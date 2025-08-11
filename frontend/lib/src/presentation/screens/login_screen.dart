@@ -558,14 +558,14 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Remix.id_card_line, color: AppColors.colorFF007B, size: 16),
+          Icon(Remix.shield_user_fill, color: AppColors.colorFF007B, size: 16),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'shield-user-fill',
+                  'Secure Access',
                   style: styles.body14Medium.copyWith(height: 1.21),
                 ),
                 const SizedBox(height: 8),

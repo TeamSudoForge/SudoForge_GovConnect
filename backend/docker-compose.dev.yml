@@ -1,0 +1,98 @@
+# Development docker-compose file
+services:
+  # PostgreSQL Database
+  database:
+    image: postgres:15-alpine
+    container_name: govconnect-database-dev
+    environment:
+      POSTGRES_DB: govconnect
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+    networks:
+      - govconnect-network-dev
+
+  # Backend API (Development)
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: govconnect-backend-dev
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: password
+      DB_NAME: govconnect
+      JWT_SECRET: dev-secret-key
+      JWT_EXPIRES_IN: 15m
+      JWT_REFRESH_EXPIRES_IN: 7d
+      BCRYPT_ROUNDS: 10
+      RP_NAME: GovConnect
+      RP_ID: localhost
+      ORIGIN: http://localhost:3000
+    ports:
+      - "3000:3000"
+      - "9229:9229"  # Debug port
+    depends_on:
+      - database
+    networks:
+      - govconnect-network-dev
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - ./uploads:/app/uploads
+    command: npm run start:debug
+
+  # File Storage Service (MinIO S3-compatible)
+  file-storage:
+    image: minio/minio:latest
+    container_name: govconnect-file-storage-dev
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data_dev:/data
+    command: server /data --console-address ":9001"
+    networks:
+      - govconnect-network-dev
+
+  # Mail Development Server (MailHog)
+  mail-dev:
+    image: mailhog/mailhog:latest
+    container_name: govconnect-mail-dev
+    ports:
+      - "1025:1025"  # SMTP port
+      - "8025:8025"  # Web UI port
+    networks:
+      - govconnect-network-dev
+
+  # Redis (for session management and caching)
+  redis:
+    image: redis:7-alpine
+    container_name: govconnect-redis-dev
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data_dev:/data
+    networks:
+      - govconnect-network-dev
+    command: redis-server --appendonly yes
+
+networks:
+  govconnect-network-dev:
+    driver: bridge
+
+volumes:
+  postgres_data_dev:
+  minio_data_dev:
+  redis_data_dev:
