@@ -1,9 +1,133 @@
 import 'package:flutter/material.dart';
+import 'package:remixicon/remixicon.dart';
 import '../../core/theme/theme_config.dart';
 import '../../core/utils/text_style_helper.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/email_field.dart';
 import '../widgets/password_field.dart';
+
+// --- Add FirstNameField, LastNameField, ConfirmPasswordField widgets inline for now ---
+class FirstNameField extends StatelessWidget {
+  final TextEditingController controller;
+  final TextStyleHelper styles;
+  const FirstNameField({Key? key, required this.controller, required this.styles}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('First Name', style: styles.body14Regular.copyWith(color: AppColors.colorFF4040, height: 1.21)),
+        const SizedBox(height: 8),
+        Container(
+          height: 46,
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColors.colorFFD4D4),
+            borderRadius: BorderRadius.circular(8),
+            color: AppColors.whiteCustom,
+          ),
+          child: TextFormField(
+            controller: controller,
+            decoration: InputDecoration(
+              hintText: 'Enter your first name',
+              hintStyle: styles.body14Regular.copyWith(color: AppColors.colorFFADAE),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              border: InputBorder.none,
+            ),
+            style: styles.body14Regular.copyWith(color: AppColors.colorFFADAE),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class LastNameField extends StatelessWidget {
+  final TextEditingController controller;
+  final TextStyleHelper styles;
+  const LastNameField({Key? key, required this.controller, required this.styles}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Last Name', style: styles.body14Regular.copyWith(color: AppColors.colorFF4040, height: 1.21)),
+        const SizedBox(height: 8),
+        Container(
+          height: 46,
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColors.colorFFD4D4),
+            borderRadius: BorderRadius.circular(8),
+            color: AppColors.whiteCustom,
+          ),
+          child: TextFormField(
+            controller: controller,
+            decoration: InputDecoration(
+              hintText: 'Enter your last name',
+              hintStyle: styles.body14Regular.copyWith(color: AppColors.colorFFADAE),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              border: InputBorder.none,
+            ),
+            style: styles.body14Regular.copyWith(color: AppColors.colorFFADAE),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class ConfirmPasswordField extends StatelessWidget {
+  final TextEditingController controller;
+  final TextStyleHelper styles;
+  final bool isPasswordVisible;
+  final VoidCallback onToggleVisibility;
+
+  const ConfirmPasswordField({
+    Key? key,
+    required this.controller,
+    required this.styles,
+    required this.isPasswordVisible,
+    required this.onToggleVisibility,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Confirm Password', style: styles.body14Regular.copyWith(color: AppColors.colorFF4040, height: 1.21)),
+        const SizedBox(height: 8),
+        Container(
+          height: 46,
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColors.colorFFD4D4),
+            borderRadius: BorderRadius.circular(8),
+            color: AppColors.whiteCustom,
+          ),
+          child: TextFormField(
+            controller: controller,
+            obscureText: !isPasswordVisible,
+            decoration: InputDecoration(
+              hintText: 'Re-enter your password',
+              hintStyle: styles.body14Regular.copyWith(color: AppColors.colorFFADAE),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              suffixIcon: GestureDetector(
+                onTap: onToggleVisibility,
+                child: Icon(
+                  isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                  color: AppColors.colorFFADAE,
+                ),
+              ),
+              border: InputBorder.none,
+            ),
+            style: styles.body14Regular.copyWith(color: AppColors.colorFFADAE),
+          ),
+        ),
+      ],
+    );
+  }
+}
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -15,26 +139,42 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+
   bool isPasswordVisible = false;
+  bool isConfirmPasswordVisible = false;
   bool rememberMe = false;
   bool isSignInSelected = true;
+  bool signUpStepOne = true; // true: name/email, false: password step
 
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
+    confirmPasswordController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
     super.dispose();
   }
 
   void _toggleSignInSignUp(bool signIn) {
     setState(() {
       isSignInSelected = signIn;
+      signUpStepOne = true;
     });
   }
 
   void _togglePasswordVisibility() {
     setState(() {
       isPasswordVisible = !isPasswordVisible;
+    });
+  }
+
+  void _toggleConfirmPasswordVisibility() {
+    setState(() {
+      isConfirmPasswordVisible = !isConfirmPasswordVisible;
     });
   }
 
@@ -56,6 +196,12 @@ class _LoginScreenState extends State<LoginScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Signing up...')),
     );
+  }
+
+  void _nextSignUpStep() {
+    setState(() {
+      signUpStepOne = false;
+    });
   }
 
   @override
@@ -89,7 +235,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 isSignInSelected
                     ? _buildLoginForm(styles)
                     : _buildSignupForm(styles),
-                _buildSecurityInformation(styles),
+                _buildSecurityInformation(styles), // Always show this
               ],
             ),
           ),
@@ -180,19 +326,39 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
           Expanded(
-            child: TextButton(
-              onPressed: () => _toggleSignInSignUp(false),
-              style: TextButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6),
-                ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: !isSignInSelected
+                    ? AppColors.colorFF007B
+                    : AppColors.transparentCustom,
+                borderRadius: BorderRadius.circular(6),
+                boxShadow: !isSignInSelected
+                    ? [
+                        BoxShadow(
+                          color: AppColors.blackCustom.withAlpha(255),
+                          blurRadius: 2,
+                          offset: const Offset(0, 1),
+                        ),
+                      ]
+                    : null,
               ),
-              child: Text(
-                'Sign Up',
-                style: styles.body14Regular
-                    .copyWith(color: AppColors.colorFF5252),
+              child: TextButton(
+                onPressed: () => _toggleSignInSignUp(false),
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+                child: Text(
+                  'Sign Up',
+                  style: styles.body14Regular.copyWith(
+                    color: !isSignInSelected
+                        ? AppColors.whiteCustom
+                        : AppColors.colorFF5252,
+                  ),
+                ),
               ),
             ),
           ),
@@ -223,7 +389,66 @@ class _LoginScreenState extends State<LoginScreen> {
             isFullWidth: true,
             height: 44,
           ),
+          const SizedBox(height: 24),
+          _buildSeparator(styles),
+          const SizedBox(height: 16),
+          _buildPasskeyButton(styles),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSeparator(TextStyleHelper styles) {
+    return Row(
+      children: [
+        Expanded(
+          child: Divider(
+            color: AppColors.colorFFD4D4,
+            thickness: 1,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Text(
+            'or Continue with',
+            style: styles.body14Regular.copyWith(color: AppColors.colorFF7373),
+          ),
+        ),
+        Expanded(
+          child: Divider(
+            color: AppColors.colorFFD4D4,
+            thickness: 1,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPasskeyButton(TextStyleHelper styles) {
+    return SizedBox(
+      width: double.infinity,
+      height: 44,
+      child: OutlinedButton(
+        onPressed: () {
+          // TODO: Handle Passkey sign in
+        },
+        style: OutlinedButton.styleFrom(
+          side: BorderSide(color: AppColors.colorFFD4D4),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Remix.id_card_line, color: AppColors.colorFF007B, size: 20),
+            const SizedBox(width: 8),
+            Text(
+              'Sign in with Passkey',
+              style: styles.title16Regular.copyWith(color: AppColors.colorFF007B),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -231,25 +456,47 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildSignupForm(TextStyleHelper styles) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          EmailField(controller: emailController, styles: styles),
-          const SizedBox(height: 16),
-          PasswordField(
-            controller: passwordController,
-            styles: styles,
-            isPasswordVisible: isPasswordVisible,
-            onToggleVisibility: _togglePasswordVisibility,
-          ),
-          const SizedBox(height: 16),
-          CustomButton(
-            text: 'Sign Up',
-            onPressed: _signup,
-            isFullWidth: true,
-            height: 44,
-          ),
-        ],
-      ),
+      child: signUpStepOne
+          ? Column(
+              children: [
+                FirstNameField(controller: firstNameController, styles: styles),
+                const SizedBox(height: 16),
+                LastNameField(controller: lastNameController, styles: styles),
+                const SizedBox(height: 16),
+                EmailField(controller: emailController, styles: styles),
+                const SizedBox(height: 16),
+                CustomButton(
+                  text: 'Next',
+                  onPressed: _nextSignUpStep,
+                  isFullWidth: true,
+                  height: 44,
+                ),
+              ],
+            )
+          : Column(
+              children: [
+                PasswordField(
+                  controller: passwordController,
+                  styles: styles,
+                  isPasswordVisible: isPasswordVisible,
+                  onToggleVisibility: _togglePasswordVisibility,
+                ),
+                const SizedBox(height: 16),
+                ConfirmPasswordField(
+                  controller: confirmPasswordController,
+                  styles: styles,
+                  isPasswordVisible: isConfirmPasswordVisible,
+                  onToggleVisibility: _toggleConfirmPasswordVisibility,
+                ),
+                const SizedBox(height: 16),
+                CustomButton(
+                  text: 'Sign Up',
+                  onPressed: _signup,
+                  isFullWidth: true,
+                  height: 44,
+                ),
+              ],
+            ),
     );
   }
 
@@ -311,18 +558,14 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Security Icon (removed image)
-          const SizedBox(
-            height: 16,
-            width: 16,
-          ),
+          Icon(Remix.id_card_line, color: AppColors.colorFF007B, size: 16),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Secure Access',
+                  'shield-user-fill',
                   style: styles.body14Medium.copyWith(height: 1.21),
                 ),
                 const SizedBox(height: 8),
@@ -339,4 +582,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-
