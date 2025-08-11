@@ -18,13 +18,16 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "docker:dev": "./docker.sh dev start",
-    "docker:dev:stop": "./docker.sh dev stop",
-    "docker:dev:logs": "./docker.sh dev logs",
-    "docker:prod": "./docker.sh prod start",
-    "docker:prod:stop": "./docker.sh prod stop",
-    "docker:status": "./docker.sh status",
-    "docker:cleanup": "./docker.sh cleanup"
+    "dev:up": "docker compose -f docker-compose.dev.yml up -d --build",
+    "dev:down": "docker compose -f docker-compose.dev.yml down",
+    "dev:logs": "docker compose -f docker-compose.dev.yml logs -f backend",
+    "dev:ps": "docker compose -f docker-compose.dev.yml ps",
+    "dev:restart": "npm run dev:down && npm run dev:up",
+    "dev:rebuild": "docker compose -f docker-compose.dev.yml build --no-cache",
+    "prod:up": "docker compose -f docker-compose.prod.yml up -d --build",
+    "prod:down": "docker compose -f docker-compose.prod.yml down",
+    "prod:logs": "docker compose -f docker-compose.prod.yml logs -f backend",
+    "docker:cleanup": "docker system prune -f --volumes"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
