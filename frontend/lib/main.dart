@@ -45,16 +45,9 @@ class HomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.of(
                   context,
-                ).pushNamed(AppRoutes.govConnectSignInScreen);
+                ).push(MaterialPageRoute(builder: (_) => const LoginScreen()));
               },
               child: const Text('Go to Login'),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(AppRoutes.notificationsScreen);
-              },
-              child: const Text('Go to Notifications'),
             ),
           ],
         ),

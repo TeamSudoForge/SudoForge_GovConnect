@@ -51,7 +51,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final styles = TextStyleHelper.instance;
+    final textStyles = TextStyleHelper.instance;
     final filtered = showUnread
         ? notifications.where((n) => n.unread).toList()
         : notifications;
@@ -61,9 +61,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         showBackButton: true,
         showNotifications: true,
         showProfile: true,
-        backgroundColor: Colors.blueAccent,
-        iconColor: Colors.white,
-        textColor: Colors.white,
       ),
       backgroundColor: const Color(0xFFF6F8FA),
       body: Column(
@@ -114,11 +111,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       backgroundColor: n.iconBackgroundColor,
                       child: Icon(n.icon, color: n.iconColor, size: 28),
                     ),
-                    title: Text(n.title, style: styles.title16Medium),
-                    subtitle: Text(n.message, style: styles.body14Regular),
+                    title: Text(n.title, style: textStyles.title16Medium),
+                    subtitle: Text(n.message, style: textStyles.body14Regular),
                     trailing: Text(
                       _formatDate(n.date),
-                      style: styles.body12Regular.copyWith(color: Colors.grey),
+                      style: textStyles.body12Regular.copyWith(
+                        color: Colors.grey,
+                      ),
                     ),
                     isThreeLine: true,
                   ),
@@ -162,16 +161,19 @@ class _FilterButton extends StatelessWidget {
       child: Container(
         height: 36,
         decoration: BoxDecoration(
-          color: selected ? const Color(0xFF1565C0) : Colors.white,
+          color: selected
+              ? Theme.of(context).primaryColor
+              : Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: const Color(0xFF1565C0)),
+          border: Border.all(color: Theme.of(context).primaryColor),
         ),
         alignment: Alignment.center,
         child: Text(
           label,
-          style: TextStyle(
-            color: selected ? Colors.white : const Color(0xFF1565C0),
-            fontWeight: FontWeight.w600,
+          style: TextStyleHelper.instance.body14Medium.copyWith(
+            color: selected
+                ? Theme.of(context).colorScheme.onPrimary
+                : Theme.of(context).primaryColor,
           ),
         ),
       ),
