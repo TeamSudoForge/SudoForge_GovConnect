@@ -8,7 +8,7 @@ class AppRoutes {
   static const String govConnectSignInScreen = '/gov_connect_sign_in_screen';
   static const String emailVerificationScreen = '/email_verification_screen';
   static const String appNavigationScreen = '/app_navigation_screen';
-  static const String notificationsScreen = '/notifications_screen';
+  static const String notificationsScreen = '/notifications';
 
   static const String initialRoute = '/';
 

@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/text_style_helper.dart';
+import 'package:gov_connect/src/core/routes/app_routes.dart';
 
 class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final TextStyle? titleStyle;
   final List<Widget>? actions;
-  final Color? backgroundColor;
-  final Color? iconColor;
-  final Color? textColor;
   final double elevation;
   final bool showBackButton;
   final bool showNotifications;
@@ -19,10 +15,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CommonAppBar({
     Key? key,
     required this.title,
-    this.titleStyle,
     this.actions,
-    this.backgroundColor,
-    this.iconColor,
     this.elevation = 0,
     this.showBackButton = true,
     this.showNotifications = true,
@@ -30,16 +23,14 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onBack,
     this.onNotifications,
     this.onProfile,
-    this.textColor,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final styles = TextStyleHelper.instance;
     void defaultNotificationsNav() {
       final current = ModalRoute.of(context)?.settings.name;
-      if (current != '/notifications_screen') {
-        Navigator.of(context).pushNamed('/notifications_screen');
+      if (current != AppRoutes.notificationsScreen) {
+        Navigator.of(context).pushNamed(AppRoutes.notificationsScreen);
       }
     }
 
@@ -50,16 +41,20 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       leading: showBackButton
           ? IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
+              icon: CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 16,
+                child: Icon(
+                  Icons.arrow_back,
+                  color: Theme.of(context).colorScheme.primary,
+                  size: 20,
+                ),
+              ),
               onPressed: onBack ?? () => Navigator.of(context).maybePop(),
               tooltip: 'Back',
             )
           : null,
-      title: Text(
-        title,
-        style: (titleStyle ?? styles.title20).copyWith(color: Colors.white),
-      ),
-      backgroundColor: backgroundColor ?? Colors.blueAccent,
+      title: Text(title),
       elevation: elevation,
       actions: [
         if (showNotifications)
@@ -76,7 +71,6 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         if (actions != null) ...actions!,
       ],
-      iconTheme: IconThemeData(color: iconColor ?? Colors.black),
     );
   }
 
