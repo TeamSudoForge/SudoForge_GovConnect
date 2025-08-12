@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gov_connect/src/presentation/widgets/custom_button.dart';
@@ -17,7 +18,37 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       List.generate(6, (index) => TextEditingController());
   final List<FocusNode> codeFocusNodes = List.generate(6, (index) => FocusNode());
   final String emailAddress = 'user@example.com';
-  String resendTimer = '00:45';
+  int _resendSeconds = 45;
+  Timer? _timer;
+
+  String get resendTimer => _resendSeconds < 10
+      ? '00:0$_resendSeconds'
+      : '00:$_resendSeconds';
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      codeFocusNodes[0].requestFocus();
+    });
+    _startResendTimer();
+  }
+
+  void _startResendTimer() {
+    _timer?.cancel();
+    setState(() {
+      _resendSeconds = 45;
+    });
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_resendSeconds > 0) {
+        setState(() {
+          _resendSeconds--;
+        });
+      } else {
+        timer.cancel();
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -27,15 +58,8 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
     for (var focusNode in codeFocusNodes) {
       focusNode.dispose();
     }
+    _timer?.cancel();
     super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      codeFocusNodes[0].requestFocus();
-    });
   }
 
   void _handleCodeInput(String value, int index) {
@@ -61,13 +85,16 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   }
 
   void _handleResendCode() {
-    print('Resend code requested');
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('Verification code has been resent to your email.'),
-        backgroundColor: appTheme.colorFF4CAF,
-      ),
-    );
+    if (_resendSeconds == 0) {
+      print('Resend code requested');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Verification code has been resent to your email.'),
+          backgroundColor: appTheme.colorFF4CAF,
+        ),
+      );
+      _startResendTimer();
+    }
   }
 
   @override
@@ -290,7 +317,9 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                               child: Text(
                                 'Resend Code',
                                 style: TextStyleHelper.instance.body14.copyWith(
-                                    color: appTheme.colorFF007B,
+                                    color: _resendSeconds == 0
+                                        ? appTheme.colorFF007B
+                                        : Colors.grey,
                                     height: 1.21,
                                     decoration: TextDecoration.underline),
                                 textAlign: TextAlign.center,
