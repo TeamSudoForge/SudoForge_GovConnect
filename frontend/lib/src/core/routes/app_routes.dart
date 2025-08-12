@@ -4,9 +4,9 @@ import '../../presentation/screens/email_verification_screen.dart';
 import '../../presentation/screens/app_navigation_screen.dart';
 
 class AppRoutes {
-  static const String govConnectSignInScreen = '/gov_connect_sign_in_screen';
-  static const String emailVerificationScreen = '/email_verification_screen';
-  static const String appNavigationScreen = '/app_navigation_screen';
+  static const String govConnectSignInScreen = '/govConnectSignIn';
+  static const String emailVerificationScreen = '/emailVerification';
+  static const String appNavigationScreen = '/appNavigation';
   static const String initialRoute = '/';
 
   static Map<String, WidgetBuilder> get routes => {
@@ -16,4 +16,3 @@ class AppRoutes {
         initialRoute: (context) => const AppNavigationScreen(),
       };
 }
-

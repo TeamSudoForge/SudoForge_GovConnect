@@ -3,6 +3,9 @@ import '../../core/theme/text_style_helper.dart';
 import '../../core/utils/image_constant.dart';
 
 class EmailVerificationScreen extends StatelessWidget {
+
+  static const String routeName = '/emailVerification';
+
   const EmailVerificationScreen({Key? key}) : super(key: key);
 
   @override

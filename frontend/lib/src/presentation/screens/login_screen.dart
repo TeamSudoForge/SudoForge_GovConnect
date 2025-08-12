@@ -131,6 +131,7 @@ class ConfirmPasswordField extends StatelessWidget {
 }
 
 class LoginScreen extends StatefulWidget {
+  static const String routeName = '/login';
   const LoginScreen({Key? key}) : super(key: key);
 
   @override

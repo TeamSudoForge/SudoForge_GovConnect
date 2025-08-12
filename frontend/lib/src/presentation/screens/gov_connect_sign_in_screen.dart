@@ -5,6 +5,7 @@ import '../widgets/password_field.dart';
 import '../widgets/custom_button.dart';
 
 class GovConnectSignInScreen extends StatefulWidget {
+  static const String routeName = '/govConnectSignIn';
   const GovConnectSignInScreen({Key? key}) : super(key: key);
 
   @override
