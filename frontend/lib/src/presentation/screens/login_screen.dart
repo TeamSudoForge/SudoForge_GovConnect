@@ -11,6 +11,7 @@ import '../widgets/password_field.dart';
 class FirstNameField extends StatelessWidget {
   final TextEditingController controller;
   final TextStyleHelper styles;
+  static const String routeName = '/signInSignUpPage';
   const FirstNameField({Key? key, required this.controller, required this.styles}) : super(key: key);
 
   @override
