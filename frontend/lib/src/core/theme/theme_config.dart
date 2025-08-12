@@ -49,6 +49,12 @@ class AppTheme {
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.colorFF007B,
         foregroundColor: AppColors.whiteCustom,
+        iconTheme: IconThemeData(color: AppColors.whiteCustom),
+        titleTextStyle: TextStyle(
+          color: AppColors.whiteCustom,
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+        ),
       ),
       // ...other theme properties as needed
     );
@@ -69,6 +75,12 @@ class AppTheme {
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.colorFF007B,
         foregroundColor: AppColors.whiteCustom,
+        iconTheme: IconThemeData(color: AppColors.whiteCustom),
+        titleTextStyle: TextStyle(
+          color: AppColors.whiteCustom,
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+        ),
       ),
       // ...other theme properties as needed
     );

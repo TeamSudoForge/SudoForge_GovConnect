@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'src/presentation/screens/login_screen.dart';
 import 'src/core/theme/theme_config.dart';
+import 'src/presentation/widgets/common_app_bar.dart';
+import 'src/core/routes/app_routes.dart';
 
 void main() {
   runApp(const GovConnectApp());
@@ -17,6 +19,7 @@ class GovConnectApp extends StatelessWidget {
       title: 'GovConnect',
       theme: AppTheme.lightTheme(fontScale),
       darkTheme: AppTheme.darkTheme(fontScale),
+      routes: {...AppRoutes.routes..remove(AppRoutes.initialRoute)},
       home: const HomePage(),
     );
   }
@@ -28,15 +31,25 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('GovConnect Home')),
+      appBar: CommonAppBar(
+        title: 'GovConnect Home',
+        showBackButton: false,
+        showNotifications: true,
+        showProfile: true,
+      ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const LoginScreen()),
-            );
-          },
-          child: const Text('Go to Login'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(
+                  context,
+                ).push(MaterialPageRoute(builder: (_) => const LoginScreen()));
+              },
+              child: const Text('Go to Login'),
+            ),
+          ],
         ),
       ),
     );
