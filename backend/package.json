@@ -21,20 +21,12 @@
     "dev:up": "docker compose -f docker-compose.dev.yml up -d --build",
     "dev:down": "docker compose -f docker-compose.dev.yml down",
     "dev:logs": "docker compose -f docker-compose.dev.yml logs -f backend",
-    "dev:ps": "docker compose -f docker-compose.dev.yml ps",
     "dev:restart": "npm run dev:down && npm run dev:up",
-    "dev:rebuild": "docker compose -f docker-compose.dev.yml build --no-cache",
     "prod:up": "docker compose -f docker-compose.prod.yml up -d --build",
     "prod:down": "docker compose -f docker-compose.prod.yml down",
-    "prod:logs": "docker compose -f docker-compose.prod.yml logs -f backend",
-    "docker:cleanup": "docker system prune -f --volumes",
-    "debug:routes": "node scripts/debug-server.js",
     "typeorm": "typeorm-ts-node-commonjs",
-    "migration:create": "npm run typeorm -- migration:create",
-    "migration:generate": "npm run typeorm -- migration:generate -d src/config/typeorm.config.ts",
     "migration:run": "npm run typeorm -- migration:run -d src/config/typeorm.config.ts",
-    "migration:revert": "npm run typeorm -- migration:revert -d src/config/typeorm.config.ts",
-    "migration:show": "npm run typeorm -- migration:show -d src/config/typeorm.config.ts"
+    "migration:create": "npm run typeorm -- migration:create"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
