@@ -89,3 +89,16 @@ export interface PasskeyOptionsDto {
     transports?: string[];
   }>;
 }
+
+export class UserDto {
+  id: string;
+  email: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+
+  constructor(partial: Partial<UserDto>) {
+    Object.assign(this, partial);
+  }
+}

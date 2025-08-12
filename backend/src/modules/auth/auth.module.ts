@@ -1,30 +1,37 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { ConfigService } from '@nestjs/config';
-import { AuthService } from './auth.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+
 import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
+import { User } from '../users/entities/user.entity';
 import { UsersModule } from '../users/users.module';
-import { AuthSession, Passkey, User } from '../../database/entities';
-import { JwtStrategy } from '../../common/strategies/jwt.strategy';
-import { LocalStrategy } from '../../common/strategies/local.strategy';
+import { TwoFactorService } from './two-factor/two-factor.service';
+import { TwoFactorCode } from './two-factor/entities/two-factor-code.entity';
+import { MailService } from '../notifications/mail/mail.service';
+import { JwtStrategy } from 'src/common/strategies/jwt.strategy';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([AuthSession, Passkey, User]),
     PassportModule,
     JwtModule.registerAsync({
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get('jwt.secret'),
-        signOptions: { expiresIn: configService.get('jwt.expiresIn') },
-      }),
+      imports: [ConfigModule],
       inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { 
+          expiresIn: configService.get<string>('JWT_EXPIRES_IN', '15m') 
+        },
+      }),
     }),
+    TypeOrmModule.forFeature([User, TwoFactorCode]),
     UsersModule,
+    ConfigModule,
   ],
-  providers: [AuthService, JwtStrategy, LocalStrategy],
   controllers: [AuthController],
-  exports: [AuthService],
+  providers: [AuthService, JwtStrategy, TwoFactorService, MailService],
+  exports: [AuthService, TwoFactorService],
 })
 export class AuthModule {}

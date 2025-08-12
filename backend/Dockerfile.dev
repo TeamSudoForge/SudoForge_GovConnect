@@ -1,28 +1,18 @@
 FROM node:20-alpine
 
-# Install required tools
-RUN apk add --no-cache wget postgresql-client redis
-
 WORKDIR /app
 
-# Copy package files
+# Copy package files first for better caching
 COPY package*.json ./
 
-# Install all dependencies
-RUN npm ci
+# Use npm install instead of npm ci for development
+RUN npm install
 
-# Copy source code
+# Copy the rest of the application
 COPY . .
 
-# Create uploads directory
-RUN mkdir -p /app/uploads
-
-# Expose port
+# Expose API port
 EXPOSE 3000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=30s --retries=3 \
-  CMD wget --quiet --tries=1 --spider http://localhost:3000/health || exit 1
-
-# Wait for services and start dev server
-CMD ["sh", "-c", "while ! pg_isready -h database -p 5432 -U postgres -q; do echo 'Waiting for database...'; sleep 2; done; while ! redis-cli -h redis -p 6379 ping > /dev/null 2>&1; do echo 'Waiting for Redis...'; sleep 2; done; echo 'Services ready!'; npm run start:dev"]
+# Use nodemon for development to watch for changes
+CMD ["npm", "run", "start:dev"]

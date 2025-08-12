@@ -56,6 +56,24 @@ curl -X POST http://localhost:3000/auth/login \
   -d '{"email":"test@example.com","password":"password123"}'
 ```
 
+### Two-Factor Authentication
+
+When a user with enabled 2FA logs in, the system automatically sends a verification code to the user's email address. The login process will then require this verification code to complete authentication.
+
+#### Enable 2FA for a User
+```bash
+curl -X POST http://localhost:3000/auth/enable-2fa \
+  -H 'Authorization: Bearer YOUR_ACCESS_TOKEN' \
+  -H 'Content-Type: application/json'
+```
+
+#### Complete Login with 2FA
+```bash
+curl -X POST http://localhost:3000/auth/verify-2fa \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"test@example.com","verificationCode":"123456"}'
+```
+
 ## Documentation
 - **Authentication API**: `AUTH_README.md`
 - **Docker Setup**: `DOCKER_SIMPLIFIED.md`

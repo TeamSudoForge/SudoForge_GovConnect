@@ -9,6 +9,8 @@ import {
   Param,
   HttpCode,
   HttpStatus,
+  Req,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
@@ -17,14 +19,20 @@ import {
   RefreshTokenDto,
   PasskeyRegistrationDto,
   AuthResponseDto,
+  UserDto,
 } from './dto/auth.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { LocalAuthGuard } from '../../common/guards/local-auth.guard';
 import { User } from '../../database/entities';
+import { Verify2faDto } from './two-factor/dto/verify-2fa.dto';
+import { TwoFactorService } from './two-factor/two-factor.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly twoFactorService: TwoFactorService,
+  ) {}
 
   @Post('register')
   async register(@Body() registerDto: RegisterDto): Promise<AuthResponseDto> {
@@ -33,8 +41,61 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() loginDto: LoginDto): Promise<AuthResponseDto> {
-    return this.authService.login(loginDto);
+  async login(@Body() loginDto: LoginDto) {
+    const user = await this.authService.validateUser(loginDto.email, loginDto.password);
+
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+    if (!(user.email && user.id)) {
+      throw new UnauthorizedException('User not found');
+    }
+    // Check if user has 2FA enabled
+    if (await this.twoFactorService.isTwoFactorEnabled(user.id)) {
+      await this.twoFactorService.generateAndSendVerificationCode(user.email);
+      return {
+        message: 'Verification code sent to your email',
+        requires2FA: true,
+        email: user.email,
+      };
+    }
+
+    // No 2FA, proceed with normal login
+    return this.authService.loginWithUser(user);
+  }
+
+  @Post('verify-2fa')
+  @HttpCode(HttpStatus.OK)
+  async verify2fa(@Body() verify2faDto: Verify2faDto) {
+    const isValid = await this.twoFactorService.verifyCode(
+      verify2faDto.email,
+      verify2faDto.verificationCode,
+    );
+
+    if (!isValid) {
+      throw new UnauthorizedException('Invalid verification code');
+    }
+
+    const user = await this.authService.findByEmail(verify2faDto.email);
+    return this.authService.loginWithUser(user);
+  }
+
+  @Post('enable-2fa')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async enable2fa(@Req() req) {
+    const user = req.user as { id: string };
+    await this.twoFactorService.enableTwoFactor(user.id);
+    return { message: 'Two-factor authentication enabled successfully' };
+  }
+
+  @Post('disable-2fa')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async disable2fa(@Req() req) {
+    const user = req.user as { id: string };
+    await this.twoFactorService.disableTwoFactor(user.id);
+    return { message: 'Two-factor authentication disabled successfully' };
   }
 
   @Post('refresh')
@@ -107,3 +168,4 @@ export class AuthController {
     return { success: true };
   }
 }
+

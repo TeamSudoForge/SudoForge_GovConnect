@@ -36,6 +36,8 @@ export class AuthService {
     private authSessionRepository: Repository<AuthSession>,
     @InjectRepository(Passkey)
     private passkeyRepository: Repository<Passkey>,
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
   ) {}
 
   async register(registerDto: RegisterDto): Promise<AuthResponseDto> {
@@ -48,6 +50,10 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException('INVALID_CREDENTIALS');
     }
+    return this.generateTokens(user);
+  }
+
+  async loginWithUser(user: User): Promise<AuthResponseDto> {
     return this.generateTokens(user);
   }
 
@@ -167,7 +173,6 @@ export class AuthService {
     const user = await this.usersService.findById(userId);
 
     // For now, we'll store the passkey without full WebAuthn verification
-    // In production, you'd want to properly verify the attestation
     await this.passkeyRepository.save({
       userId: user.id,
       credentialId: credential.id,
@@ -199,7 +204,6 @@ export class AuthService {
     }
 
     // For demo purposes, we'll trust the passkey if it exists
-    // In production, you'd verify the signature properly
     return this.generateTokens(passkey.user);
   }
 
@@ -219,5 +223,13 @@ export class AuthService {
     if (result.affected === 0) {
       throw new BadRequestException('PASSKEY_NOT_FOUND');
     }
+  }
+
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.usersRepository.findOne({ where: { email } });
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+    return user;
   }
 }
