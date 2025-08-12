@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../utils/text_style_helper.dart';
+import 'package:gov_connect/src/core/app_export.dart';
 
 // Centralized color definitions
 class AppColors {

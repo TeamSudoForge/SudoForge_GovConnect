@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/theme_config.dart';
+import '../../core/app_export.dart';
 
 class CustomButton extends StatelessWidget {
   const CustomButton({
@@ -37,10 +37,10 @@ class CustomButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor ?? AppColors.colorFF007B,
-          foregroundColor: textColor ?? AppColors.whiteCustom,
+          backgroundColor: backgroundColor ?? appTheme.colorFF007B,
+          foregroundColor: textColor ?? appTheme.whiteCustom,
           elevation: hasShadow ?? false ? 2 : 0,
-          shadowColor: AppColors.blackCustom.withAlpha(26),
+          shadowColor: appTheme.blackCustom.withAlpha(26),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius ?? 8),
           ),

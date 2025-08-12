@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/app_export.dart';
 import '../../core/theme/theme_config.dart';
 import '../../core/utils/text_style_helper.dart';
 
@@ -24,15 +25,15 @@ class PasswordField extends StatelessWidget {
         Text(
           'Password',
           style: styles.body14Regular
-              .copyWith(color: AppColors.colorFF4040, height: 1.21),
+              .copyWith(color: appTheme.colorFF4040, height: 1.21),
         ),
         const SizedBox(height: 8),
         Container(
           height: 46,
           decoration: BoxDecoration(
-            border: Border.all(color: AppColors.colorFFD4D4),
+            border: Border.all(color: appTheme.colorFFD4D4),
             borderRadius: BorderRadius.circular(8),
-            color: AppColors.whiteCustom,
+            color: appTheme.whiteCustom,
           ),
           child: TextFormField(
             controller: controller,
@@ -40,7 +41,7 @@ class PasswordField extends StatelessWidget {
             decoration: InputDecoration(
               hintText: 'Enter your password',
               hintStyle: styles.body14Regular
-                  .copyWith(color: AppColors.colorFFADAE),
+                  .copyWith(color: appTheme.colorFFADAE),
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               suffixIcon: GestureDetector(
                 onTap: onToggleVisibility,
@@ -48,17 +49,16 @@ class PasswordField extends StatelessWidget {
                   isPasswordVisible
                       ? Icons.visibility
                       : Icons.visibility_off,
-                  color: AppColors.colorFFADAE,
+                  color: appTheme.colorFFADAE,
                 ),
               ),
               border: InputBorder.none,
             ),
             style: styles.body14Regular
-                .copyWith(color: AppColors.colorFFADAE),
+                .copyWith(color: appTheme.colorFFADAE),
           ),
         ),
       ],
     );
   }
 }
-
