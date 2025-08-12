@@ -25,9 +25,18 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     container_name: govconnect-backend-dev
+    command: >
+      sh -c "
+        echo 'Waiting for database to be ready...' &&
+        while ! nc -z database 5432; do
+          sleep 1
+        done &&
+        echo 'Database is ready!' &&
+        npm run migration:run &&
+        npm run start:dev
+      "
     environment:
       NODE_ENV: development
-      PORT: 3000
       DB_HOST: database
       DB_PORT: 5432
       DB_USERNAME: postgres
@@ -36,20 +45,18 @@ services:
       JWT_SECRET: development-secret-key
       JWT_EXPIRES_IN: 15m
       JWT_REFRESH_EXPIRES_IN: 7d
-      BCRYPT_ROUNDS: 12
-      RP_NAME: GovConnect
-      RP_ID: localhost
-      ORIGIN: http://localhost:3000
+      MAIL_HOST: mail-dev
+      MAIL_PORT: 1025
+      MAIL_FROM: noreply@govconnect.com
     ports:
       - "3000:3000"
-    depends_on:
-      database:
-        condition: service_healthy
-    networks:
-      - govconnect-network-dev
     volumes:
       - .:/app
-      - /app/node_modules
+      - ./node_modules:/app/node_modules
+    depends_on:
+      - database
+    networks:
+      - govconnect-network-dev
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health"]
       interval: 30s
@@ -91,29 +98,10 @@ services:
       - govconnect-network-dev
     restart: unless-stopped
 
-  # Redis (for session management and caching)
-  redis:
-    image: redis:7-alpine
-    container_name: govconnect-redis-dev
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data_dev:/data
-    networks:
-      - govconnect-network-dev
-    command: redis-server --appendonly yes
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
-
 networks:
   govconnect-network-dev:
     driver: bridge
 
 volumes:
   postgres_data_dev:
-  minio_data_dev:
-  redis_data_dev:
+  node_modules:

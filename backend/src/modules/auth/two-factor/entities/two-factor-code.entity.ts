@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
-import { User } from '../../../users/entities/user.entity';
+import { User } from '../../../../database/entities/user.entity';
 
 @Entity('two_factor_codes')
 export class TwoFactorCode {
@@ -9,7 +9,7 @@ export class TwoFactorCode {
   @Column({ name: 'user_id' })
   userId: string;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
 

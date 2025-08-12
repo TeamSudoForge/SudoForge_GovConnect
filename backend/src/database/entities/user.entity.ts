@@ -32,6 +32,9 @@ export class User {
   @Column({ default: 'user' })
   role: string;
 
+  @Column({ name: 'is_two_factor_enabled', default: false })
+  isTwoFactorEnabled: boolean;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

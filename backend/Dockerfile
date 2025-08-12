@@ -30,5 +30,12 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
   CMD wget --quiet --tries=1 --spider http://localhost:3000/health || exit 1
 
+# Create entrypoint script to run migrations before starting the app
+RUN echo '#!/bin/sh\n\
+echo "Running migrations..."\n\
+npm run migration:run\n\
+echo "Starting application..."\n\
+exec npm run start:prod\n' > /app/entrypoint.sh && chmod +x /app/entrypoint.sh
+
 # Wait for services and start
-CMD ["sh", "-c", "while ! pg_isready -h database -p 5432 -U postgres -q; do echo 'Waiting for database...'; sleep 2; done; while ! redis-cli -h redis -p 6379 ping > /dev/null 2>&1; do echo 'Waiting for Redis...'; sleep 2; done; echo 'Services ready!'; npm run start:prod"]
+CMD ["/app/entrypoint.sh"]

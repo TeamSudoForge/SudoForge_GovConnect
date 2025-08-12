@@ -95,7 +95,31 @@ docker-compose exec -T database psql -U postgres govconnect < backup_file.sql
 
 # Reset database (destroys all data)
 docker-compose down -v && docker-compose up -d database
+
+# Run migrations manually
+npm run migration:run
+
+# Revert last migration (useful for fixing migration errors)
+npm run migration:revert
 ```
+
+### Handling Migration Errors
+If you encounter migration errors like "column contains null values":
+
+1. Revert the problematic migration:
+   ```bash
+   npm run migration:revert
+   ```
+
+2. Fix the migration file by:
+   - Making columns nullable initially
+   - Adding default values for non-nullable columns
+   - Creating multi-step migrations for complex changes
+
+3. Run the migrations again:
+   ```bash
+   npm run migration:run
+   ```
 
 ### Cleanup
 ```bash
