@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'src/presentation/screens/login_screen.dart';
+import 'src/presentation/screens/notifications_screen.dart';
 import 'src/core/theme/theme_config.dart';
 
 void main() {
@@ -30,13 +31,29 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('GovConnect Home')),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const LoginScreen()),
-            );
-          },
-          child: const Text('Go to Login'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(
+                  context,
+                ).push(MaterialPageRoute(builder: (_) => const LoginScreen()));
+              },
+              child: const Text('Go to Login'),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const NotificationsScreen(),
+                  ),
+                );
+              },
+              child: const Text('Go to Notifications'),
+            ),
+          ],
         ),
       ),
     );
