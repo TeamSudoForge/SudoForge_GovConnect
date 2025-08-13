@@ -1,0 +1,19 @@
+FROM node:20-alpine
+
+# Install netcat for the wait-for-db script
+RUN apk add --no-cache netcat-openbsd
+
+WORKDIR /app
+
+# Skip all npm install steps - will copy host node_modules
+# Just copy package.json for reference (not for installation)
+COPY package*.json ./
+
+# Copy application code
+COPY . .
+
+# Expose API port
+EXPOSE 3000
+
+# Command is specified in docker-compose.yml
+CMD ["npm", "run", "start:dev"]
