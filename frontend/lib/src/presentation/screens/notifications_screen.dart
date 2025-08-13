@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/text_style_helper.dart';
+import '../../core/app_export.dart';
 import '../widgets/common_app_bar.dart';
 
 class NotificationsScreen extends StatefulWidget {

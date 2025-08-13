@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gov_connect/src/core/theme/app_colors.dart';
+import 'package:gov_connect/src/core/theme/theme_config.dart';
 
 /// Centralized text styles for the app
 class AppTextStyles {

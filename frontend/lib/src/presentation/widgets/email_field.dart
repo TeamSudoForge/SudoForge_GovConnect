@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/app_export.dart';
-import '../../core/theme/text_style_helper.dart';
+import '../../core/theme/theme_config.dart';
 
 class EmailField extends StatelessWidget {
   final TextEditingController controller;
@@ -20,15 +20,15 @@ class EmailField extends StatelessWidget {
         Text(
           'Email Address',
           style: styles.body14Regular
-              .copyWith(color: appTheme.colorFF4040, height: 1.21),
+              .copyWith(color: AppColors.colorFF4040, height: 1.21),
         ),
         const SizedBox(height: 8),
         Container(
           height: 46,
           decoration: BoxDecoration(
-            border: Border.all(color: appTheme.colorFFD4D4),
+            border: Border.all(color: AppColors.colorFFD4D4),
             borderRadius: BorderRadius.circular(8),
-            color: appTheme.whiteCustom,
+            color: AppColors.whiteCustom,
           ),
           child: TextFormField(
             controller: controller,
@@ -36,12 +36,12 @@ class EmailField extends StatelessWidget {
             decoration: InputDecoration(
               hintText: 'Enter your email',
               hintStyle: styles.body14Regular
-                  .copyWith(color: appTheme.colorFFADAE),
+                  .copyWith(color: AppColors.colorFFADAE),
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               border: InputBorder.none,
             ),
             style: styles.body14Regular
-                .copyWith(color: appTheme.colorFFADAE),
+                .copyWith(color: AppColors.colorFFADAE),
           ),
         ),
       ],

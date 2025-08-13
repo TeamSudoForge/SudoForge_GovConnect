@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:remixicon/remixicon.dart';
 import '../../core/app_export.dart';
-import '../../core/theme/text_style_helper.dart';
 import '../../core/theme/theme_config.dart';
 import '../widgets/custom_button.dart';
 
@@ -22,7 +21,7 @@ class HomeScreen extends StatelessWidget {
         elevation: 0,
         title: Text(
           'GovConnect',
-          style: styles.headline18Regular.copyWith(
+          style: styles.title18Medium.copyWith(
             color: AppColors.whiteCustom,
           ),
         ),
@@ -77,7 +76,7 @@ class HomeScreen extends StatelessWidget {
         children: [
           Text(
             'Welcome back,',
-            style: styles.body16Regular.copyWith(
+            style: styles.title16Regular.copyWith(
               color: AppColors.whiteCustom.withOpacity(0.8),
             ),
           ),
@@ -106,7 +105,7 @@ class HomeScreen extends StatelessWidget {
       children: [
         Text(
           'Quick Actions',
-          style: styles.headline20Regular.copyWith(
+          style: styles.title20.copyWith(
             color: AppColors.colorFF0062,
           ),
         ),
@@ -225,7 +224,7 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 'Account Information',
-                style: styles.body16Medium.copyWith(
+                style: styles.title16Medium.copyWith(
                   color: AppColors.colorFF0062,
                 ),
               ),
@@ -274,7 +273,7 @@ class HomeScreen extends StatelessWidget {
         ),
         title: Text(
           'Logout',
-          style: styles.headline18Regular.copyWith(
+          style: styles.title18Medium.copyWith(
             color: AppColors.colorFF0062,
           ),
         ),
