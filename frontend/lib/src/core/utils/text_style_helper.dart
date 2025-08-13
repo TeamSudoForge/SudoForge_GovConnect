@@ -1,6 +1,37 @@
 import 'package:flutter/material.dart';
 import '../theme/theme_config.dart';
 
+class AppTextStyles {
+  AppTextStyles._();
+
+  // Headline styles
+  static const TextStyle headline24 = TextStyle(fontSize: 24, color: AppColors.colorFF1717);
+  static const TextStyle headline24Regular = TextStyle(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.colorFF1717);
+  
+  // Title styles
+  static const TextStyle title20RegularRoboto = TextStyle(fontSize: 20, fontWeight: FontWeight.w400, fontFamily: 'Roboto');
+  static const TextStyle title20 = TextStyle(fontSize: 20, color: AppColors.colorFF3838);
+  static const TextStyle title18Medium = TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: AppColors.colorFF1717);
+  static const TextStyle title16 = TextStyle(fontSize: 16, color: AppColors.colorFF4040);
+  static const TextStyle title16Medium = TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: AppColors.colorFF1717);
+  static const TextStyle title16Regular = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: AppColors.blackCustom);
+  
+  // Body styles
+  static const TextStyle body14 = TextStyle(fontSize: 14, color: AppColors.colorFF7373);
+  static const TextStyle body14Regular = TextStyle(fontSize: 14, fontWeight: FontWeight.w400);
+  static const TextStyle body14Medium = TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.colorFF1717);
+  static const TextStyle body12 = TextStyle(fontSize: 12, color: AppColors.colorFF6B72);
+  static const TextStyle body12Regular = TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: AppColors.colorFF5252);
+  
+  // Aliases for backward compatibility
+  static const TextStyle title1 = headline24;
+  static const TextStyle title1Regular = headline24Regular;
+  static const TextStyle title2 = title20;
+  static const TextStyle bodyMedium = body14;
+  static const TextStyle bodySmall = body12;
+}
+
+// Keep the original class for the theme generation
 class TextStyleHelper {
   static TextStyleHelper? _instance;
 
@@ -39,18 +70,18 @@ class TextStyleHelper {
     );
   }
 
-  // Individual styles for direct usage
-  TextStyle get headline24 => TextStyle(fontSize: 24, color: AppColors.colorFF1717);
-  TextStyle get headline24Regular => TextStyle(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.colorFF1717);
-  TextStyle get title20RegularRoboto => TextStyle(fontSize: 20, fontWeight: FontWeight.w400, fontFamily: 'Roboto');
-  TextStyle get title20 => TextStyle(fontSize: 20, color: AppColors.colorFF3838);
-  TextStyle get title18Medium => TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: AppColors.colorFF1717);
-  TextStyle get title16 => TextStyle(fontSize: 16, color: AppColors.colorFF4040);
-  TextStyle get title16Medium => TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: AppColors.colorFF1717);
-  TextStyle get title16Regular => TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: AppColors.blackCustom);
-  TextStyle get body14 => TextStyle(fontSize: 14, color: AppColors.colorFF7373);
-  TextStyle get body14Regular => TextStyle(fontSize: 14, fontWeight: FontWeight.w400);
-  TextStyle get body14Medium => TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.colorFF1717);
-  TextStyle get body12 => TextStyle(fontSize: 12, color: AppColors.colorFF6B72);
-  TextStyle get body12Regular => TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: AppColors.colorFF5252);
+  // Individual styles for direct usage (kept for login screen compatibility)
+  TextStyle get headline24 => AppTextStyles.headline24;
+  TextStyle get headline24Regular => AppTextStyles.headline24Regular;
+  TextStyle get title20RegularRoboto => AppTextStyles.title20RegularRoboto;
+  TextStyle get title20 => AppTextStyles.title20;
+  TextStyle get title18Medium => AppTextStyles.title18Medium;
+  TextStyle get title16 => AppTextStyles.title16;
+  TextStyle get title16Medium => AppTextStyles.title16Medium;
+  TextStyle get title16Regular => AppTextStyles.title16Regular;
+  TextStyle get body14 => AppTextStyles.body14;
+  TextStyle get body14Regular => AppTextStyles.body14Regular;
+  TextStyle get body14Medium => AppTextStyles.body14Medium;
+  TextStyle get body12 => AppTextStyles.body12;
+  TextStyle get body12Regular => AppTextStyles.body12Regular;
 }

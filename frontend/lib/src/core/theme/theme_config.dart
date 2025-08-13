@@ -74,3 +74,12 @@ class AppTheme {
     );
   }
 }
+
+// Convenience class for accessing theme colors
+class ThemeConfig {
+  static Color get primaryColor => AppColors.colorFF007B;
+  static Color get backgroundColor => AppColors.whiteCustom;
+  static Color get textPrimaryColor => AppColors.colorFF1717;
+  static Color get textBlack3 => AppColors.colorFF5252;
+  static Color get textSecondaryColor => AppColors.colorFF7373;
+}
