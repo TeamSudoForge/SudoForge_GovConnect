@@ -41,8 +41,24 @@ export class AuthService {
   ) {}
 
   async register(registerDto: RegisterDto): Promise<AuthResponseDto> {
-    const user = await this.usersService.create(registerDto);
-    return this.generateTokens(user);
+    // Create user with email verification disabled for new users
+    const userData = { ...registerDto, isEmailVerified: false };
+    const user = await this.usersService.create(userData);
+    
+    // For new registrations, need email verification
+    return {
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role,
+      },
+      message: 'Registration successful. Please verify your email address.',
+      requiresEmailVerification: true,
+      email: user.email,
+    } as any; // AuthResponseDto needs to be updated to include these fields
   }
 
   async login(loginDto: LoginDto): Promise<AuthResponseDto> {

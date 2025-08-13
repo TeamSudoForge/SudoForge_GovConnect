@@ -35,6 +35,9 @@ export class User {
   @Column({ name: 'is_two_factor_enabled', default: false })
   isTwoFactorEnabled: boolean;
 
+  @Column({ name: 'is_email_verified', default: true })
+  isEmailVerified: boolean;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

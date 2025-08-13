@@ -22,6 +22,7 @@
     "dev:down": "docker compose -f docker-compose.dev.yml down",
     "dev:logs": "docker compose -f docker-compose.dev.yml logs -f backend",
     "dev:restart": "npm run dev:down && npm run dev:up",
+    "dev:rebuild": "npm run dev:down && docker compose -f docker-compose.dev.yml build --no-cache && npm run dev:up",
     "prod:up": "docker compose -f docker-compose.prod.yml up -d --build",
     "prod:down": "docker compose -f docker-compose.prod.yml down",
     "typeorm": "typeorm-ts-node-commonjs",

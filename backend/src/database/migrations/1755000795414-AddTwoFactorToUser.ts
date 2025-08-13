@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, TableColumn } from 'typeorm';
 
-export class AddTwoFactorToUser1692841539000 implements MigrationInterface {
+export class AddTwoFactorToUser1755000795414 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     // Check if the table exists
     const tableExists = await queryRunner.hasTable('users');

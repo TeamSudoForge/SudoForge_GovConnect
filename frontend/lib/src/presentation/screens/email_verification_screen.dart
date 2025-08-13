@@ -1,13 +1,23 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:gov_connect/src/presentation/widgets/custom_button.dart';
 import 'package:gov_connect/src/presentation/widgets/custom_image_view.dart';
-
+import '../../core/services/auth_service.dart';
 import '../../core/app_export.dart';
 
+enum VerificationType { emailVerification, twoFactorAuth }
+
 class EmailVerificationScreen extends StatefulWidget {
-  const EmailVerificationScreen({Key? key}) : super(key: key);
+  final String email;
+  final VerificationType verificationType;
+  
+  const EmailVerificationScreen({
+    Key? key,
+    required this.email,
+    this.verificationType = VerificationType.emailVerification,
+  }) : super(key: key);
 
   @override
   _EmailVerificationScreenState createState() => _EmailVerificationScreenState();
@@ -17,13 +27,30 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   final List<TextEditingController> codeControllers =
       List.generate(6, (index) => TextEditingController());
   final List<FocusNode> codeFocusNodes = List.generate(6, (index) => FocusNode());
-  final String emailAddress = 'user@example.com';
   int _resendSeconds = 45;
   Timer? _timer;
 
   String get resendTimer => _resendSeconds < 10
       ? '00:0$_resendSeconds'
       : '00:$_resendSeconds';
+
+  String get screenTitle {
+    return widget.verificationType == VerificationType.emailVerification 
+        ? 'Verify Email' 
+        : 'Two-Factor Authentication';
+  }
+
+  String get headerTitle {
+    return widget.verificationType == VerificationType.emailVerification 
+        ? 'Check Your Email' 
+        : 'Enter Security Code';
+  }
+
+  String get description {
+    return widget.verificationType == VerificationType.emailVerification 
+        ? 'We\'ve sent a verification code to your email address. Please enter the 6-digit code below to verify your account.'
+        : 'We\'ve sent a 6-digit security code to your email address for two-factor authentication.';
+  }
 
   @override
   void initState() {
@@ -73,6 +100,14 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   void _handleVerificationSubmit() {
     String code = codeControllers.map((controller) => controller.text).join('');
     if (code.length == 6) {
+      final authService = context.read<AuthService>();
+      
+      if (widget.verificationType == VerificationType.emailVerification) {
+        authService.verifyEmail(code);
+      } else {
+        authService.verify2FA(code);
+      }
+      
       print('Verification code submitted: $code');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -86,7 +121,16 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
   void _handleResendCode() {
     if (_resendSeconds == 0) {
-      print('Resend code requested');
+      final authService = context.read<AuthService>();
+      
+      if (widget.verificationType == VerificationType.emailVerification) {
+        authService.resendEmailVerificationCode();
+      } else {
+        // For 2FA, we might need a separate resend method
+        // This would need to be implemented in the backend/auth service
+        print('Resend 2FA code requested');
+      }
+      
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('Verification code has been resent to your email.'),
@@ -102,46 +146,62 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
     return Scaffold(
       backgroundColor: appTheme.whiteCustom,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            width: double.infinity,
-            constraints: BoxConstraints(maxWidth: 428),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(16),
-                  margin: EdgeInsets.only(top: 16),
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Container(
-                          width: 35,
-                          height: 35,
-                          decoration: BoxDecoration(
-                            color: appTheme.colorFFB8E3,
-                            borderRadius: BorderRadius.circular(17),
-                          ),
-                          child: Center(
-                            child: CustomImageView(
-                              height: 20,
-                              width: 20,
+        child: Consumer<AuthService>(
+          builder: (context, authService, child) {
+            // Handle navigation based on auth state
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (authService.isAuthenticated) {
+                Navigator.of(context).pushReplacementNamed('/home');
+              } else if (authService.state.status == AuthStatus.error) {
+                if (authService.state.error != null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(authService.state.error!)),
+                  );
+                  authService.clearError();
+                }
+              }
+            });
+
+            return SingleChildScrollView(
+              child: Container(
+                width: double.infinity,
+                constraints: BoxConstraints(maxWidth: 428),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(16),
+                      margin: EdgeInsets.only(top: 16),
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Container(
+                              width: 35,
+                              height: 35,
+                              decoration: BoxDecoration(
+                                color: appTheme.colorFFB8E3,
+                                borderRadius: BorderRadius.circular(17),
+                              ),
+                              child: Center(
+                                child: CustomImageView(
+                                  height: 20,
+                                  width: 20,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                          SizedBox(width: 16),
+                          Text(
+                            screenTitle,
+                            style: TextStyleHelper.instance.title20
+                                .copyWith(height: 1.2),
+                          ),
+                        ],
                       ),
-                      SizedBox(width: 16),
-                      Text(
-                        'Verify Email',
-                        style: TextStyleHelper.instance.title20
-                            .copyWith(height: 1.2),
-                      ),
-                    ],
-                  ),
-                ),
+                    ),
                 Container(
                   margin: EdgeInsets.only(top: 32),
                   child: Center(
@@ -168,7 +228,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                       Container(
                         margin: EdgeInsets.only(top: 32, bottom: 24),
                         child: Text(
-                          'Check Your Email',
+                          headerTitle,
                           style: TextStyleHelper.instance.headline24
                               .copyWith(height: 1.21),
                           textAlign: TextAlign.center,
@@ -178,7 +238,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                         margin: EdgeInsets.only(bottom: 32),
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         child: Text(
-                          'We\'ve sent a verification code to your email address. Please enter the 6-digit code below to verify your account.',
+                          description,
                           style: TextStyleHelper.instance.title16
                               .copyWith(height: 1.13),
                           textAlign: TextAlign.center,
@@ -202,7 +262,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                             ),
                             SizedBox(height: 8),
                             Text(
-                              emailAddress,
+                              widget.email,
                               style: TextStyleHelper.instance.title16Medium
                                   .copyWith(height: 1.19),
                               textAlign: TextAlign.center,
@@ -289,8 +349,10 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                             ),
                             SizedBox(height: 24),
                             CustomButton(
-                              text: 'Verify Email',
-                              onPressed: _handleVerificationSubmit,
+                              text: widget.verificationType == VerificationType.emailVerification 
+                                  ? 'Verify Email' 
+                                  : 'Verify Code',
+                              onPressed: authService.isLoading ? null : _handleVerificationSubmit,
                               isFullWidth: true,
                               height: 48,
                               backgroundColor: appTheme.colorFF007B,
@@ -341,8 +403,9 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               ],
             ),
           ),
-        ),
-      ),
+        );
+      },
+    ),
     );
   }
 }
