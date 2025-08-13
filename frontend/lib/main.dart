@@ -8,6 +8,7 @@ import 'src/presentation/screens/two_factor_verification_screen.dart';
 import 'src/presentation/screens/app_navigation_screen.dart';
 import 'src/core/theme/theme_config.dart';
 import 'src/injection.dart';
+import 'src/presentation/widgets/common_app_bar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -78,7 +79,12 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('GovConnect Home')),
+      appBar: CommonAppBar(
+        title: 'GovConnect Home',
+        showBackButton: false,
+        showNotifications: true,
+        showProfile: true,
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
