@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:remixicon/remixicon.dart';
 import '../../core/app_export.dart';
+import '../../core/providers/auth_provider.dart';
 import '../../core/theme/text_style_helper.dart';
 import '../../core/theme/theme_config.dart';
 import '../widgets/custom_button.dart';
@@ -295,10 +296,16 @@ class _LoginScreenState extends State<LoginScreen> {
               if (authService.state.status == AuthStatus.authenticated) {
                 Navigator.of(context).pushReplacementNamed('/home');
               } else if (authService.state.status == AuthStatus.requires2FA) {
+                // Store email in AuthProvider before navigation
+                context.read<AuthProvider>().setEmail(authService.state.email);
                 Navigator.of(context).pushNamed(
                   TwoFactorVerificationScreen.routeName,
                   arguments: {'email': authService.state.email},
                 );
+              } else if (authService.state.status == AuthStatus.requiresEmailVerification) {
+                // Store email in AuthProvider before navigation
+                context.read<AuthProvider>().setEmail(emailController.text.trim());
+                Navigator.of(context).pushNamed('/email-verification');
               } else if (authService.state.status == AuthStatus.error) {
                 final currentError = authService.state.error;
                 if (currentError != null && currentError != _lastError) {

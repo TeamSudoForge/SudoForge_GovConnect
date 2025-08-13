@@ -5,17 +5,16 @@ import 'package:provider/provider.dart';
 import 'package:gov_connect/src/presentation/widgets/custom_button.dart';
 import 'package:gov_connect/src/presentation/widgets/custom_image_view.dart';
 import '../../core/services/auth_service.dart';
+import '../../core/providers/auth_provider.dart';
 import '../../core/app_export.dart';
 
 enum VerificationType { emailVerification, twoFactorAuth }
 
 class EmailVerificationScreen extends StatefulWidget {
-  final String email;
   final VerificationType verificationType;
   
   const EmailVerificationScreen({
     Key? key,
-    required this.email,
     this.verificationType = VerificationType.emailVerification,
   }) : super(key: key);
 
@@ -143,65 +142,66 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = context.watch<AuthService>();
+    final email = context.watch<AuthProvider>().email;
+
+    // Handle navigation based on auth state
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (authService.isAuthenticated) {
+        Navigator.of(context).pushReplacementNamed('/home');
+      } else if (authService.state.status == AuthStatus.error) {
+        if (authService.state.error != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(authService.state.error!)),
+          );
+          authService.clearError();
+        }
+      }
+    });
+
     return Scaffold(
       backgroundColor: appTheme.whiteCustom,
       body: SafeArea(
-        child: Consumer<AuthService>(
-          builder: (context, authService, child) {
-            // Handle navigation based on auth state
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (authService.isAuthenticated) {
-                Navigator.of(context).pushReplacementNamed('/home');
-              } else if (authService.state.status == AuthStatus.error) {
-                if (authService.state.error != null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(authService.state.error!)),
-                  );
-                  authService.clearError();
-                }
-              }
-            });
-
-            return SingleChildScrollView(
-              child: Container(
-                width: double.infinity,
-                constraints: BoxConstraints(maxWidth: 428),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(16),
-                      margin: EdgeInsets.only(top: 16),
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Container(
-                              width: 35,
-                              height: 35,
-                              decoration: BoxDecoration(
-                                color: appTheme.colorFFB8E3,
-                                borderRadius: BorderRadius.circular(17),
-                              ),
-                              child: Center(
-                                child: CustomImageView(
-                                  height: 20,
-                                  width: 20,
-                                ),
-                              ),
+        child: SingleChildScrollView(
+          child: Container(
+            width: double.infinity,
+            constraints: BoxConstraints(maxWidth: 428),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(16),
+                  margin: EdgeInsets.only(top: 16),
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          width: 35,
+                          height: 35,
+                          decoration: BoxDecoration(
+                            color: appTheme.colorFFB8E3,
+                            borderRadius: BorderRadius.circular(17),
+                          ),
+                          child: Center(
+                            child: CustomImageView(
+                              height: 20,
+                              width: 20,
                             ),
                           ),
-                          SizedBox(width: 16),
-                          Text(
-                            screenTitle,
-                            style: TextStyleHelper.instance.title20
-                                .copyWith(height: 1.2),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+                      SizedBox(width: 16),
+                      Text(
+                        screenTitle,
+                        style: TextStyleHelper.instance.title20
+                            .copyWith(height: 1.2),
+                      ),
+                    ],
+                  ),
+                ),
                 Container(
                   margin: EdgeInsets.only(top: 32),
                   child: Center(
@@ -262,7 +262,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                             ),
                             SizedBox(height: 8),
                             Text(
-                              widget.email,
+                              email ?? 'No email provided',
                               style: TextStyleHelper.instance.title16Medium
                                   .copyWith(height: 1.19),
                               textAlign: TextAlign.center,
@@ -403,9 +403,8 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               ],
             ),
           ),
-        );
-      },
-    ),
+        ),
+      ),
     );
   }
 }
