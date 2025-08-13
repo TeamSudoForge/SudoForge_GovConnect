@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:remixicon/remixicon.dart';
 import '../../core/app_export.dart';
 import '../../core/theme/text_style_helper.dart';
@@ -6,11 +7,13 @@ import '../../core/theme/theme_config.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/email_field.dart';
 import '../widgets/password_field.dart';
+import 'two_factor_verification_screen.dart';
 
 // --- Add FirstNameField, LastNameField, ConfirmPasswordField widgets inline for now ---
 class FirstNameField extends StatelessWidget {
   final TextEditingController controller;
   final TextStyleHelper styles;
+  static const String routeName = '/signInSignUpPage';
   const FirstNameField({Key? key, required this.controller, required this.styles}) : super(key: key);
 
   @override
@@ -131,6 +134,7 @@ class ConfirmPasswordField extends StatelessWidget {
 }
 
 class LoginScreen extends StatefulWidget {
+  static const String routeName = '/login';
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
@@ -149,6 +153,9 @@ class _LoginScreenState extends State<LoginScreen> {
   bool rememberMe = false;
   bool isSignInSelected = true;
   bool signUpStepOne = true; // true: name/email, false: password step
+
+  // Add error handling flag
+  String? _lastError;
 
   @override
   void dispose() {
@@ -186,17 +193,86 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _login() {
-    // TODO: Call domain usecase for login
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Logging in...')),
+    // Basic validation
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all fields')),
+      );
+      return;
+    }
+
+    // Email validation
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (!emailRegex.hasMatch(emailController.text.trim())) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a valid email address')),
+      );
+      return;
+    }
+
+    context.read<AuthService>().login(
+      email: emailController.text.trim(),
+      password: passwordController.text,
+      rememberMe: rememberMe,
     );
   }
 
   void _signup() {
-    // TODO: Call domain usecase for signup
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Signing up...')),
-    );
+    if (signUpStepOne) {
+      // Validate step one fields
+      if (firstNameController.text.trim().isEmpty || 
+          lastNameController.text.trim().isEmpty || 
+          emailController.text.trim().isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please fill in all fields')),
+        );
+        return;
+      }
+
+      // Email validation
+      final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+      if (!emailRegex.hasMatch(emailController.text.trim())) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please enter a valid email address')),
+        );
+        return;
+      }
+
+      // Proceed to next step
+      _nextSignUpStep();
+    } else {
+      // Validate step two fields
+      if (passwordController.text.isEmpty || confirmPasswordController.text.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please fill in all fields')),
+        );
+        return;
+      }
+
+      // Password strength validation
+      if (passwordController.text.length < 8) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Password must be at least 8 characters long')),
+        );
+        return;
+      }
+
+      if (passwordController.text != confirmPasswordController.text) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Passwords do not match')),
+        );
+        return;
+      }
+
+      // Perform registration
+      context.read<AuthService>().register(
+        email: emailController.text.trim(),
+        password: passwordController.text,
+        firstName: firstNameController.text.trim(),
+        lastName: lastNameController.text.trim(),
+        username: emailController.text.split('@')[0], // Use email prefix as username
+      );
+    }
   }
 
   void _nextSignUpStep() {
@@ -212,34 +288,58 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: AppColors.whiteCustom,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            constraints: const BoxConstraints(maxWidth: 400),
-            child: Column(
-              children: [
-                const SizedBox(height: 56),
-                // Government Icon (removed image)
-                Container(
-                  height: 64,
-                  width: 64,
-                  decoration: BoxDecoration(
-                    color: AppColors.colorFF0062,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Center(
-                    child: SizedBox.shrink(), // No image
-                  ),
+        child: Consumer<AuthService>(
+          builder: (context, authService, child) {
+            // Handle navigation based on auth state
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (authService.state.status == AuthStatus.authenticated) {
+                Navigator.of(context).pushReplacementNamed('/home');
+              } else if (authService.state.status == AuthStatus.requires2FA) {
+                Navigator.of(context).pushNamed(
+                  TwoFactorVerificationScreen.routeName,
+                  arguments: {'email': authService.state.email},
+                );
+              } else if (authService.state.status == AuthStatus.error) {
+                final currentError = authService.state.error;
+                if (currentError != null && currentError != _lastError) {
+                  _lastError = currentError;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(currentError)),
+                  );
+                }
+              }
+            });
+
+            return SingleChildScrollView(
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 56),
+                    // Government Icon (removed image)
+                    Container(
+                      height: 64,
+                      width: 64,
+                      decoration: BoxDecoration(
+                        color: AppColors.colorFF0062,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Center(
+                        child: SizedBox.shrink(), // No image
+                      ),
+                    ),
+                    _buildWelcomeHeader(styles),
+                    _buildSignInSignUpToggle(styles),
+                    isSignInSelected
+                        ? _buildLoginForm(styles, authService.isLoading)
+                        : _buildSignupForm(styles, authService.isLoading),
+                    _buildSecurityInformation(styles), // Always show this
+                  ],
                 ),
-                _buildWelcomeHeader(styles),
-                _buildSignInSignUpToggle(styles),
-                isSignInSelected
-                    ? _buildLoginForm(styles)
-                    : _buildSignupForm(styles),
-                _buildSecurityInformation(styles), // Always show this
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -368,7 +468,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildLoginForm(TextStyleHelper styles) {
+  Widget _buildLoginForm(TextStyleHelper styles, bool isLoading) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -389,6 +489,7 @@ class _LoginScreenState extends State<LoginScreen> {
             onPressed: _login,
             isFullWidth: true,
             height: 44,
+            isLoading: isLoading,
           ),
           const SizedBox(height: 24),
           _buildSeparator(styles),
@@ -454,7 +555,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildSignupForm(TextStyleHelper styles) {
+  Widget _buildSignupForm(TextStyleHelper styles, bool isLoading) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       child: signUpStepOne
@@ -468,7 +569,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 16),
                 CustomButton(
                   text: 'Next',
-                  onPressed: _nextSignUpStep,
+                  onPressed: () => _signup(),
                   isFullWidth: true,
                   height: 44,
                 ),
@@ -495,6 +596,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: _signup,
                   isFullWidth: true,
                   height: 44,
+                  isLoading: isLoading,
                 ),
               ],
             ),
