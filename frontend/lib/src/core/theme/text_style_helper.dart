@@ -26,6 +26,18 @@ class TextStyleHelper {
     color: appTheme.colorFF1717,
   );
 
+  TextStyle get headline20Regular => TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.w400,
+    color: appTheme.colorFF1717,
+  );
+
+  TextStyle get headline18Regular => TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w400,
+    color: appTheme.colorFF1717,
+  );
+
   // Title Styles
   // Medium text styles for titles and subtitles
 
@@ -91,6 +103,18 @@ class TextStyleHelper {
     fontSize: 12,
     fontWeight: FontWeight.w400,
     color: appTheme.colorFF5252,
+  );
+
+  TextStyle get body16Regular => TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    color: appTheme.colorFF1717,
+  );
+
+  TextStyle get body16Medium => TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+    color: appTheme.colorFF1717,
   );
 
   TextTheme textTheme([double scale = 1.0]) => TextTheme(
