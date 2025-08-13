@@ -48,6 +48,15 @@ services:
       MAIL_HOST: mail-dev
       MAIL_PORT: 1025
       MAIL_FROM: noreply@govconnect.com
+      # Storage
+      STORAGE_DRIVER: minio
+      MINIO_ENDPOINT: file-storage
+      MINIO_PORT: 9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin123
+      MINIO_USE_SSL: 'false'
+      MINIO_BUCKET: uploads
+      MINIO_PUBLIC_URL: http://localhost:9000
     ports:
       - "3000:3000"
     volumes:

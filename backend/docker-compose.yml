@@ -41,6 +41,15 @@ services:
       RP_NAME: GovConnect
       RP_ID: localhost
       ORIGIN: http://localhost:3000
+      # Storage
+      STORAGE_DRIVER: minio
+      MINIO_ENDPOINT: file-storage
+      MINIO_PORT: 9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin123
+      MINIO_USE_SSL: 'false'
+      MINIO_BUCKET: uploads
+      MINIO_PUBLIC_URL: http://localhost:9000
     ports:
       - "3000:3000"
     depends_on:

@@ -12,6 +12,7 @@ import { User } from './database/entities/user.entity';
 import { AuthSession } from './database/entities/auth-session.entity';
 import { Passkey } from './database/entities/passkey.entity';
 import { TwoFactorCode } from './modules/auth/two-factor/entities/two-factor-code.entity';
+import { StorageModule } from './modules/storage/storage.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { TwoFactorCode } from './modules/auth/two-factor/entities/two-factor-cod
     AuthModule,
     UsersModule,
     HealthModule,
+    StorageModule,
   ],
   controllers: [AppController],
   providers: [AppService],
