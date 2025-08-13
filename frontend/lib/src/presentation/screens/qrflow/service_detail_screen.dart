@@ -54,7 +54,7 @@ class ServiceDetailScreen extends StatelessWidget {
               height: 200,
               width: double.infinity,
               child: Image.asset(
-                'assets/idservice.jpg',
+                'assets/qrflow_images/idservice.jpg',
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(

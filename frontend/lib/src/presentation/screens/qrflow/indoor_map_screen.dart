@@ -18,13 +18,17 @@ class IndoorMapScreen extends StatefulWidget {
 }
 
 class _IndoorMapScreenState extends State<IndoorMapScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _pathAnimation;
+  late AnimationController _tokenAnimationController;
+  late Animation<double> _tokenFadeAnimation;
+  late Animation<Offset> _tokenSlideAnimation;
   bool _navigationStarted = false;
   int _currentStage = 0; // 0: start, 1: waiting, 2: counter1, 3: counter2, 4: done
   bool _showNotification = false;
   String _notificationMessage = '';
+  bool _showTokenMessage = false;
 
   @override
   void initState() {
@@ -41,6 +45,28 @@ class _IndoorMapScreenState extends State<IndoorMapScreen>
       curve: Curves.easeInOut,
     ));
     
+    // Initialize token animation controller
+    _tokenAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    
+    _tokenFadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _tokenAnimationController,
+      curve: Curves.easeIn,
+    ));
+    
+    _tokenSlideAnimation = Tween<Offset>(
+      begin: const Offset(0.0, 0.3),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _tokenAnimationController,
+      curve: Curves.easeOutCubic,
+    ));
+    
     // Listen to animation status
     _animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -51,7 +77,17 @@ class _IndoorMapScreenState extends State<IndoorMapScreen>
   
   void _handleAnimationComplete() {
     if (_currentStage == 1 && mounted) {
-      // Arrived at waiting area, start waiting timer
+      // Arrived at waiting area, show token message after delay
+      Future.delayed(Duration(seconds: 1), () {
+        if (mounted && _currentStage == 1) {
+          setState(() {
+            _showTokenMessage = true;
+          });
+          _tokenAnimationController.forward();
+        }
+      });
+      
+      // Then show notification after longer delay
       Future.delayed(Duration(seconds: 5), () {
         if (mounted && _currentStage == 1) {
           setState(() {
@@ -66,6 +102,7 @@ class _IndoorMapScreenState extends State<IndoorMapScreen>
   @override
   void dispose() {
     _animationController.dispose();
+    _tokenAnimationController.dispose();
     super.dispose();
   }
 
@@ -394,43 +431,95 @@ class _IndoorMapScreenState extends State<IndoorMapScreen>
                 ),
                 // Show document reminder while waiting
                 if (_currentStage == 1 && _pathAnimation.value == 1)
-                  Container(
-                    margin: EdgeInsets.only(top: 16),
-                    padding: EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.amber[50],
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.amber[300]!),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.info_outline, color: Colors.amber[700], size: 20),
-                        SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Required Documents:',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.amber[900],
-                                  fontSize: 13,
-                                ),
+                  Column(
+                    children: [
+                      // Required Documents section (shows immediately)
+                      Container(
+                        margin: EdgeInsets.only(top: 16),
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.blue[50],
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.blue[300]!),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.assignment, color: Colors.blue[700], size: 20),
+                            SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Required Documents:',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue[900],
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    '• Birth Certificate\n• Proof of Address\n• 2 Passport Photos',
+                                    style: TextStyle(
+                                      color: Colors.blue[800],
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              SizedBox(height: 4),
-                              Text(
-                                '• Birth Certificate\n• Proof of Address\n• 2 Passport Photos',
-                                style: TextStyle(
-                                  color: Colors.amber[800],
-                                  fontSize: 12,
-                                ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Token message (shows with animation after delay)
+                      if (_showTokenMessage)
+                        FadeTransition(
+                          opacity: _tokenFadeAnimation,
+                          child: SlideTransition(
+                            position: _tokenSlideAnimation,
+                            child: Container(
+                              margin: EdgeInsets.only(top: 12),
+                              padding: EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.green[50],
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Colors.green[300]!),
                               ),
-                            ],
+                              child: Row(
+                                children: [
+                                  Icon(Icons.confirmation_number, color: Colors.green[700], size: 20),
+                                  SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Your Token Number',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.green[900],
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                        SizedBox(height: 4),
+                                        Text(
+                                          'A-247',
+                                          style: TextStyle(
+                                            color: Colors.green[800],
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
-                      ],
-                    ),
+                    ],
                   ),
               ],
             ),

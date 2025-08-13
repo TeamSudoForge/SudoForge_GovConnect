@@ -51,7 +51,7 @@ class DepartmentsScreen extends StatelessWidget {
                     width: double.infinity,
                     height: double.infinity,
                     child: Image.asset(
-                      'assets/departmentimg.jpg',
+                      'assets/qrflow_images/departmentimg.jpg',
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -139,7 +139,7 @@ class DepartmentsScreen extends StatelessWidget {
                     children: [
                       _buildServiceCard(
                         context,
-                        iconPath: 'assets/baby.png',
+                        iconPath: 'assets/icons_imported/baby.png',
                         title: 'Birth Certificate',
                         subtitle: 'Register new birth',
                         color: const Color(0xFFFCE4EC),

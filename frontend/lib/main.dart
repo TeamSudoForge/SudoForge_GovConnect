@@ -54,14 +54,8 @@ class GovConnectApp extends StatelessWidget {
   }
 
   String _getInitialRoute(AuthStatus status) {
-    switch (status) {
-      case AuthStatus.authenticated:
-        return '/home';
-      case AuthStatus.requires2FA:
-        return TwoFactorVerificationScreen.routeName;
-      default:
-        return LoginScreen.routeName;
-    }
+    // Always go to home screen on app start
+    return '/home';
   }
 
   Map<String, WidgetBuilder> _getRoutes() {
