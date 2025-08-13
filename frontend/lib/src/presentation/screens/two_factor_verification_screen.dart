@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/app_export.dart';
-import '../../core/theme/text_style_helper.dart';
 import '../../core/theme/theme_config.dart';
 import '../widgets/custom_button.dart';
 
@@ -160,7 +159,7 @@ class _TwoFactorVerificationScreenState extends State<TwoFactorVerificationScree
             textAlign: TextAlign.center,
             keyboardType: TextInputType.number,
             maxLength: 1,
-            style: styles.headline20Regular.copyWith(
+            style: styles.title20.copyWith(
               color: AppColors.colorFF0062,
             ),
             decoration: InputDecoration(

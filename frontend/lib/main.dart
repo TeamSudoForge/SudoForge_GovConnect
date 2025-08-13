@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:gov_connect/src/core/app_export.dart';
 import 'package:gov_connect/src/presentation/screens/email_verification_screen.dart';
 import 'src/presentation/screens/login_screen.dart';
+import 'src/presentation/screens/qrflow/qr_scan_screen.dart';
 import 'src/presentation/screens/home_screen.dart';
 import 'src/presentation/screens/two_factor_verification_screen.dart';
 import 'src/presentation/screens/app_navigation_screen.dart';
@@ -12,10 +13,10 @@ import 'src/presentation/widgets/common_app_bar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize services
   await initializeServices();
-  
+
   runApp(const GovConnectApp());
 }
 
@@ -88,7 +89,16 @@ class HomePage extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const QrScanScreen()),
+                );
+              },
+              child: const Text('QR Flow'),
+            ),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).push(
