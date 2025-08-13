@@ -35,7 +35,10 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
     }
 
     void defaultProfileNav() {
-      // TODO add after adding the profile page
+      final current = ModalRoute.of(context)?.settings.name;
+      if (current != AppRoutes.userProfileScreen) {
+        Navigator.of(context).pushNamed(AppRoutes.userProfileScreen);
+      }
     }
 
     return AppBar(

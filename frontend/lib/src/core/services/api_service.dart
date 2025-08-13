@@ -1,15 +1,20 @@
 import 'package:dio/dio.dart';
 import '../models/auth_models.dart';
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 class ApiService {
   static String get baseUrl {
-    // When running on Android emulator, localhost needs to be changed to 10.0.2.2
-    if (Platform.isAndroid) {
-      return 'http://10.0.2.2:3000';
+    // Use different baseUrls for web, Android, and others
+    if (kIsWeb) {
+      return 'http://localhost:3000';
     }
-    // For iOS simulator or physical devices, you might need to use your machine's IP address
-    return 'http://localhost:3000';
+    // For mobile platforms, use defaultTargetPlatform
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.android:
+        return 'http://10.0.2.2:3000';
+      default:
+        return 'http://localhost:3000';
+    }
   }
 
   late final Dio _dio;

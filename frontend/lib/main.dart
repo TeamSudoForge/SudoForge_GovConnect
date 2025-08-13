@@ -69,6 +69,7 @@ class GovConnectApp extends StatelessWidget {
       '/login': (context) => const LoginScreen(),
       '/home': (context) => const HomeScreen(),
       '/email-verification': (context) => const EmailVerificationScreen(),
+      '/userProfile': (context) => const UserProfileScreen(),
     };
   }
 }
