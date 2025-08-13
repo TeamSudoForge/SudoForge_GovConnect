@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../../core/theme/theme_config.dart';
+import '../../core/app_export.dart';
 
 
 
