@@ -24,14 +24,10 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
   @override
   void initState() {
     super.initState();
-    
+
     // Initialize locations list
-    locations = [
-      'Battaramulla Office',
-      'Colombo Office', 
-      'Kandy Office',
-    ];
-    
+    locations = ['Battaramulla Office', 'Colombo Office', 'Kandy Office'];
+
     // Initialize with current appointment data
     // Check if the appointment location exists in our locations list
     String appointmentLocation = widget.appointment.location.name;
@@ -40,7 +36,7 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
       locations.add(appointmentLocation);
     }
     selectedLocation = appointmentLocation;
-    
+
     // Parse the current appointment date if needed
     // For now, keeping the current implementation
   }
@@ -144,7 +140,9 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
             Text('Service Locations', style: styles.title18Medium),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
-              value: locations.contains(selectedLocation) ? selectedLocation : locations.first,
+              value: locations.contains(selectedLocation)
+                  ? selectedLocation
+                  : locations.first,
               items: locations
                   .map(
                     (location) => DropdownMenuItem(
