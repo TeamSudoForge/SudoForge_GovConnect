@@ -6,7 +6,7 @@ import '../../presentation/screens/home_screen.dart';
 import '../../presentation/screens/email_verification_screen.dart';
 import '../../presentation/screens/two_factor_verification_screen.dart';
 import '../../presentation/screens/app_navigation_screen.dart';
-import '../../presentation/screens/id_card_renewal_screen.dart';
+import '../../presentation/screens/appointment_details.dart';
 import '../../presentation/screens/appointment_update_screen.dart';
 import '../../presentation/screens/notifications_screen.dart';
 
@@ -85,11 +85,10 @@ class AppRouter {
           ],
         ),
 
-        // Service Routes
         GoRoute(
-          path: '/id-card-renewal',
-          name: 'id-card-renewal',
-          builder: (context, state) => const IdCardRenewalScreen(),
+          path: '/appointment-details',
+          name: 'appointment-details',
+          builder: (context, state) => const AppointmentDetailsScreen(),
         ),
         GoRoute(
           path: '/appointment-update',
@@ -112,7 +111,8 @@ class AppRoutes {
   static const String home = '/home';
   static const String notifications = '/home/notifications';
   static const String appNavigation = '/home/app-navigation';
-  static const String idCardRenewal = '/id-card-renewal';
+  // static const String idCardRenewal = '/id-card-renewal'; // TODO: Uncomment when screen is created
+  static const String appointmentDetails = '/appointment-details';
   static const String appointmentUpdate = '/appointment-update';
 }
 
@@ -123,6 +123,8 @@ extension GoRouterExtension on GoRouter {
   void pushHome() => pushNamed('home');
 
   void pushNotifications() => pushNamed('notifications');
+
+  void pushAppointmentDetails() => pushNamed('appointment-details');
 
   void pushTwoFactorVerification(String email) =>
       pushNamed('two-factor-verification', queryParameters: {'email': email});

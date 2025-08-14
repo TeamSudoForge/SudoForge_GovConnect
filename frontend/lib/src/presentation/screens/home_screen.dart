@@ -52,9 +52,9 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(height: 24),
                 // Button to navigate to app navigation screen
                 CustomButton(
-                  text: 'id card renewal',
+                  text: 'appointment details',
                   onPressed: () {
-                    context.pushNamed('id-card-renewal');
+                    context.pushNamed('appointment-details');
                   },
                   backgroundColor: AppColors.colorFF007B,
                 ),

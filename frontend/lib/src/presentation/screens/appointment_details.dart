@@ -6,18 +6,19 @@ import 'package:url_launcher/url_launcher.dart';
 import '../widgets/common_app_bar.dart';
 import '../../core/models/appointment_models.dart';
 
-class IdCardRenewalScreen extends StatefulWidget {
-  static const String routeName = '/id-card-renewal';
+class AppointmentDetailsScreen extends StatefulWidget {
+  static const String routeName = '/appointment-details';
 
-  const IdCardRenewalScreen({super.key});
+  const AppointmentDetailsScreen({super.key});
 
   @override
-  State<IdCardRenewalScreen> createState() => _IdCardRenewalScreenState();
+  State<AppointmentDetailsScreen> createState() =>
+      _AppointmentDetailsScreenState();
 }
 
-class _IdCardRenewalScreenState extends State<IdCardRenewalScreen> {
+class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
   // Sample appointment data
-  final AppointmentDetails appointment = sampleAppointment;
+  final AppointmentDetails appointmentData = sampleAppointment;
 
   // Map controller for flutter_map
   final MapController _mapController = MapController();
@@ -62,7 +63,7 @@ class _IdCardRenewalScreenState extends State<IdCardRenewalScreen> {
                     children: [
                       // Title section
                       Text(
-                        appointment.serviceTitle,
+                        appointmentData.serviceTitle,
                         style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w600,
@@ -80,7 +81,7 @@ class _IdCardRenewalScreenState extends State<IdCardRenewalScreen> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                appointment.date,
+                                appointmentData.date,
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.grey.shade600,
@@ -97,7 +98,7 @@ class _IdCardRenewalScreenState extends State<IdCardRenewalScreen> {
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    appointment.time,
+                                    appointmentData.time,
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Theme.of(context).primaryColor,
@@ -118,7 +119,7 @@ class _IdCardRenewalScreenState extends State<IdCardRenewalScreen> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      appointment.department,
+                      appointmentData.department,
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey.shade600,
@@ -163,7 +164,7 @@ class _IdCardRenewalScreenState extends State<IdCardRenewalScreen> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    appointment.serviceDescription,
+                    appointmentData.serviceDescription,
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey.shade700,
@@ -188,7 +189,7 @@ class _IdCardRenewalScreenState extends State<IdCardRenewalScreen> {
 
                   // Documents List
                   Column(
-                    children: appointment.requiredDocuments
+                    children: appointmentData.requiredDocuments
                         .map((doc) => _buildDocumentItem(doc))
                         .toList(),
                   ),
@@ -247,8 +248,8 @@ class _IdCardRenewalScreenState extends State<IdCardRenewalScreen> {
                             mapController: _mapController,
                             options: MapOptions(
                               initialCenter: LatLng(
-                                appointment.location.latitude,
-                                appointment.location.longitude,
+                                appointmentData.location.latitude,
+                                appointmentData.location.longitude,
                               ),
                               initialZoom: 14.0,
                               interactionOptions: const InteractionOptions(
@@ -266,8 +267,8 @@ class _IdCardRenewalScreenState extends State<IdCardRenewalScreen> {
                                 markers: [
                                   Marker(
                                     point: LatLng(
-                                      appointment.location.latitude,
-                                      appointment.location.longitude,
+                                      appointmentData.location.latitude,
+                                      appointmentData.location.longitude,
                                     ),
                                     width: 40,
                                     height: 40,
@@ -427,9 +428,10 @@ class _IdCardRenewalScreenState extends State<IdCardRenewalScreen> {
                       ),
                       const SizedBox(width: 16),
                       GestureDetector(
-                        onTap: () => _launchPhone(appointment.location.phone),
+                        onTap: () =>
+                            _launchPhone(appointmentData.location.phone),
                         child: Text(
-                          appointment.location.phone,
+                          appointmentData.location.phone,
                           style: TextStyle(
                             fontSize: 14,
                             color: Theme.of(context).primaryColor,
@@ -455,9 +457,10 @@ class _IdCardRenewalScreenState extends State<IdCardRenewalScreen> {
                       ),
                       const SizedBox(width: 24),
                       GestureDetector(
-                        onTap: () => _launchEmail(appointment.location.email),
+                        onTap: () =>
+                            _launchEmail(appointmentData.location.email),
                         child: Text(
-                          appointment.location.email,
+                          appointmentData.location.email,
                           style: TextStyle(
                             fontSize: 14,
                             color: Theme.of(context).primaryColor,
@@ -481,7 +484,7 @@ class _IdCardRenewalScreenState extends State<IdCardRenewalScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    appointment.location.address,
+                    appointmentData.location.address,
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey.shade700,
@@ -523,8 +526,9 @@ class _IdCardRenewalScreenState extends State<IdCardRenewalScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            AppointmentUpdateScreen(appointment: appointment),
+                        builder: (context) => AppointmentUpdateScreen(
+                          appointment: appointmentData,
+                        ),
                       ),
                     );
                   },
