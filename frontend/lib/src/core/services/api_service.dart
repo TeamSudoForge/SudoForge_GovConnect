@@ -6,7 +6,10 @@ class ApiService {
   static String get baseUrl {
     // When running on Android emulator, localhost needs to be changed to 10.0.2.2
     if (Platform.isAndroid) {
+      // if using Android emulator
       return 'http://10.0.2.2:3000';
+      // if using real Android device
+      // return "http://192.168.96.103:3000";
     }
     // For iOS simulator or physical devices, you might need to use your machine's IP address
     return 'http://localhost:3000';
@@ -20,9 +23,7 @@ class ApiService {
         baseUrl: baseUrl,
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json'},
       ),
     );
 
@@ -58,7 +59,10 @@ class ApiService {
 
   Future<AuthResponse> register(RegisterRequest request) async {
     try {
-      final response = await _dio.post('/auth/register', data: request.toJson());
+      final response = await _dio.post(
+        '/auth/register',
+        data: request.toJson(),
+      );
       return AuthResponse.fromJson(response.data);
     } on DioException catch (e) {
       throw _handleDioError(e);
@@ -67,7 +71,10 @@ class ApiService {
 
   Future<AuthResponse> verify2FA(Verify2FARequest request) async {
     try {
-      final response = await _dio.post('/auth/verify-2fa', data: request.toJson());
+      final response = await _dio.post(
+        '/auth/verify-2fa',
+        data: request.toJson(),
+      );
       return AuthResponse.fromJson(response.data);
     } on DioException catch (e) {
       throw _handleDioError(e);
@@ -109,17 +116,23 @@ class ApiService {
   }
 
   // Passkey endpoints
-  Future<Map<String, dynamic>> beginPasskeyRegistration(String displayName) async {
+  Future<Map<String, dynamic>> beginPasskeyRegistration(
+    String displayName,
+  ) async {
     try {
-      final response = await _dio.post('/auth/passkey/register/begin', 
-        data: {'displayName': displayName});
+      final response = await _dio.post(
+        '/auth/passkey/register/begin',
+        data: {'displayName': displayName},
+      );
       return response.data;
     } on DioException catch (e) {
       throw _handleDioError(e);
     }
   }
 
-  Future<void> completePasskeyRegistration(Map<String, dynamic> credential) async {
+  Future<void> completePasskeyRegistration(
+    Map<String, dynamic> credential,
+  ) async {
     try {
       await _dio.post('/auth/passkey/register/complete', data: credential);
     } on DioException catch (e) {
@@ -136,9 +149,14 @@ class ApiService {
     }
   }
 
-  Future<AuthResponse> completePasskeyAuthentication(Map<String, dynamic> credential) async {
+  Future<AuthResponse> completePasskeyAuthentication(
+    Map<String, dynamic> credential,
+  ) async {
     try {
-      final response = await _dio.post('/auth/passkey/authenticate/complete', data: credential);
+      final response = await _dio.post(
+        '/auth/passkey/authenticate/complete',
+        data: credential,
+      );
       return AuthResponse.fromJson(response.data);
     } on DioException catch (e) {
       throw _handleDioError(e);

@@ -54,7 +54,7 @@ final sampleAppointment = AppointmentDetails(
         'Department for Registrations of Persons\n10th Floor\nSuhurupaya\nSri Subhuthipura Road\nBattaramulla.',
     phone: '045 6016098',
     email: 'info@drp.lk',
-    latitude: 33.5186,
-    longitude: -86.8104,
+    latitude: 6.822165,
+    longitude: 79.875634,
   ),
 );
