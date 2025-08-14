@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, TableColumn } from 'typeorm';
 
-export class MakePasskeyPublicKeyRequired1692841540003 implements MigrationInterface {
+export class MakePasskeyPublicKeyRequired1755000883253 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     // First, ensure any existing rows have a default value for public_key
     await queryRunner.query(`
