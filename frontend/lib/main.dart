@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:gov_connect/src/core/app_export.dart';
-import 'package:gov_connect/src/presentation/screens/email_verification_screen.dart';
-import 'src/presentation/screens/login_screen.dart';
-import 'src/presentation/screens/qrflow/qr_scan_screen.dart';
-import 'src/presentation/screens/home_screen.dart';
-import 'src/presentation/screens/two_factor_verification_screen.dart';
-import 'src/presentation/screens/app_navigation_screen.dart';
 import 'src/core/theme/theme_config.dart';
 import 'src/injection.dart';
 import 'src/core/routes/app_router.dart';
@@ -25,17 +19,18 @@ class GovConnectApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double fontScale = 1.0;
     return MultiProvider(
       providers: providers,
-      child: Consumer<AuthService>(
-        builder: (context, authService, child) {
+      child: Consumer2<AuthService, SettingsService>(
+        builder: (context, authService, settingsService, child) {
+          final fontScale = settingsService.currentFontScale;
           final router = AppRouter.createRouter(authService);
 
           return MaterialApp.router(
             title: 'GovConnect',
             theme: AppTheme.lightTheme(fontScale),
             darkTheme: AppTheme.darkTheme(fontScale),
+            themeMode: settingsService.settings.materialThemeMode,
             routerConfig: router,
           );
         },

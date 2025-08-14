@@ -6,11 +6,13 @@ export 'utils/size_utils.dart';
 
 // Models
 export 'models/auth_models.dart';
+export 'models/settings_models.dart';
 
 // Services
 export 'services/auth_service.dart';
 export 'services/api_service.dart';
 export 'services/storage_service.dart';
+export 'services/settings_service.dart';
 
 // Storage
 export 'storage_keys.dart';
