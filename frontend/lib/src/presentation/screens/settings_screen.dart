@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/app_export.dart';
-import '../../core/theme/theme_config.dart';
 import '../../core/models/settings_models.dart';
 import '../../core/services/settings_service.dart';
 
@@ -10,27 +9,22 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: AppColors.colorFF007B,
+        backgroundColor: theme.primaryColor,
         elevation: 0,
         leading: IconButton(
-          icon: const CircleAvatar(
+          icon: CircleAvatar(
             backgroundColor: Colors.white,
             radius: 18,
-            child: Icon(Icons.arrow_back, color: Color(0xFF007BCE), size: 20),
+            child: Icon(Icons.arrow_back, color: theme.primaryColor, size: 20),
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text(
-          'Settings',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        title: Text('Settings', style: theme.appBarTheme.titleTextStyle),
         centerTitle: true,
         actions: [
           IconButton(
@@ -42,7 +36,7 @@ class SettingsScreen extends StatelessWidget {
             child: CircleAvatar(
               radius: 16,
               backgroundColor: Colors.white,
-              child: Icon(Icons.person, color: AppColors.colorFF007B, size: 20),
+              child: Icon(Icons.person, color: theme.primaryColor, size: 20),
             ),
           ),
         ],
@@ -53,13 +47,13 @@ class SettingsScreen extends StatelessWidget {
             child: Column(
               children: [
                 // Language Section
-                _buildLanguageSection(settingsService),
+                _buildLanguageSection(settingsService, theme),
 
                 // Display Section
-                _buildDisplaySection(settingsService),
+                _buildDisplaySection(settingsService, theme),
 
                 // Notifications Section
-                _buildNotificationsSection(settingsService),
+                _buildNotificationsSection(settingsService, theme),
               ],
             ),
           );
@@ -69,24 +63,27 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLanguageSection(SettingsService settingsService) {
+  Widget _buildLanguageSection(
+    SettingsService settingsService,
+    ThemeData theme,
+  ) {
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 20, 20, 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(20, 16, 20, 8),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
             child: Text(
               'Language',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF1A1A1A),
+                color: theme.colorScheme.onSurface,
               ),
             ),
           ),
@@ -95,18 +92,21 @@ class SettingsScreen extends StatelessWidget {
             AppLanguage.english,
             'English',
             Icons.language,
+            theme,
           ),
           _buildLanguageOption(
             settingsService,
             AppLanguage.sinhala,
             'සිංහල',
             Icons.language,
+            theme,
           ),
           _buildLanguageOption(
             settingsService,
             AppLanguage.tamil,
             'தமிழ்',
             Icons.language,
+            theme,
           ),
         ],
       ),
@@ -118,73 +118,81 @@ class SettingsScreen extends StatelessWidget {
     AppLanguage language,
     String label,
     IconData icon,
+    ThemeData theme,
   ) {
-    return InkWell(
-      onTap: () => settingsService.updateLanguage(language),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: Row(
-          children: [
-            Icon(icon, size: 24, color: const Color(0xFF666666)),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xFF1A1A1A),
-                ),
-              ),
-            ),
-            Radio<AppLanguage>(
-              value: language,
-              groupValue: settingsService.language,
-              onChanged: (value) {
-                if (value != null) {
-                  settingsService.updateLanguage(value);
-                }
-              },
-              activeColor: AppColors.colorFF007B,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDisplaySection(SettingsService settingsService) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      child: Row(
         children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(20, 16, 20, 8),
+          Icon(
+            icon,
+            size: 24,
+            color: theme.colorScheme.onSurface.withOpacity(0.6),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
             child: Text(
-              'Display',
+              label,
               style: TextStyle(
                 fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF1A1A1A),
+                fontWeight: FontWeight.w400,
+                color: theme.colorScheme.onSurface,
               ),
             ),
           ),
-          // Font Size Section
-          _buildFontSizeSection(settingsService),
-          const Divider(height: 1, indent: 60),
-          // Theme Section
-          _buildThemeSection(settingsService),
+          Radio<AppLanguage>(
+            value: language,
+            groupValue: settingsService.language,
+            onChanged: (value) {
+              if (value != null) {
+                settingsService.updateLanguage(value);
+              }
+            },
+            activeColor: theme.primaryColor,
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildFontSizeSection(SettingsService settingsService) {
+  Widget _buildDisplaySection(
+    SettingsService settingsService,
+    ThemeData theme,
+  ) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+            child: Text(
+              'Display',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
+          ),
+          // Font Size Section
+          _buildFontSizeSection(settingsService, theme),
+          Divider(height: 1, indent: 60, color: theme.dividerTheme.color),
+          // Theme Section
+          _buildThemeSection(settingsService, theme),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFontSizeSection(
+    SettingsService settingsService,
+    ThemeData theme,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -192,14 +200,18 @@ class SettingsScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           child: Row(
             children: [
-              const Icon(Icons.text_fields, size: 24, color: Color(0xFF666666)),
+              Icon(
+                Icons.text_fields,
+                size: 24,
+                color: theme.colorScheme.onSurface.withOpacity(0.6),
+              ),
               const SizedBox(width: 16),
-              const Text(
+              Text(
                 'Font Size',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
-                  color: Color(0xFF1A1A1A),
+                  color: theme.colorScheme.onSurface,
                 ),
               ),
             ],
@@ -209,7 +221,7 @@ class SettingsScreen extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(60, 0, 20, 16),
           child: Column(
             children: FontSizeOption.values.map((option) {
-              return _buildFontSizeOption(settingsService, option);
+              return _buildFontSizeOption(settingsService, option, theme);
             }).toList(),
           ),
         ),
@@ -220,39 +232,37 @@ class SettingsScreen extends StatelessWidget {
   Widget _buildFontSizeOption(
     SettingsService settingsService,
     FontSizeOption option,
+    ThemeData theme,
   ) {
-    return InkWell(
-      onTap: () => settingsService.updateFontSize(option),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        child: Row(
-          children: [
-            Radio<FontSizeOption>(
-              value: option,
-              groupValue: settingsService.fontSize,
-              onChanged: (value) {
-                if (value != null) {
-                  settingsService.updateFontSize(value);
-                }
-              },
-              activeColor: AppColors.colorFF007B,
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Row(
+        children: [
+          Radio<FontSizeOption>(
+            value: option,
+            groupValue: settingsService.fontSize,
+            onChanged: (value) {
+              if (value != null) {
+                settingsService.updateFontSize(value);
+              }
+            },
+            activeColor: theme.primaryColor,
+          ),
+          const SizedBox(width: 12),
+          Text(
+            option.displayName,
+            style: TextStyle(
+              fontSize: 16 * option.scale,
+              fontWeight: FontWeight.w400,
+              color: theme.colorScheme.onSurface,
             ),
-            const SizedBox(width: 12),
-            Text(
-              option.displayName,
-              style: TextStyle(
-                fontSize: 16 * option.scale,
-                fontWeight: FontWeight.w400,
-                color: const Color(0xFF1A1A1A),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildThemeSection(SettingsService settingsService) {
+  Widget _buildThemeSection(SettingsService settingsService, ThemeData theme) {
     return Column(
       children: [
         _buildThemeOption(
@@ -260,18 +270,21 @@ class SettingsScreen extends StatelessWidget {
           AppThemeMode.system,
           'System Theme',
           Icons.settings_system_daydream,
+          theme,
         ),
         _buildThemeOption(
           settingsService,
           AppThemeMode.light,
           'Light Mode',
           Icons.light_mode,
+          theme,
         ),
         _buildThemeOption(
           settingsService,
           AppThemeMode.dark,
           'Dark Mode',
           Icons.dark_mode,
+          theme,
         ),
       ],
     );
@@ -282,59 +295,64 @@ class SettingsScreen extends StatelessWidget {
     AppThemeMode themeMode,
     String label,
     IconData icon,
+    ThemeData theme,
   ) {
-    return InkWell(
-      onTap: () => settingsService.updateThemeMode(themeMode),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: Row(
-          children: [
-            Icon(icon, size: 24, color: const Color(0xFF666666)),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xFF1A1A1A),
-                ),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            size: 24,
+            color: theme.colorScheme.onSurface.withOpacity(0.6),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: theme.colorScheme.onSurface,
               ),
             ),
-            Radio<AppThemeMode>(
-              value: themeMode,
-              groupValue: settingsService.themeMode,
-              onChanged: (value) {
-                if (value != null) {
-                  settingsService.updateThemeMode(value);
-                }
-              },
-              activeColor: AppColors.colorFF007B,
-            ),
-          ],
-        ),
+          ),
+          Radio<AppThemeMode>(
+            value: themeMode,
+            groupValue: settingsService.themeMode,
+            onChanged: (value) {
+              if (value != null) {
+                settingsService.updateThemeMode(value);
+              }
+            },
+            activeColor: theme.primaryColor,
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildNotificationsSection(SettingsService settingsService) {
+  Widget _buildNotificationsSection(
+    SettingsService settingsService,
+    ThemeData theme,
+  ) {
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 0, 20, 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(20, 16, 20, 8),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
             child: Text(
               'Notifications',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF1A1A1A),
+                color: theme.colorScheme.onSurface,
               ),
             ),
           ),
@@ -342,13 +360,13 @@ class SettingsScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             child: Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.notifications_outlined,
                   size: 24,
-                  color: Color(0xFF666666),
+                  color: theme.colorScheme.onSurface.withOpacity(0.6),
                 ),
                 const SizedBox(width: 16),
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -357,7 +375,7 @@ class SettingsScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
-                          color: Color(0xFF1A1A1A),
+                          color: theme.colorScheme.onSurface,
                         ),
                       ),
                       Text(
@@ -365,7 +383,7 @@ class SettingsScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w400,
-                          color: Color(0xFF666666),
+                          color: theme.colorScheme.onSurface.withOpacity(0.6),
                         ),
                       ),
                     ],
@@ -376,8 +394,8 @@ class SettingsScreen extends StatelessWidget {
                   onChanged: (value) {
                     settingsService.updateNotificationsEnabled(value);
                   },
-                  activeColor: AppColors.colorFF007B,
-                  activeTrackColor: AppColors.colorFF007B.withOpacity(0.3),
+                  activeColor: theme.primaryColor,
+                  activeTrackColor: theme.primaryColor.withOpacity(0.3),
                 ),
               ],
             ),
@@ -388,26 +406,37 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildBottomNavigation(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
       height: 80,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: Color(0xFFE0E0E0), width: 0.5)),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        border: Border(
+          top: BorderSide(color: theme.dividerTheme.color!, width: 0.5),
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildNavItem(Icons.home_outlined, 'Home', false, () {
             Navigator.of(context).pop();
-          }),
-          _buildNavItem(Icons.grid_view_outlined, 'Services', false, () {}),
+          }, theme),
+          _buildNavItem(
+            Icons.grid_view_outlined,
+            'Services',
+            false,
+            () {},
+            theme,
+          ),
           _buildNavItem(
             Icons.calendar_today_outlined,
             'Appointments',
             false,
             () {},
+            theme,
           ),
-          _buildNavItem(Icons.settings, 'Settings', true, () {}),
+          _buildNavItem(Icons.settings, 'Settings', true, () {}, theme),
         ],
       ),
     );
@@ -418,6 +447,7 @@ class SettingsScreen extends StatelessWidget {
     String label,
     bool isSelected,
     VoidCallback onTap,
+    ThemeData theme,
   ) {
     return InkWell(
       onTap: onTap,
@@ -430,8 +460,8 @@ class SettingsScreen extends StatelessWidget {
               icon,
               size: 24,
               color: isSelected
-                  ? AppColors.colorFF007B
-                  : const Color(0xFF666666),
+                  ? theme.primaryColor
+                  : theme.colorScheme.onSurface.withOpacity(0.6),
             ),
             const SizedBox(height: 4),
             Text(
@@ -440,8 +470,8 @@ class SettingsScreen extends StatelessWidget {
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
                 color: isSelected
-                    ? AppColors.colorFF007B
-                    : const Color(0xFF666666),
+                    ? theme.primaryColor
+                    : theme.colorScheme.onSurface.withOpacity(0.6),
               ),
             ),
           ],

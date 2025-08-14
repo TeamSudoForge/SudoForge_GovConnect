@@ -6,8 +6,10 @@ class AppTextStyles {
   AppTextStyles._();
 
   // Headline styles
-  static const TextStyle headline24 =
-      TextStyle(fontSize: 24, color: AppColors.colorFF1717);
+  static const TextStyle headline24 = TextStyle(
+    fontSize: 24,
+    color: AppColors.colorFF1717,
+  );
   static const TextStyle headline24Regular = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.w400,
@@ -20,15 +22,19 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     fontFamily: 'Roboto',
   );
-  static const TextStyle title20 =
-      TextStyle(fontSize: 20, color: AppColors.colorFF3838);
+  static const TextStyle title20 = TextStyle(
+    fontSize: 20,
+    color: AppColors.colorFF3838,
+  );
   static const TextStyle title18Medium = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w500,
     color: AppColors.colorFF1717,
   );
-  static const TextStyle title16 =
-      TextStyle(fontSize: 16, color: AppColors.colorFF4040);
+  static const TextStyle title16 = TextStyle(
+    fontSize: 16,
+    color: AppColors.colorFF4040,
+  );
   static const TextStyle title16Medium = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w500,
@@ -41,17 +47,23 @@ class AppTextStyles {
   );
 
   // Body styles
-  static const TextStyle body14 =
-      TextStyle(fontSize: 14, color: AppColors.colorFF7373);
-  static const TextStyle body14Regular =
-      TextStyle(fontSize: 14, fontWeight: FontWeight.w400);
+  static const TextStyle body14 = TextStyle(
+    fontSize: 14,
+    color: AppColors.colorFF7373,
+  );
+  static const TextStyle body14Regular = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+  );
   static const TextStyle body14Medium = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w500,
     color: AppColors.colorFF1717,
   );
-  static const TextStyle body12 =
-      TextStyle(fontSize: 12, color: AppColors.colorFF6B72);
+  static const TextStyle body12 = TextStyle(
+    fontSize: 12,
+    color: AppColors.colorFF6B72,
+  );
   static const TextStyle body12Regular = TextStyle(
     fontSize: 12,
     fontWeight: FontWeight.w400,
@@ -103,6 +115,11 @@ class TextStyleHelper {
         color: AppColors.colorFF1717,
       ),
     );
+  }
+
+  // Method to get scaled text styles for any theme
+  TextStyle getScaledStyle(TextStyle baseStyle, double fontScale) {
+    return baseStyle.copyWith(fontSize: (baseStyle.fontSize ?? 14) * fontScale);
   }
 
   // Direct access to AppTextStyles constants
