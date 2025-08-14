@@ -12,10 +12,9 @@ class AppRoutes {
   static const String initialRoute = '/';
 
   static Map<String, WidgetBuilder> get routes => {
-        govConnectSignInScreen: (context) => const LoginScreen(),
-        emailVerificationScreen: (context) => const EmailVerificationScreen(),
-        appNavigationScreen: (context) => const AppNavigationScreen(),
-        initialRoute: (context) => const AppNavigationScreen(),
-      };
+    govConnectSignInScreen: (context) => const LoginScreen(),
+    emailVerificationScreen: (context) => const EmailVerificationScreen(),
+    appNavigationScreen: (context) => const AppNavigationScreen(),
+    initialRoute: (context) => const AppNavigationScreen(),
+  };
 }
-

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:remixicon/remixicon.dart';
 import '../../core/app_export.dart';
@@ -9,7 +10,7 @@ import 'qrflow/qr_scan_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String routeName = '/home';
-  
+
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
@@ -23,26 +24,21 @@ class HomeScreen extends StatelessWidget {
         elevation: 0,
         title: Text(
           'GovConnect',
-          style: styles.title18Medium.copyWith(
-            color: AppColors.whiteCustom,
-          ),
+          style: styles.title18Medium.copyWith(color: AppColors.whiteCustom),
         ),
         actions: [
           IconButton(
             onPressed: () {
               _showLogoutDialog(context);
             },
-            icon: Icon(
-              Remix.logout_circle_line,
-              color: AppColors.whiteCustom,
-            ),
+            icon: Icon(Remix.logout_circle_line, color: AppColors.whiteCustom),
           ),
         ],
       ),
       body: Consumer<AuthService>(
         builder: (context, authService, child) {
           final user = authService.currentUser;
-          
+
           return SingleChildScrollView(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -53,6 +49,15 @@ class HomeScreen extends StatelessWidget {
                 _buildQuickActions(context, styles),
                 const SizedBox(height: 32),
                 _buildUserInfo(user, styles),
+                const SizedBox(height: 24),
+                // Button to navigate to app navigation screen
+                CustomButton(
+                  text: 'appointment details',
+                  onPressed: () {
+                    context.pushNamed('appointment-details');
+                  },
+                  backgroundColor: AppColors.colorFF007B,
+                ),
               ],
             ),
           );
@@ -107,9 +112,7 @@ class HomeScreen extends StatelessWidget {
       children: [
         Text(
           'Quick Actions',
-          style: styles.title20.copyWith(
-            color: AppColors.colorFF0062,
-          ),
+          style: styles.title20.copyWith(color: AppColors.colorFF0062),
         ),
         const SizedBox(height: 16),
         _buildNavigationButton(
@@ -141,7 +144,6 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-
   Widget _buildNavigationButton({
     required BuildContext context,
     required String text,
@@ -153,32 +155,27 @@ class HomeScreen extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        height: 56,
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.colorFFD4D4),
           boxShadow: [
             BoxShadow(
-              color: backgroundColor.withOpacity(0.3),
+              color: AppColors.colorFF0845.withAlpha(13),
               blurRadius: 8,
-              offset: const Offset(0, 4),
+              offset: const Offset(0, 2),
             ),
           ],
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon,
-              color: AppColors.whiteCustom,
-              size: 24,
-            ),
-            const SizedBox(width: 12),
+            Icon(icon, color: AppColors.whiteCustom, size: 24),
+            const SizedBox(height: 8),
             Text(
               text,
-              style: styles.title16Medium.copyWith(
-                color: AppColors.whiteCustom,
-              ),
+              style: styles.body14Medium.copyWith(color: AppColors.whiteCustom),
             ),
           ],
         ),
@@ -199,11 +196,7 @@ class HomeScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(
-                Remix.user_line,
-                color: AppColors.colorFF007B,
-                size: 20,
-              ),
+              Icon(Remix.user_line, color: AppColors.colorFF007B, size: 20),
               const SizedBox(width: 8),
               Text(
                 'Account Information',
@@ -230,15 +223,11 @@ class HomeScreen extends StatelessWidget {
       children: [
         Text(
           label,
-          style: styles.body14Regular.copyWith(
-            color: AppColors.colorFF5252,
-          ),
+          style: styles.body14Regular.copyWith(color: AppColors.colorFF5252),
         ),
         Text(
           value,
-          style: styles.body14Medium.copyWith(
-            color: AppColors.colorFF0062,
-          ),
+          style: styles.body14Medium.copyWith(color: AppColors.colorFF0062),
         ),
       ],
     );
@@ -246,25 +235,19 @@ class HomeScreen extends StatelessWidget {
 
   void _showLogoutDialog(BuildContext context) {
     final styles = TextStyleHelper.instance;
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.whiteCustom,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         title: Text(
           'Logout',
-          style: styles.title18Medium.copyWith(
-            color: AppColors.colorFF0062,
-          ),
+          style: styles.title18Medium.copyWith(color: AppColors.colorFF0062),
         ),
         content: Text(
           'Are you sure you want to logout?',
-          style: styles.body14Regular.copyWith(
-            color: AppColors.colorFF5252,
-          ),
+          style: styles.body14Regular.copyWith(color: AppColors.colorFF5252),
         ),
         actions: [
           TextButton(

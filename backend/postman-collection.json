@@ -24,13 +24,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/register",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "register"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
             }
           }
         },
@@ -50,13 +45,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/login",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "login"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
             }
           }
         },
@@ -76,13 +66,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/refresh",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "refresh"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "refresh"]
             }
           }
         },
@@ -98,13 +83,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/auth/profile",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "profile"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "profile"]
             }
           }
         },
@@ -124,13 +104,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/auth/enable-2fa",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "enable-2fa"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "enable-2fa"]
             }
           }
         },
@@ -150,13 +125,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/auth/disable-2fa",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "disable-2fa"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "disable-2fa"]
             }
           }
         },
@@ -176,13 +146,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/verify-2fa",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "verify-2fa"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "verify-2fa"]
             }
           }
         }
@@ -211,15 +176,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/passkey/register/begin",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "passkey",
-                "register",
-                "begin"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "passkey", "register", "begin"]
             }
           }
         },
@@ -243,15 +201,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/passkey/register/complete",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "passkey",
-                "register",
-                "complete"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "passkey", "register", "complete"]
             }
           }
         },
@@ -267,15 +218,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/auth/passkey/authenticate/begin",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "passkey",
-                "authenticate",
-                "begin"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "passkey", "authenticate", "begin"]
             }
           }
         },
@@ -295,15 +239,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/passkey/authenticate/complete",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "passkey",
-                "authenticate",
-                "complete"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "passkey", "authenticate", "complete"]
             }
           }
         },
@@ -319,13 +256,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/auth/passkeys",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "passkeys"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "passkeys"]
             }
           }
         },
@@ -341,14 +273,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/auth/passkeys/{{passkeyId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "passkeys",
-                "{{passkeyId}}"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "passkeys", "{{passkeyId}}"]
             }
           }
         }
