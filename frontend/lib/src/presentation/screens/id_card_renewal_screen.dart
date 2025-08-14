@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:gov_connect/src/presentation/screens/appointment_update_screen.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/common_app_bar.dart';
@@ -46,6 +47,7 @@ class _IdCardRenewalScreenState extends State<IdCardRenewalScreen> {
       ),
       body: SingleChildScrollView(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Appointment Header Section
@@ -53,51 +55,56 @@ class _IdCardRenewalScreenState extends State<IdCardRenewalScreen> {
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Title section
-                  Text(
-                    appointment.serviceTitle,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                      height: 1.2,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-
-                  // Date and time section - positioned to the right
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                      // Title section
+                      Text(
+                        appointment.serviceTitle,
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                          height: 1.2,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+
+                      // Date and time section - positioned to the right
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(
-                            appointment.date,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey.shade600,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Icon(
-                                Icons.access_time,
-                                size: 16,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                              const SizedBox(width: 4),
                               Text(
-                                appointment.time,
+                                appointment.date,
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Theme.of(context).primaryColor,
-                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey.shade600,
                                 ),
+                              ),
+                              const SizedBox(height: 4),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.access_time,
+                                    size: 16,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    appointment.time,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Theme.of(context).primaryColor,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -105,10 +112,18 @@ class _IdCardRenewalScreenState extends State<IdCardRenewalScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    appointment.department,
-                    style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+
+                  SizedBox(height: 8),
+
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      appointment.department,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -499,8 +514,12 @@ class _IdCardRenewalScreenState extends State<IdCardRenewalScreen> {
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
+                  // Handle update appointment
                   onPressed: () {
-                    // Handle update appointment
+                    Navigator.pushNamed(
+                      context,
+                      AppointmentUpdateScreen.routeName,
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,

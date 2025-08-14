@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gov_connect/src/presentation/screens/appointment_update_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:gov_connect/src/core/app_export.dart';
 import 'package:gov_connect/src/presentation/screens/email_verification_screen.dart';
@@ -70,6 +71,8 @@ class GovConnectApp extends StatelessWidget {
       '/home': (context) => const HomeScreen(),
       '/email-verification': (context) => const EmailVerificationScreen(),
       IdCardRenewalScreen.routeName: (context) => const IdCardRenewalScreen(),
+      AppointmentUpdateScreen.routeName: (context) =>
+          const AppointmentUpdateScreen(),
     };
   }
 }
