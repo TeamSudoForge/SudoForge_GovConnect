@@ -9,6 +9,7 @@ import '../../presentation/screens/app_navigation_screen.dart';
 import '../../presentation/screens/appointment_details.dart';
 import '../../presentation/screens/appointment_update_screen.dart';
 import '../../presentation/screens/notifications_screen.dart';
+import '../../presentation/screens/settings_screen.dart';
 
 class AppRouter {
   static GoRouter createRouter(AuthService authService) {
@@ -78,6 +79,11 @@ class AppRouter {
               builder: (context, state) => const NotificationsScreen(),
             ),
             GoRoute(
+              path: 'settings',
+              name: 'settings',
+              builder: (context, state) => const SettingsScreen(),
+            ),
+            GoRoute(
               path: 'app-navigation',
               name: 'app-navigation',
               builder: (context, state) => const AppNavigationScreen(),
@@ -110,6 +116,7 @@ class AppRoutes {
   static const String twoFactorVerification = '/two-factor-verification';
   static const String home = '/home';
   static const String notifications = '/home/notifications';
+  static const String settings = '/home/settings';
   static const String appNavigation = '/home/app-navigation';
   // static const String idCardRenewal = '/id-card-renewal'; // TODO: Uncomment when screen is created
   static const String appointmentDetails = '/appointment-details';
@@ -123,6 +130,8 @@ extension GoRouterExtension on GoRouter {
   void pushHome() => pushNamed('home');
 
   void pushNotifications() => pushNamed('notifications');
+
+  void pushSettings() => pushNamed('settings');
 
   void pushAppointmentDetails() => pushNamed('appointment-details');
 

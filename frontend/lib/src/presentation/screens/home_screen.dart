@@ -29,9 +29,17 @@ class HomeScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
+              context.pushNamed('settings');
+            },
+            icon: Icon(Remix.settings_3_line, color: AppColors.whiteCustom),
+            tooltip: 'Settings',
+          ),
+          IconButton(
+            onPressed: () {
               _showLogoutDialog(context);
             },
             icon: Icon(Remix.logout_circle_line, color: AppColors.whiteCustom),
+            tooltip: 'Logout',
           ),
         ],
       ),
