@@ -190,6 +190,17 @@ export class CreateDynamicFormsTables1755149644700 implements MigrationInterface
           ('hidden', 'Hidden field')
         `);
 
+        // Create the updated_at trigger function if it doesn't exist
+        await queryRunner.query(`
+          CREATE OR REPLACE FUNCTION update_updated_at_column()
+          RETURNS TRIGGER AS $$
+          BEGIN
+            NEW.updated_at = CURRENT_TIMESTAMP;
+            RETURN NEW;
+          END;
+          $$ LANGUAGE plpgsql;
+        `);
+
         // Add update triggers
         await queryRunner.query(`
           CREATE TRIGGER update_departments_updated_at BEFORE UPDATE ON departments 
