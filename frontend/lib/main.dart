@@ -6,16 +6,17 @@ import 'src/presentation/screens/login_screen.dart';
 import 'src/presentation/screens/home_screen.dart';
 import 'src/presentation/screens/two_factor_verification_screen.dart';
 import 'src/presentation/screens/app_navigation_screen.dart';
+import 'src/presentation/screens/id_card_renewal_screen.dart';
 import 'src/core/theme/theme_config.dart';
 import 'src/injection.dart';
 import 'src/presentation/widgets/common_app_bar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize services
   await initializeServices();
-  
+
   runApp(const GovConnectApp());
 }
 
@@ -39,9 +40,8 @@ class GovConnectApp extends StatelessWidget {
               if (settings.name == TwoFactorVerificationScreen.routeName) {
                 final args = settings.arguments as Map<String, dynamic>?;
                 return MaterialPageRoute(
-                  builder: (context) => TwoFactorVerificationScreen(
-                    email: args?['email'] ?? '',
-                  ),
+                  builder: (context) =>
+                      TwoFactorVerificationScreen(email: args?['email'] ?? ''),
                 );
               }
               return null;
@@ -69,6 +69,7 @@ class GovConnectApp extends StatelessWidget {
       '/login': (context) => const LoginScreen(),
       '/home': (context) => const HomeScreen(),
       '/email-verification': (context) => const EmailVerificationScreen(),
+      IdCardRenewalScreen.routeName: (context) => const IdCardRenewalScreen(),
     };
   }
 }
@@ -91,9 +92,9 @@ class HomePage extends StatelessWidget {
           children: <Widget>[
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const LoginScreen()),
-                );
+                Navigator.of(
+                  context,
+                ).push(MaterialPageRoute(builder: (_) => const LoginScreen()));
               },
               child: const Text('Go to Login'),
             ),
@@ -101,10 +102,23 @@ class HomePage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const AppNavigationScreen()),
+                  MaterialPageRoute(
+                    builder: (_) => const AppNavigationScreen(),
+                  ),
                 );
               },
               child: const Text('Go to App Navigation'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const IdCardRenewalScreen(),
+                  ),
+                );
+              },
+              child: const Text('ID Card Renewal'),
             ),
           ],
         ),
