@@ -15,10 +15,8 @@ class TextStyleHelper {
   // Headline Styles
   // Medium-large text styles for section headers
 
-  TextStyle get headline24 => TextStyle(
-    fontSize: 24,
-    color: appTheme.colorFF1717,
-  );
+  TextStyle get headline24 =>
+      TextStyle(fontSize: 24, color: appTheme.colorFF1717);
 
   TextStyle get headline24Regular => TextStyle(
     fontSize: 24,
@@ -47,10 +45,7 @@ class TextStyleHelper {
     fontFamily: 'Roboto',
   );
 
-  TextStyle get title20 => TextStyle(
-    fontSize: 20,
-    color: appTheme.colorFF3838,
-  );
+  TextStyle get title20 => TextStyle(fontSize: 20, color: appTheme.colorFF3838);
 
   TextStyle get title18Medium => TextStyle(
     fontSize: 18,
@@ -58,10 +53,7 @@ class TextStyleHelper {
     color: appTheme.colorFF1717,
   );
 
-  TextStyle get title16 => TextStyle(
-    fontSize: 16,
-    color: appTheme.colorFF4040,
-  );
+  TextStyle get title16 => TextStyle(fontSize: 16, color: appTheme.colorFF4040);
 
   TextStyle get title16Medium => TextStyle(
     fontSize: 16,
@@ -78,15 +70,10 @@ class TextStyleHelper {
   // Body Styles
   // Standard text styles for body content
 
-  TextStyle get body14 => TextStyle(
-    fontSize: 14,
-    color: appTheme.colorFF7373,
-  );
+  TextStyle get body14 => TextStyle(fontSize: 14, color: appTheme.colorFF7373);
 
-  TextStyle get body14Regular => TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w400,
-  );
+  TextStyle get body14Regular =>
+      TextStyle(fontSize: 14, fontWeight: FontWeight.w400);
 
   TextStyle get body14Medium => TextStyle(
     fontSize: 14,
@@ -94,10 +81,7 @@ class TextStyleHelper {
     color: appTheme.colorFF1717,
   );
 
-  TextStyle get body12 => TextStyle(
-    fontSize: 12,
-    color: appTheme.colorFF6B72,
-  );
+  TextStyle get body12 => TextStyle(fontSize: 12, color: appTheme.colorFF6B72);
 
   TextStyle get body12Regular => TextStyle(
     fontSize: 12,

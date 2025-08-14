@@ -3,9 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:remixicon/remixicon.dart';
 import '../../core/app_export.dart';
-import '../../core/theme/text_style_helper.dart';
 import '../../core/theme/theme_config.dart';
 import '../widgets/custom_button.dart';
+import 'login_screen.dart';
+import 'qrflow/qr_scan_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String routeName = '/home';
@@ -23,9 +24,7 @@ class HomeScreen extends StatelessWidget {
         elevation: 0,
         title: Text(
           'GovConnect',
-          style: styles.headline18Regular.copyWith(
-            color: AppColors.whiteCustom,
-          ),
+          style: styles.title18Medium.copyWith(color: AppColors.whiteCustom),
         ),
         actions: [
           IconButton(
@@ -47,7 +46,7 @@ class HomeScreen extends StatelessWidget {
               children: [
                 _buildWelcomeSection(user, styles),
                 const SizedBox(height: 32),
-                _buildQuickActions(styles),
+                _buildQuickActions(context, styles),
                 const SizedBox(height: 32),
                 _buildUserInfo(user, styles),
                 const SizedBox(height: 24),
@@ -84,7 +83,7 @@ class HomeScreen extends StatelessWidget {
         children: [
           Text(
             'Welcome back,',
-            style: styles.body16Regular.copyWith(
+            style: styles.title16Regular.copyWith(
               color: AppColors.whiteCustom.withOpacity(0.8),
             ),
           ),
@@ -107,98 +106,79 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildQuickActions(TextStyleHelper styles) {
+  Widget _buildQuickActions(BuildContext context, TextStyleHelper styles) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Quick Actions',
-          style: styles.headline20Regular.copyWith(
-            color: AppColors.colorFF0062,
-          ),
+          style: styles.title20.copyWith(color: AppColors.colorFF0062),
         ),
         const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(
-              child: _buildActionCard(
-                icon: Remix.file_text_line,
-                title: 'Documents',
-                subtitle: 'View & Download',
-                styles: styles,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildActionCard(
-                icon: Remix.bill_line,
-                title: 'Bills',
-                subtitle: 'Pay Online',
-                styles: styles,
-              ),
-            ),
-          ],
+        _buildNavigationButton(
+          context: context,
+          text: 'Login',
+          icon: Remix.login_box_line,
+          backgroundColor: AppColors.colorFF007B,
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
+            );
+          },
+          styles: styles,
         ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: _buildActionCard(
-                icon: Remix.service_line,
-                title: 'Services',
-                subtitle: 'Apply Now',
-                styles: styles,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildActionCard(
-                icon: Remix.customer_service_2_line,
-                title: 'Support',
-                subtitle: 'Get Help',
-                styles: styles,
-              ),
-            ),
-          ],
+        const SizedBox(height: 16),
+        _buildNavigationButton(
+          context: context,
+          text: 'Scan QR Code',
+          icon: Remix.qr_scan_line,
+          backgroundColor: AppColors.colorFF0062,
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const QrScanScreen()),
+            );
+          },
+          styles: styles,
         ),
       ],
     );
   }
 
-  Widget _buildActionCard({
+  Widget _buildNavigationButton({
+    required BuildContext context,
+    required String text,
     required IconData icon,
-    required String title,
-    required String subtitle,
+    required Color backgroundColor,
+    required VoidCallback onPressed,
     required TextStyleHelper styles,
   }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.whiteCustom,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.colorFFD4D4),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.colorFF0845.withAlpha(13),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: AppColors.colorFF007B, size: 24),
-          const SizedBox(height: 8),
-          Text(
-            title,
-            style: styles.body14Medium.copyWith(color: AppColors.colorFF0062),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            subtitle,
-            style: styles.body12Regular.copyWith(color: AppColors.colorFF7373),
-          ),
-        ],
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.colorFFD4D4),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.colorFF0845.withAlpha(13),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: AppColors.whiteCustom, size: 24),
+            const SizedBox(height: 8),
+            Text(
+              text,
+              style: styles.body14Medium.copyWith(color: AppColors.whiteCustom),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -220,7 +200,7 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 'Account Information',
-                style: styles.body16Medium.copyWith(
+                style: styles.title16Medium.copyWith(
                   color: AppColors.colorFF0062,
                 ),
               ),
@@ -263,9 +243,7 @@ class HomeScreen extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         title: Text(
           'Logout',
-          style: styles.headline18Regular.copyWith(
-            color: AppColors.colorFF0062,
-          ),
+          style: styles.title18Medium.copyWith(color: AppColors.colorFF0062),
         ),
         content: Text(
           'Are you sure you want to logout?',

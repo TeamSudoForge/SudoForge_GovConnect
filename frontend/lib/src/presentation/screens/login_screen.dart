@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:remixicon/remixicon.dart';
 import '../../core/app_export.dart';
-import '../../core/theme/text_style_helper.dart';
 import '../../core/theme/theme_config.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/email_field.dart';

@@ -80,7 +80,7 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'New ${widget.appointment.serviceTitle.replaceAll('\n', ' ')} appointment',
+              "New ${widget.appointment.serviceTitle.replaceAll('\n', ' ')} appointment",
               style: styles.headline20Regular.copyWith(
                 color: AppColors.colorFF0062,
               ),
@@ -242,7 +242,7 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
                             : AppColors.colorFFD4D4,
                       ),
                       color: isSelected
-                          ? AppColors.colorFF007B.withValues(alpha: 0.08)
+                          ? AppColors.colorFF007B.withOpacity(0.08)
                           : AppColors.whiteCustom,
                       borderRadius: BorderRadius.circular(8),
                     ),
