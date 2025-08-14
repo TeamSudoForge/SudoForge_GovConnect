@@ -15,6 +15,7 @@ class AppRoutes {
     govConnectSignInScreen: (context) => const LoginScreen(),
     emailVerificationScreen: (context) => const EmailVerificationScreen(),
     appNavigationScreen: (context) => const AppNavigationScreen(),
+    notificationsScreen: (context) => const NotificationsScreen(),
     initialRoute: (context) => const AppNavigationScreen(),
   };
 }
