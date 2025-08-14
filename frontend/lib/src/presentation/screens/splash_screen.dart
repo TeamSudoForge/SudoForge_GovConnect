@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import '../../core/app_export.dart';
+import '../../core/routes/app_router.dart';
 import 'dart:async';
 
 class SplashScreen extends StatefulWidget {
@@ -11,10 +15,32 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    // Simulate loading time (e.g., 2 seconds)
+    // Simulate loading time and check authentication
     Timer(Duration(seconds: 2), () {
-      Navigator.pushReplacementNamed(context, '/home');
+      _navigateBasedOnAuth();
     });
+  }
+
+  void _navigateBasedOnAuth() {
+    // Mark that splash has been shown for this session
+    AppRouter.markSplashAsShown();
+
+    final authService = Provider.of<AuthService>(context, listen: false);
+    final authStatus = authService.state.status;
+
+    switch (authStatus) {
+      case AuthStatus.authenticated:
+        context.go('/home');
+        break;
+      case AuthStatus.requires2FA:
+        // You might want to pass email from stored state
+        context.go('/two-factor-verification');
+        break;
+      case AuthStatus.unauthenticated:
+      default:
+        context.go('/login');
+        break;
+    }
   }
 
   @override
@@ -25,29 +51,29 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Your icon
-            Container(
-              decoration: BoxDecoration(
-                color: Color(0xFF0D6EFD), // Blue background for icon
-                borderRadius: BorderRadius.circular(8),
-              ),
-              padding: EdgeInsets.all(16),
-              child: Icon(
-                Icons.account_balance, // Example icon
-                color: Colors.white,
-                size: 48,
-              ),
-            ),
-            SizedBox(height: 12),
+            // Splash logo
+            Image.asset('assets/splash_logo.png', width: 120, height: 120),
+            SizedBox(height: 13),
             // App name
             Text(
               "GovConnect",
               style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-                color: Colors.black87,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF0D6EFD),
               ),
             ),
+            // SizedBox(height: 8),
+            // // Subtitle
+            // Text(
+            //   "Connecting you to government services",
+            //   style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+            // ),
+            // SizedBox(height: 40),
+            // // Loading indicator
+            // CircularProgressIndicator(
+            //   valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF0D6EFD)),
+            // ),
           ],
         ),
       ),

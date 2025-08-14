@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import '../../core/app_export.dart';
 import '../../core/models/appointment_models.dart';
+import '../../presentation/screens/splash_screen.dart';
 import '../../presentation/screens/login_screen.dart';
 import '../../presentation/screens/home_screen.dart';
 import '../../presentation/screens/email_verification_screen.dart';
@@ -12,19 +13,45 @@ import '../../presentation/screens/notifications_screen.dart';
 import '../../presentation/screens/settings_screen.dart';
 
 class AppRouter {
+  // Session-based flag to track if splash has been shown
+  // This ensures splash is only shown once per app session
+  static bool _hasShownSplash = false;
+
+  static void markSplashAsShown() {
+    _hasShownSplash = true;
+  }
+
   static GoRouter createRouter(AuthService authService) {
     return GoRouter(
-      initialLocation: '/',
+      initialLocation: '/splash',
       debugLogDiagnostics: true,
       refreshListenable: authService,
       redirect: (context, state) {
         final authStatus = authService.state.status;
         final isLoggedIn = authStatus == AuthStatus.authenticated;
         final isLoggingIn = state.matchedLocation == '/login';
+        final isOnSplash = state.matchedLocation == '/splash';
         final isOnAuth =
             isLoggingIn ||
             state.matchedLocation == '/email-verification' ||
             state.matchedLocation == '/two-factor-verification';
+
+        // Show splash only on first app launch (during this session)
+        // This ensures splash is only shown when app starts, not during login/logout flows
+        if (isOnSplash && !_hasShownSplash) {
+          return null; // Allow splash to show
+        }
+
+        // Skip splash if already shown and redirect based on auth status
+        if (isOnSplash && _hasShownSplash) {
+          if (isLoggedIn) {
+            return '/home';
+          } else if (authStatus == AuthStatus.requires2FA) {
+            return '/two-factor-verification';
+          } else {
+            return '/login';
+          }
+        }
 
         // Redirect to login if not authenticated and not on auth screens
         if (!isLoggedIn && !isOnAuth) {
@@ -45,6 +72,13 @@ class AppRouter {
         return null; // No redirect needed
       },
       routes: [
+        // Splash Screen Route
+        GoRoute(
+          path: '/splash',
+          name: 'splash',
+          builder: (context, state) => SplashScreen(),
+        ),
+
         // Authentication Routes
         GoRoute(
           path: '/login',
@@ -111,6 +145,7 @@ class AppRouter {
 
 // Route names for type-safe navigation
 class AppRoutes {
+  static const String splash = '/splash';
   static const String login = '/login';
   static const String emailVerification = '/email-verification';
   static const String twoFactorVerification = '/two-factor-verification';
@@ -125,6 +160,8 @@ class AppRoutes {
 
 // Extension for type-safe navigation
 extension GoRouterExtension on GoRouter {
+  void pushSplash() => pushNamed('splash');
+
   void pushLogin() => pushNamed('login');
 
   void pushHome() => pushNamed('home');
