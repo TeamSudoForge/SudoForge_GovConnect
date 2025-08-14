@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:gov_connect/src/presentation/widgets/common_app_bar.dart';
 import '../../core/theme/theme_config.dart';
 import '../../core/theme/text_style_helper.dart';
+import '../../core/models/appointment_models.dart';
 
 class AppointmentUpdateScreen extends StatefulWidget {
   static const String routeName = '/appointment-update';
+  final AppointmentDetails appointment;
 
-  const AppointmentUpdateScreen({Key? key}) : super(key: key);
+  const AppointmentUpdateScreen({super.key, required this.appointment});
 
   @override
   State<AppointmentUpdateScreen> createState() =>
@@ -17,12 +19,31 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
   String selectedLocation = 'Battaramulla Office';
   DateTime selectedDate = DateTime.now();
   String selectedTimeSlot = '10:30 A.M - 11:00 A.M';
+  late List<String> locations;
 
-  final List<String> locations = [
-    'Battaramulla Office',
-    'Colombo Office',
-    'Kandy Office',
-  ];
+  @override
+  void initState() {
+    super.initState();
+    
+    // Initialize locations list
+    locations = [
+      'Battaramulla Office',
+      'Colombo Office', 
+      'Kandy Office',
+    ];
+    
+    // Initialize with current appointment data
+    // Check if the appointment location exists in our locations list
+    String appointmentLocation = widget.appointment.location.name;
+    if (!locations.contains(appointmentLocation)) {
+      // If the appointment location doesn't exist in our list, add it
+      locations.add(appointmentLocation);
+    }
+    selectedLocation = appointmentLocation;
+    
+    // Parse the current appointment date if needed
+    // For now, keeping the current implementation
+  }
 
   final List<String> timeSlots = [
     '8:30 A.M - 9:00 A.M',
@@ -53,7 +74,7 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
     return Scaffold(
       backgroundColor: AppColors.whiteCustom,
       appBar: CommonAppBar(
-        title: 'ID card renewal',
+        title: widget.appointment.serviceTitle.replaceAll('\n', ' '),
         showNotifications: true,
         showProfile: true,
       ),
@@ -63,7 +84,7 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'New ID Card renewal appointment',
+              'New ${widget.appointment.serviceTitle.replaceAll('\n', ' ')} appointment',
               style: styles.headline20Regular.copyWith(
                 color: AppColors.colorFF0062,
               ),
@@ -72,7 +93,7 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
             Text('Service Description', style: styles.title18Medium),
             const SizedBox(height: 8),
             Text(
-              'Visit the registration office at your scheduled time to complete identity verification, new photograph, and fee payment.',
+              widget.appointment.serviceDescription,
               style: styles.body14.copyWith(height: 1.5),
             ),
             const SizedBox(height: 20),
@@ -83,26 +104,31 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
               style: styles.body14.copyWith(height: 1.5),
             ),
             const SizedBox(height: 12),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 8),
-                  width: 6,
-                  height: 6,
-                  decoration: const BoxDecoration(
-                    color: AppColors.colorFF0062,
-                    shape: BoxShape.circle,
-                  ),
+            ...widget.appointment.requiredDocuments.map(
+              (document) => Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(top: 8),
+                      width: 6,
+                      height: 6,
+                      decoration: const BoxDecoration(
+                        color: AppColors.colorFF0062,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        document,
+                        style: styles.body14.copyWith(height: 1.5),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    'Proof of identity - passport or birth certificate',
-                    style: styles.body14.copyWith(height: 1.5),
-                  ),
-                ),
-              ],
+              ),
             ),
             const SizedBox(height: 12),
             GestureDetector(
@@ -118,7 +144,7 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
             Text('Service Locations', style: styles.title18Medium),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
-              value: selectedLocation,
+              value: locations.contains(selectedLocation) ? selectedLocation : locations.first,
               items: locations
                   .map(
                     (location) => DropdownMenuItem(
@@ -128,9 +154,11 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
                   )
                   .toList(),
               onChanged: (value) {
-                setState(() {
-                  selectedLocation = value!;
-                });
+                if (value != null) {
+                  setState(() {
+                    selectedLocation = value;
+                  });
+                }
               },
               decoration: InputDecoration(
                 border: OutlineInputBorder(
@@ -216,7 +244,7 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
                             : AppColors.colorFFD4D4,
                       ),
                       color: isSelected
-                          ? AppColors.colorFF007B.withOpacity(0.08)
+                          ? AppColors.colorFF007B.withValues(alpha: 0.08)
                           : AppColors.whiteCustom,
                       borderRadius: BorderRadius.circular(8),
                     ),

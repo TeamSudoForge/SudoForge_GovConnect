@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:remixicon/remixicon.dart';
 import '../../core/app_export.dart';
@@ -8,7 +9,7 @@ import '../widgets/custom_button.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String routeName = '/home';
-  
+
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
@@ -31,17 +32,14 @@ class HomeScreen extends StatelessWidget {
             onPressed: () {
               _showLogoutDialog(context);
             },
-            icon: Icon(
-              Remix.logout_circle_line,
-              color: AppColors.whiteCustom,
-            ),
+            icon: Icon(Remix.logout_circle_line, color: AppColors.whiteCustom),
           ),
         ],
       ),
       body: Consumer<AuthService>(
         builder: (context, authService, child) {
           final user = authService.currentUser;
-          
+
           return SingleChildScrollView(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -52,6 +50,15 @@ class HomeScreen extends StatelessWidget {
                 _buildQuickActions(styles),
                 const SizedBox(height: 32),
                 _buildUserInfo(user, styles),
+                const SizedBox(height: 24),
+                // Button to navigate to app navigation screen
+                CustomButton(
+                  text: 'id card renewal',
+                  onPressed: () {
+                    context.pushNamed('id-card-renewal');
+                  },
+                  backgroundColor: AppColors.colorFF007B,
+                ),
               ],
             ),
           );
@@ -180,24 +187,16 @@ class HomeScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Icon(
-            icon,
-            color: AppColors.colorFF007B,
-            size: 24,
-          ),
+          Icon(icon, color: AppColors.colorFF007B, size: 24),
           const SizedBox(height: 8),
           Text(
             title,
-            style: styles.body14Medium.copyWith(
-              color: AppColors.colorFF0062,
-            ),
+            style: styles.body14Medium.copyWith(color: AppColors.colorFF0062),
           ),
           const SizedBox(height: 4),
           Text(
             subtitle,
-            style: styles.body12Regular.copyWith(
-              color: AppColors.colorFF7373,
-            ),
+            style: styles.body12Regular.copyWith(color: AppColors.colorFF7373),
           ),
         ],
       ),
@@ -217,11 +216,7 @@ class HomeScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(
-                Remix.user_line,
-                color: AppColors.colorFF007B,
-                size: 20,
-              ),
+              Icon(Remix.user_line, color: AppColors.colorFF007B, size: 20),
               const SizedBox(width: 8),
               Text(
                 'Account Information',
@@ -248,15 +243,11 @@ class HomeScreen extends StatelessWidget {
       children: [
         Text(
           label,
-          style: styles.body14Regular.copyWith(
-            color: AppColors.colorFF5252,
-          ),
+          style: styles.body14Regular.copyWith(color: AppColors.colorFF5252),
         ),
         Text(
           value,
-          style: styles.body14Medium.copyWith(
-            color: AppColors.colorFF0062,
-          ),
+          style: styles.body14Medium.copyWith(color: AppColors.colorFF0062),
         ),
       ],
     );
@@ -264,14 +255,12 @@ class HomeScreen extends StatelessWidget {
 
   void _showLogoutDialog(BuildContext context) {
     final styles = TextStyleHelper.instance;
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.whiteCustom,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         title: Text(
           'Logout',
           style: styles.headline18Regular.copyWith(
@@ -280,9 +269,7 @@ class HomeScreen extends StatelessWidget {
         ),
         content: Text(
           'Are you sure you want to logout?',
-          style: styles.body14Regular.copyWith(
-            color: AppColors.colorFF5252,
-          ),
+          style: styles.body14Regular.copyWith(color: AppColors.colorFF5252),
         ),
         actions: [
           TextButton(

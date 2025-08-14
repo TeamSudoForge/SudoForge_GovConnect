@@ -9,7 +9,7 @@ import '../../core/models/appointment_models.dart';
 class IdCardRenewalScreen extends StatefulWidget {
   static const String routeName = '/id-card-renewal';
 
-  const IdCardRenewalScreen({Key? key}) : super(key: key);
+  const IdCardRenewalScreen({super.key});
 
   @override
   State<IdCardRenewalScreen> createState() => _IdCardRenewalScreenState();
@@ -292,7 +292,7 @@ class _IdCardRenewalScreenState extends State<IdCardRenewalScreen> {
                                 borderRadius: BorderRadius.circular(4),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
+                                    color: Colors.black.withValues(alpha: 0.1),
                                     blurRadius: 4,
                                     offset: const Offset(0, 2),
                                   ),
@@ -348,7 +348,9 @@ class _IdCardRenewalScreenState extends State<IdCardRenewalScreen> {
                                     borderRadius: BorderRadius.circular(4),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withOpacity(0.1),
+                                        color: Colors.black.withValues(
+                                          alpha: 0.1,
+                                        ),
                                         blurRadius: 4,
                                         offset: const Offset(0, 2),
                                       ),
@@ -377,7 +379,9 @@ class _IdCardRenewalScreenState extends State<IdCardRenewalScreen> {
                                     borderRadius: BorderRadius.circular(4),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withOpacity(0.1),
+                                        color: Colors.black.withValues(
+                                          alpha: 0.1,
+                                        ),
                                         blurRadius: 4,
                                         offset: const Offset(0, 2),
                                       ),
@@ -516,9 +520,12 @@ class _IdCardRenewalScreenState extends State<IdCardRenewalScreen> {
                 child: ElevatedButton(
                   // Handle update appointment
                   onPressed: () {
-                    Navigator.pushNamed(
+                    Navigator.push(
                       context,
-                      AppointmentUpdateScreen.routeName,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            AppointmentUpdateScreen(appointment: appointment),
+                      ),
                     );
                   },
                   style: ElevatedButton.styleFrom(
