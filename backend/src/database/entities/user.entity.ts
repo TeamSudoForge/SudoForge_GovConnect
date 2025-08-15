@@ -38,6 +38,9 @@ export class User {
   @Column({ name: 'is_email_verified', default: true })
   isEmailVerified: boolean;
 
+  @Column({ name: 'passkey_challenge', type: 'text', nullable: true })
+  passkeyChallenge: string | null;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
