@@ -27,6 +27,7 @@ import { FormResponsesService } from './services/form-responses.service';
 import { AnalyticsService } from './services/analytics.service';
 import { DepartmentsService } from './services/departments.service';
 import { DynamicFormsService } from './dynamic-forms.service';
+import { FormSeederService } from './seeders/form-seeder.service';
 
 // Controllers
 import { FormsController } from './controllers/forms.controller';
@@ -66,6 +67,7 @@ import { DynamicFormsController } from './dynamic-forms.controller';
     AnalyticsService,
     DepartmentsService,
     DynamicFormsService,
+    FormSeederService,
   ],
   exports: [
     FormsService,
@@ -73,6 +75,7 @@ import { DynamicFormsController } from './dynamic-forms.controller';
     AnalyticsService,
     DepartmentsService,
     DynamicFormsService,
+    FormSeederService,
   ],
 })
 export class FormsModule {}

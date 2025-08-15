@@ -60,7 +60,7 @@ export class PasskeyController {
       );
 
     if (verified) {
-      return this.authService.login(user);
+      return this.authService.loginWithUser(user);
     }
 
     return { verified };

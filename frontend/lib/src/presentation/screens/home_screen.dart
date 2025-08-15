@@ -198,7 +198,19 @@ class HomeScreen extends StatelessWidget {
           icon: Remix.file_2_line,
           backgroundColor: const Color(0xFF2196F3),
           onPressed: () {
-            context.pushNamed('demo-form');
+            context.pushNamed('form-selection');
+          },
+          styles: styles,
+          theme: theme,
+        ),
+        const SizedBox(height: 16),
+        _buildNavigationButton(
+          context: context,
+          text: 'Dynamic Forms 2',
+          icon: Remix.file_2_line,
+          backgroundColor: const Color(0xFF2196F3),
+          onPressed: () {
+            context.pushNamed('form-selection');
           },
           styles: styles,
           theme: theme,

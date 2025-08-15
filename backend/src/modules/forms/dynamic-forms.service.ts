@@ -268,6 +268,85 @@ export class DynamicFormsService {
     return { isValid: errors.length === 0, errors };
   }
 
+  async getFormConfigById(id: string): Promise<any> {
+    const form = await this.getFormById(id);
+    
+    // Transform the database format to frontend format
+    const formattedForm = {
+      id: form.id,
+      title: form.title,
+      description: form.description,
+      isActive: form.isActive,
+      version: form.version,
+      metadata: form.metadata || {},
+      createdAt: form.createdAt,
+      updatedAt: form.updatedAt,
+      defaultValues: this.extractDefaultValues(form.sections),
+      sections: form.sections.map(section => ({
+        id: section.id,
+        title: section.title,
+        description: section.description,
+        pageNumber: section.pageNumber,
+        orderIndex: section.orderIndex,
+        formId: section.formId,
+        createdAt: section.createdAt,
+        updatedAt: section.updatedAt,
+        fields: section.fields.map(field => ({
+          id: field.id,
+          label: field.label,
+          fieldName: field.fieldName,
+          fieldType: this.transformFieldType(field.fieldType),
+          isRequired: field.isRequired,
+          placeholder: field.placeholder,
+          helpText: field.helpText,
+          orderIndex: field.orderIndex,
+          validationRules: field.validationRules,
+          options: field.options,
+          metadata: field.metadata,
+          sectionId: field.sectionId,
+          createdAt: field.createdAt,
+          updatedAt: field.updatedAt,
+        }))
+      }))
+    };
+
+    return formattedForm;
+  }
+
+  private transformFieldType(fieldType: FieldType): string {
+    // Transform database field types to frontend expected format
+    const fieldTypeMap = {
+      [FieldType.TEXT]: 'text',
+      [FieldType.PHONE_NUMBER]: 'phoneNumber',
+      [FieldType.EMAIL]: 'email',
+      [FieldType.DOCUMENT_UPLOAD]: 'documentUpload',
+      [FieldType.DATE]: 'date',
+      [FieldType.DROPDOWN]: 'dropdown',
+      [FieldType.RADIO_BUTTON]: 'radioButton',
+      [FieldType.CHECKBOX]: 'checkbox',
+      [FieldType.TEXTAREA]: 'textarea',
+      [FieldType.NUMBER]: 'number',
+      [FieldType.DEPENDENCY_FORM]: 'dependencyForm'
+    };
+    
+    return fieldTypeMap[fieldType] || fieldType;
+  }
+
+  private extractDefaultValues(sections: FormSection[]): any {
+    const defaultValues: any = {};
+    
+    sections.forEach(section => {
+      section.fields.forEach(field => {
+        if (field.fieldType === FieldType.DEPENDENCY_FORM && field.metadata) {
+          // Set default values for dependency forms based on metadata.isFilled
+          defaultValues[field.fieldName] = field.metadata.isFilled || false;
+        }
+      });
+    });
+
+    return defaultValues;
+  }
+
   async deleteForm(id: string): Promise<void> {
     const form = await this.getFormById(id);
     await this.formRepository.remove(form);

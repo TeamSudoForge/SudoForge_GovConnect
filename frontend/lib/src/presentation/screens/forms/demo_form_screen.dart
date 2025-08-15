@@ -1,14 +1,18 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gov_connect/src/core/models/dynamic_form_models.dart';
+import 'package:gov_connect/src/core/services/form_api_service.dart';
+import 'package:gov_connect/src/core/services/auth_service.dart';
 import 'package:gov_connect/src/presentation/widgets/form_fields/dependency_form_field.dart';
 import 'package:gov_connect/src/presentation/widgets/dynamic_form_renderer.dart';
 
 class DemoFormScreen extends StatefulWidget {
+  final String? formId;
   final Map<String, dynamic>? jsonFormData;
   static const String routeName = '/demo-form';
   
-  const DemoFormScreen({Key? key, this.jsonFormData}) : super(key: key);
+  const DemoFormScreen({Key? key, this.formId, this.jsonFormData}) : super(key: key);
   
   @override
   _DemoFormScreenState createState() => _DemoFormScreenState();
@@ -24,6 +28,13 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
   late DynamicFormModel _completeFormModel;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   
+  // API Service
+  late FormApiService _formApiService;
+  
+  // Loading state
+  bool _isLoading = true;
+  String? _errorMessage;
+  
   // Animation controllers for submission
   late AnimationController _scaleController;
   late AnimationController _checkController;
@@ -31,11 +42,18 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
   late Animation<double> _checkAnimation;
   bool _isSubmitting = false;
 
+  // Hardcoded form IDs as requested
+  static const List<String> _availableFormIds = [
+    '8f65c305-8c2a-4346-bc20-7c727ddb911c',
+    'fa79a916-e02d-4e41-888f-ccbd7af664b4',
+  ];
+
   @override
   void initState() {
     super.initState();
-    _initializeCompleteFormModel();
+    _formApiService = FormApiService(AuthService());
     _initializeAnimations();
+    _loadFormData();
   }
 
   void _initializeAnimations() {
@@ -73,12 +91,88 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
     super.dispose();
   }
 
-  void _initializeCompleteFormModel() {
+  Future<void> _loadFormData() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      Map<String, dynamic>? jsonData;
+
+      if (widget.jsonFormData != null) {
+        // Use provided JSON data
+        print('📋 Using provided JSON data');
+        jsonData = widget.jsonFormData;
+      } else {
+        // Determine which form ID to use
+        String formIdToLoad;
+        if (widget.formId != null && _availableFormIds.contains(widget.formId)) {
+          formIdToLoad = widget.formId!;
+        } else {
+          // Default to the first hardcoded form ID
+          formIdToLoad = _availableFormIds.first;
+        }
+
+        print('🆔 Loading form with ID: $formIdToLoad');
+
+        // Test connection first
+        final isConnected = await _formApiService.testConnection();
+        print('🌐 API connection test: ${isConnected ? 'SUCCESS' : 'FAILED'}');
+        
+        if (!isConnected) {
+          throw Exception('Cannot connect to backend API');
+        }
+
+        // Skip auth check for now
+        // Check authentication
+        // final authService = AuthService();
+        // final isAuthenticated = authService.isAuthenticated;
+        // final token = await authService.getToken();
+        // print('🔐 Authentication status: $isAuthenticated');
+        // print('🎟️ Token available: ${token != null}');
+        
+        // if (!isAuthenticated || token == null) {
+        //   throw Exception('User not authenticated - please log in first');
+        // }
+
+        // Fetch form data from API
+        jsonData = await _formApiService.getFormConfig(formIdToLoad);
+        
+        if (jsonData == null) {
+          throw Exception('Failed to load form configuration - API returned null');
+        }
+        
+        // Transform backend format to frontend format
+        jsonData = _transformBackendResponse(jsonData);
+        
+        print('✅ Successfully loaded and transformed form data from API');
+      }
+
+      _initializeCompleteFormModel(jsonData);
+      
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('💥 Error in _loadFormData: $e');
+      setState(() {
+        _isLoading = false;
+        _errorMessage = 'Error loading form: ${e.toString()}';
+      });
+      
+      // Fallback to sample data if API fails
+      print('🔄 Falling back to sample data');
+      _initializeCompleteFormModel(_getSampleJsonData());
+    }
+  }
+
+  void _initializeCompleteFormModel([Map<String, dynamic>? jsonData]) {
     // Use provided JSON data or fallback to sample data
-    final jsonData = widget.jsonFormData ?? _getSampleJsonData();
+    final data = jsonData ?? widget.jsonFormData ?? _getSampleJsonData();
     
     // Parse the JSON into DynamicFormModel
-    _completeFormModel = DynamicFormModel.fromJson(jsonData);
+    _completeFormModel = DynamicFormModel.fromJson(data);
 
     // Extract dependency fields from the overview section (first section with pageNumber 1)
     final overviewSection = _completeFormModel.sections.firstWhere(
@@ -98,12 +192,74 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
     totalFormPages = formPageNumbers.length;
 
     // Initialize form data with default values from JSON
-    _initializeFormDataFromJson(jsonData);
+    _initializeFormDataFromJson(data);
   }
 
   void _initializeFormDataFromJson(Map<String, dynamic> jsonData) {
-    final defaultValues = jsonData['defaultValues'] as Map<String, dynamic>? ?? {};
+    // Safely handle defaultValues casting
+    final defaultValuesRaw = jsonData['defaultValues'];
+    Map<String, dynamic> defaultValues = {};
+    
+    if (defaultValuesRaw != null) {
+      if (defaultValuesRaw is Map<String, dynamic>) {
+        defaultValues = defaultValuesRaw;
+      } else if (defaultValuesRaw is Map) {
+        // Convert Map<dynamic, dynamic> to Map<String, dynamic>
+        defaultValues = Map<String, dynamic>.from(defaultValuesRaw);
+      }
+    }
+    
     _formData = Map<String, dynamic>.from(defaultValues);
+  }
+
+  Map<String, dynamic> _transformBackendResponse(Map<String, dynamic> backendData) {
+    print('🔄 Transforming backend response to frontend format');
+    
+    // Create a deep copy to avoid modifying the original data
+    final transformedData = json.decode(json.encode(backendData)) as Map<String, dynamic>;
+    
+    // Add defaultValues if missing
+    if (!transformedData.containsKey('defaultValues')) {
+      transformedData['defaultValues'] = <String, dynamic>{};
+    }
+    
+    // Transform sections and fields
+    if (transformedData.containsKey('sections') && transformedData['sections'] is List) {
+      final sections = transformedData['sections'] as List;
+      for (var sectionData in sections) {
+        if (sectionData is Map && sectionData['fields'] is List) {
+          final fields = sectionData['fields'] as List;
+          for (var fieldData in fields) {
+            if (fieldData is Map && fieldData['fieldType'] is String) {
+              // Transform field types
+              fieldData['fieldType'] = _transformFieldType(fieldData['fieldType'] as String);
+            }
+          }
+        }
+      }
+    }
+    
+    print('✅ Backend response transformed successfully');
+    return transformedData;
+  }
+
+  String _transformFieldType(String backendFieldType) {
+    // Transform backend field types to frontend expected format
+    final fieldTypeMap = {
+      'text': 'text',
+      'phone_number': 'phoneNumber',
+      'email': 'email',
+      'document_upload': 'documentUpload',
+      'date': 'date',
+      'dropdown': 'dropdown',
+      'radio_button': 'radioButton',
+      'checkbox': 'checkbox',
+      'textarea': 'textarea',
+      'number': 'number',
+      'dependency_form': 'dependencyForm'
+    };
+    
+    return fieldTypeMap[backendFieldType] ?? backendFieldType;
   }
 
   // Sample JSON data structure for testing
@@ -535,6 +691,16 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
     // Show submission animation overlay
     if (_isSubmitting) {
       return _buildSubmissionOverlay();
+    }
+
+    // Show loading state
+    if (_isLoading) {
+      return _buildLoadingScreen();
+    }
+
+    // Show error state
+    if (_errorMessage != null) {
+      return _buildErrorScreen();
     }
 
     return Scaffold(
@@ -1383,6 +1549,172 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingScreen() {
+    return Scaffold(
+      backgroundColor: const Color(0xFF2196F3),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Header
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              color: const Color(0xFF2196F3),
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => context.pop(),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  const Expanded(
+                    child: Text(
+                      'Loading Form...',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Loading indicator
+            Expanded(
+              child: Container(
+                color: Colors.white,
+                child: const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(height: 20),
+                      Text(
+                        'Loading form configuration...',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Color(0xFF666666),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorScreen() {
+    return Scaffold(
+      backgroundColor: const Color(0xFF2196F3),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Header
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              color: const Color(0xFF2196F3),
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => context.pop(),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  const Expanded(
+                    child: Text(
+                      'Error',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Error message
+            Expanded(
+              child: Container(
+                color: Colors.white,
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.error_outline,
+                          size: 80,
+                          color: Colors.red,
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          _errorMessage ?? 'An error occurred',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Color(0xFF666666),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 30),
+                        ElevatedButton(
+                          onPressed: _loadFormData,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF2196F3),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 30,
+                              vertical: 15,
+                            ),
+                          ),
+                          child: const Text(
+                            'Retry',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

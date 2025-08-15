@@ -16,6 +16,7 @@ import '../../presentation/screens/forms/id_recovery_process_screen.dart';
 import '../../presentation/screens/forms/id_recovery_form_content_screen.dart';
 import '../../presentation/screens/forms/id_recovery_success_screen.dart';
 import '../../presentation/screens/forms/demo_form_screen.dart';
+import '../../presentation/screens/forms/form_selection_screen.dart';
 
 class AppRouter {
   // Session-based flag to track if splash has been shown
@@ -128,9 +129,17 @@ class AppRouter {
               builder: (context, state) => const AddPasskeyScreen(),
             ),
             GoRoute(
+              path: 'form-selection',
+              name: 'form-selection',
+              builder: (context, state) => const FormSelectionScreen(),
+            ),
+            GoRoute(
               path: 'demo-form',
               name: 'demo-form',
-              builder: (context, state) => DemoFormScreen(),
+              builder: (context, state) {
+                final formId = state.uri.queryParameters['formId'];
+                return DemoFormScreen(formId: formId);
+              },
             ),
             GoRoute(
               path: 'id-recovery-process',
@@ -206,7 +215,15 @@ extension GoRouterExtension on GoRouter {
 
   void pushAddPasskey() => pushNamed('add-passkey');
 
-  void pushDemoForm() => pushNamed('demo-form');
+  void pushFormSelection() => pushNamed('form-selection');
+
+  void pushDemoForm([String? formId]) {
+    if (formId != null) {
+      pushNamed('demo-form', queryParameters: {'formId': formId});
+    } else {
+      pushNamed('demo-form');
+    }
+  }
 
   void pushAppointmentDetails() => pushNamed('appointment-details');
 
