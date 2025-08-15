@@ -33,13 +33,14 @@ class HomeScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              context.pushNamed('settings');
+              context.pushNamed('profile');
             },
             icon: Icon(
-              Remix.settings_3_line,
+              Icons.account_circle,
               color: theme.colorScheme.onPrimary,
+              size: 28,
             ),
-            tooltip: 'Settings',
+            tooltip: 'Profile',
           ),
           IconButton(
             onPressed: () {

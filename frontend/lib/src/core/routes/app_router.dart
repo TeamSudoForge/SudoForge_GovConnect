@@ -4,6 +4,7 @@ import '../../core/models/appointment_models.dart';
 import '../../presentation/screens/splash_screen.dart';
 import '../../presentation/screens/login_screen.dart';
 import '../../presentation/screens/home_screen.dart';
+import '../../presentation/screens/profile_screen.dart';
 import '../../presentation/screens/email_verification_screen.dart';
 import '../../presentation/screens/two_factor_verification_screen.dart';
 import '../../presentation/screens/app_navigation_screen.dart';
@@ -117,6 +118,11 @@ class AppRouter {
               builder: (context, state) => const NotificationsScreen(),
             ),
             GoRoute(
+              path: 'profile',
+              name: 'profile',
+              builder: (context, state) => const ProfileScreen(),
+            ),
+            GoRoute(
               path: 'settings',
               name: 'settings',
               builder: (context, state) => const SettingsScreen(),
@@ -134,7 +140,8 @@ class AppRouter {
                 GoRoute(
                   path: 'form-content',
                   name: 'id-recovery-form-content',
-                  builder: (context, state) => const IdRecoveryFormContentScreen(),
+                  builder: (context, state) =>
+                      const IdRecoveryFormContentScreen(),
                 ),
                 GoRoute(
                   path: 'success',
@@ -177,6 +184,7 @@ class AppRoutes {
   static const String twoFactorVerification = '/two-factor-verification';
   static const String home = '/home';
   static const String notifications = '/home/notifications';
+  static const String profile = '/home/profile';
   static const String settings = '/home/settings';
   static const String addPasskey = '/home/add-passkey';
   static const String appNavigation = '/home/app-navigation';
@@ -194,6 +202,8 @@ extension GoRouterExtension on GoRouter {
   void pushHome() => pushNamed('home');
 
   void pushNotifications() => pushNamed('notifications');
+
+  void pushProfile() => pushNamed('profile');
 
   void pushSettings() => pushNamed('settings');
 
