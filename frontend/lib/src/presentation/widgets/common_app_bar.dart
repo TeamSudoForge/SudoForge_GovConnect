@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gov_connect/src/core/routes/app_router.dart';
+import 'package:provider/provider.dart';
+import 'package:gov_connect/src/core/providers/notification_provider.dart';
 
 class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -60,10 +62,32 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: elevation,
       actions: [
         if (showNotifications)
-          IconButton(
-            icon: const Icon(Icons.notifications_none),
-            onPressed: onNotifications ?? defaultNotificationsNav,
-            tooltip: 'Notifications',
+          Consumer<NotificationProvider>(
+            builder: (context, provider, _) => Stack(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.notifications_none),
+                  onPressed: onNotifications ?? defaultNotificationsNav,
+                  tooltip: 'Notifications',
+                ),
+                if (provider.unreadCount > 0)
+                  Positioned(
+                    right: 8,
+                    top: 8,
+                    child: CircleAvatar(
+                      radius: 8,
+                      backgroundColor: Colors.red,
+                      child: Text(
+                        provider.unreadCount.toString(),
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         if (showProfile)
           IconButton(

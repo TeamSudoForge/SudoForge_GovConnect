@@ -180,6 +180,20 @@ class ApiService {
     }
   }
 
+  Future<List<Map<String, dynamic>>> getNotifications() async {
+    final response = await _dio.get('/notifications');
+    return List<Map<String, dynamic>>.from(response.data);
+  }
+
+  Future<void> markNotificationAsRead(String id) async {
+    await _dio.post('/notifications/mark-read', data: {'id': id});
+  }
+
+  Future<void> sendFcmToken(String token) async {
+    print('[API] FCM Token: $token');
+    // await _dio.post('/fcm/token', data: {'token': token});
+  }
+
   String _handleDioError(DioException e) {
     if (e.response != null) {
       final data = e.response!.data;

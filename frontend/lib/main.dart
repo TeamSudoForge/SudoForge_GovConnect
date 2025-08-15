@@ -10,13 +10,16 @@ import 'src/presentation/screens/app_navigation_screen.dart';
 import 'src/core/theme/theme_config.dart';
 import 'src/injection.dart';
 import 'src/core/routes/app_router.dart';
+import '/src/core/services/firebase_setup.dart';
 
-void main() async {
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize services
   await initializeServices();
-
+  await setupFirebaseAndNotifications();
   runApp(const GovConnectApp());
 }
 
@@ -37,6 +40,7 @@ class GovConnectApp extends StatelessWidget {
             theme: AppTheme.lightTheme(fontScale),
             darkTheme: AppTheme.darkTheme(fontScale),
             routerConfig: router,
+            // navigatorKey: navigatorKey, // Not supported by MaterialApp.router, use GoRouter's navigatorKey if needed
           );
         },
       ),

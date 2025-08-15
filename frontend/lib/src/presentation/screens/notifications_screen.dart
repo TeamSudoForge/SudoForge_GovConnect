@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../core/app_export.dart';
+import '../../core/providers/notification_provider.dart';
 import '../widgets/common_app_bar.dart';
 
 class NotificationsScreen extends StatefulWidget {
@@ -12,49 +14,22 @@ class NotificationsScreen extends StatefulWidget {
 class _NotificationsScreenState extends State<NotificationsScreen> {
   bool showUnread = false;
 
-  final List<_NotificationItem> notifications = [
-    _NotificationItem(
-      title: 'Appointment Reminder',
-      message:
-          'You have a scheduled appointment with the Grama Niladhari tomorrow at 10:00 A.M. Please arrive on time and bring the required documents.',
-      date: DateTime.now(),
-      icon: Icons.event,
-      iconColor: Color(0xFF2196F3),
-      iconBackgroundColor: const Color.fromARGB(
-        51,
-        33,
-        150,
-        243,
-      ), // 20% opacity
-      unread: true,
-    ),
-    _NotificationItem(
-      title: 'Verification Successful',
-      message: 'Your Identity has been successfully verified',
-      date: DateTime.now().subtract(const Duration(days: 5)),
-      icon: Icons.check_circle_rounded,
-      iconColor: Color(0xFF4CAF50),
-      iconBackgroundColor: const Color.fromARGB(51, 76, 175, 80), // 20% opacity
-      unread: false,
-    ),
-    _NotificationItem(
-      title: 'Application under Review',
-      message:
-          'Your new Identity card application (Ref: #A4521) has been received and is now under review',
-      date: DateTime.now().subtract(const Duration(days: 3)),
-      icon: Icons.hourglass_bottom_rounded,
-      iconColor: Color(0xFFFFC107),
-      iconBackgroundColor: const Color.fromARGB(51, 255, 193, 7), // 20% opacity
-      unread: true,
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<NotificationProvider>(
+      context,
+      listen: false,
+    ).fetchNotifications();
+  }
 
   @override
   Widget build(BuildContext context) {
     final textStyles = TextStyleHelper.instance;
+    final provider = Provider.of<NotificationProvider>(context);
     final filtered = showUnread
-        ? notifications.where((n) => n.unread).toList()
-        : notifications;
+        ? provider.notifications.where((n) => !n.read).toList()
+        : provider.notifications;
     return Scaffold(
       appBar: CommonAppBar(
         title: 'Notifications',
@@ -63,70 +38,111 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         showProfile: true,
       ),
       backgroundColor: const Color(0xFFF6F8FA),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
+      body: provider.loading
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
               children: [
-                Expanded(
-                  child: _FilterButton(
-                    label: 'All',
-                    selected: !showUnread,
-                    onTap: () => setState(() => showUnread = false),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _FilterButton(
+                          label: 'All',
+                          selected: !showUnread,
+                          onTap: () => setState(() => showUnread = false),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _FilterButton(
+                          label: 'Unread',
+                          selected: showUnread,
+                          onTap: () => setState(() => showUnread = true),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 8),
                 Expanded(
-                  child: _FilterButton(
-                    label: 'Unread',
-                    selected: showUnread,
-                    onTap: () => setState(() => showUnread = true),
+                  child: ListView.separated(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    itemCount: filtered.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    itemBuilder: (context, i) {
+                      final n = filtered[i];
+                      return GestureDetector(
+                        onTap: () async {
+                          if (!n.read) {
+                            await provider.markAsRead(n.id);
+                          }
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.03),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                            border: !n.read
+                                ? Border.all(
+                                    color: Theme.of(
+                                      context,
+                                    ).primaryColor.withOpacity(0.25),
+                                    width: 1.2,
+                                  )
+                                : null,
+                          ),
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              backgroundColor: Theme.of(
+                                context,
+                              ).primaryColor.withOpacity(0.1),
+                              child: Icon(
+                                n.type == 'success'
+                                    ? Icons.check_circle_rounded
+                                    : Icons.notifications,
+                                color: Theme.of(context).primaryColor,
+                                size: 28,
+                              ),
+                            ),
+                            title: Text(
+                              n.title,
+                              style: textStyles.title16Medium.copyWith(
+                                fontWeight: !n.read
+                                    ? FontWeight.bold
+                                    : FontWeight.w600,
+                              ),
+                            ),
+                            subtitle: Text(
+                              n.message,
+                              style: textStyles.body14Regular,
+                            ),
+                            trailing: Text(
+                              _formatDate(n.createdAt),
+                              style: textStyles.body12Regular.copyWith(
+                                color: Colors.grey,
+                              ),
+                            ),
+                            isThreeLine: true,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
             ),
-          ),
-          Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              itemCount: filtered.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
-              itemBuilder: (context, i) {
-                final n = filtered[i];
-                return Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.03),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: n.iconBackgroundColor,
-                      child: Icon(n.icon, color: n.iconColor, size: 28),
-                    ),
-                    title: Text(n.title, style: textStyles.title16Medium),
-                    subtitle: Text(n.message, style: textStyles.body14Regular),
-                    trailing: Text(
-                      _formatDate(n.date),
-                      style: textStyles.body12Regular.copyWith(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    isThreeLine: true,
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -179,23 +195,4 @@ class _FilterButton extends StatelessWidget {
       ),
     );
   }
-}
-
-class _NotificationItem {
-  final String title;
-  final String message;
-  final DateTime date;
-  final IconData icon;
-  final Color iconColor;
-  final bool unread;
-  final Color iconBackgroundColor;
-  _NotificationItem({
-    required this.title,
-    required this.message,
-    required this.date,
-    required this.icon,
-    required this.iconColor,
-    required this.iconBackgroundColor,
-    required this.unread,
-  });
 }
