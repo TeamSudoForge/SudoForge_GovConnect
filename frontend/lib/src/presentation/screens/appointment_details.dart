@@ -4,6 +4,7 @@ import 'package:gov_connect/src/presentation/screens/appointment_update_screen.d
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/common_app_bar.dart';
+import '../widgets/bottom_navigation_widget.dart';
 import '../../core/models/appointment_models.dart';
 
 class AppointmentDetailsScreen extends StatefulWidget {
@@ -551,6 +552,9 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
             const SizedBox(height: 32),
           ],
         ),
+      ),
+      bottomNavigationBar: const BottomNavigationWidget(
+        currentItem: BottomNavItem.appointments,
       ),
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_remix/flutter_remix.dart';
 import '../../../core/theme/theme_config.dart';
 import '../../../core/utils/text_style_helper.dart';
+import '../../widgets/bottom_navigation_widget.dart';
 
 class QueueStatusScreen extends StatelessWidget {
   const QueueStatusScreen({Key? key}) : super(key: key);
@@ -159,7 +159,9 @@ class QueueStatusScreen extends StatelessWidget {
                   LinearProgressIndicator(
                     value: 12 / 23,
                     backgroundColor: Colors.grey[300],
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.colorFF007B),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      AppColors.colorFF007B,
+                    ),
                     minHeight: 8,
                   ),
                   const SizedBox(height: 12),
@@ -253,7 +255,10 @@ class QueueStatusScreen extends StatelessWidget {
                 onPressed: () {
                   // TODO: Set notification alert
                 },
-                icon: Icon(Icons.notifications_outlined, color: AppColors.colorFF1717),
+                icon: Icon(
+                  Icons.notifications_outlined,
+                  color: AppColors.colorFF1717,
+                ),
                 label: Text(
                   'Set Notification Alert',
                   style: TextStyle(
@@ -300,33 +305,8 @@ class QueueStatusScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: AppColors.colorFF007B,
-        unselectedItemColor: AppColors.colorFF7373,
-        currentIndex: 1,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(FlutterRemix.apps_2_line),
-            label: 'Services',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today_outlined),
-            label: 'Appointments',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings_outlined),
-            label: 'Settings',
-          ),
-        ],
-        onTap: (index) {
-          // TODO: Handle navigation
-        },
+      bottomNavigationBar: const BottomNavigationWidget(
+        currentItem: BottomNavItem.services,
       ),
     );
   }
@@ -369,11 +349,7 @@ class QueueStatusScreen extends StatelessWidget {
             color: iconColor.withOpacity(0.1),
             shape: BoxShape.circle,
           ),
-          child: Icon(
-            icon,
-            size: 20,
-            color: iconColor,
-          ),
+          child: Icon(icon, size: 20, color: iconColor),
         ),
         const SizedBox(width: 12),
         Expanded(

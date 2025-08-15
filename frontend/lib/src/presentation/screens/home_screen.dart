@@ -5,6 +5,7 @@ import 'package:remixicon/remixicon.dart';
 import '../../core/app_export.dart';
 import '../../core/theme/theme_config.dart';
 import '../widgets/custom_button.dart';
+import '../widgets/bottom_navigation_widget.dart';
 import 'login_screen.dart';
 import 'qrflow/qr_scan_screen.dart';
 
@@ -32,13 +33,14 @@ class HomeScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              context.pushNamed('settings');
+              context.pushNamed('profile');
             },
             icon: Icon(
-              Remix.settings_3_line,
+              Icons.account_circle,
               color: theme.colorScheme.onPrimary,
+              size: 28,
             ),
-            tooltip: 'Settings',
+            tooltip: 'Profile',
           ),
           IconButton(
             onPressed: () {
@@ -79,6 +81,9 @@ class HomeScreen extends StatelessWidget {
             ),
           );
         },
+      ),
+      bottomNavigationBar: const BottomNavigationWidget(
+        currentItem: BottomNavItem.home,
       ),
     );
   }

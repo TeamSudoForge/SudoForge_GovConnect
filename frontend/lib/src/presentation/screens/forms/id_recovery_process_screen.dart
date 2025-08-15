@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../widgets/bottom_navigation_widget.dart';
 
 class IdRecoveryProcessScreen extends StatefulWidget {
   const IdRecoveryProcessScreen({Key? key}) : super(key: key);
@@ -7,13 +8,14 @@ class IdRecoveryProcessScreen extends StatefulWidget {
   static const String routeName = '/id-recovery-process';
 
   @override
-  State<IdRecoveryProcessScreen> createState() => _IdRecoveryProcessScreenState();
+  State<IdRecoveryProcessScreen> createState() =>
+      _IdRecoveryProcessScreenState();
 }
 
 class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
   int currentStep = 1;
   final int totalSteps = 3;
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,9 +87,9 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Step Indicator
                   Row(
                     children: [
@@ -97,9 +99,9 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
                       ],
                     ],
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Step Labels
                   Row(
                     children: [
@@ -110,7 +112,9 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 14,
-                            fontWeight: currentStep == 1 ? FontWeight.w600 : FontWeight.w400,
+                            fontWeight: currentStep == 1
+                                ? FontWeight.w600
+                                : FontWeight.w400,
                           ),
                         ),
                       ),
@@ -121,7 +125,9 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 14,
-                            fontWeight: currentStep == 2 ? FontWeight.w600 : FontWeight.w400,
+                            fontWeight: currentStep == 2
+                                ? FontWeight.w600
+                                : FontWeight.w400,
                           ),
                         ),
                       ),
@@ -132,7 +138,9 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 14,
-                            fontWeight: currentStep == 3 ? FontWeight.w600 : FontWeight.w400,
+                            fontWeight: currentStep == 3
+                                ? FontWeight.w600
+                                : FontWeight.w400,
                           ),
                         ),
                       ),
@@ -141,7 +149,7 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
                 ],
               ),
             ),
-            
+
             // White Content Section
             Expanded(
               child: Container(
@@ -164,9 +172,9 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      
+
                       const SizedBox(height: 16),
-                      
+
                       // Description
                       const Center(
                         child: Text(
@@ -179,9 +187,9 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      
+
                       const SizedBox(height: 24),
-                      
+
                       // Service Registration Info
                       Container(
                         padding: const EdgeInsets.all(16),
@@ -206,7 +214,8 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
                                   ),
                                   children: [
                                     TextSpan(
-                                      text: 'This Service is registered under Immigration Department. See the ',
+                                      text:
+                                          'This Service is registered under Immigration Department. See the ',
                                     ),
                                     TextSpan(
                                       text: 'Official Announcement',
@@ -223,26 +232,26 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
                           ],
                         ),
                       ),
-                      
+
                       const SizedBox(height: 32),
-                      
+
                       // Auto-Filled Personal Information Section
                       _buildSectionHeader('Auto-Filled Personal Information'),
-                      
+
                       const SizedBox(height: 16),
-                      
+
                       _buildInfoCard(
                         'For your convenience, the following fields have been automatically filled using the verified personal data linked to your profile.',
                       ),
-                      
+
                       const SizedBox(height: 12),
-                      
+
                       _buildInfoCard(
                         'This data has been collected in accordance with applicable regulations and is securely stored. Please review and update if necessary before submission.',
                       ),
-                      
+
                       const SizedBox(height: 32),
-                      
+
                       // Auto Filed Data Section
                       const Text(
                         'Auto Filed Data',
@@ -252,9 +261,9 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
                           color: Color(0xFF333333),
                         ),
                       ),
-                      
+
                       const SizedBox(height: 16),
-                      
+
                       // Birth Certificate Dropdown
                       Container(
                         padding: const EdgeInsets.all(16),
@@ -301,9 +310,9 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
                           ],
                         ),
                       ),
-                      
+
                       const SizedBox(height: 32),
-                      
+
                       // Process Flow Section
                       const Text(
                         'Process Flow',
@@ -313,28 +322,31 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
                           color: Color(0xFF333333),
                         ),
                       ),
-                      
+
                       const SizedBox(height: 16),
-                      
+
                       // Process Flow Steps
                       _buildProcessFlowStep(
                         stepNumber: 1,
                         title: 'Auto Filed Data',
-                        description: 'Check all the required auto filed data are available and correct.',
+                        description:
+                            'Check all the required auto filed data are available and correct.',
                         isActive: true,
                       ),
-                      
+
                       _buildProcessFlowStep(
                         stepNumber: 2,
                         title: 'Birth certificate form',
-                        description: 'Fill the form for birth certificate verification.',
+                        description:
+                            'Fill the form for birth certificate verification.',
                         isActive: false,
                       ),
-                      
+
                       _buildProcessFlowStep(
                         stepNumber: 3,
                         title: 'Submit',
-                        description: 'Submit the form and wait until we process the request.',
+                        description:
+                            'Submit the form and wait until we process the request.',
                         isActive: false,
                         isLast: true,
                       ),
@@ -343,7 +355,7 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
                 ),
               ),
             ),
-            
+
             // Bottom Navigation Section
             Container(
               padding: const EdgeInsets.all(16),
@@ -376,9 +388,9 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(width: 16),
-                  
+
                   // Continue Button
                   Expanded(
                     flex: 2,
@@ -407,7 +419,7 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
                 ],
               ),
             ),
-            
+
             // Bottom Tab Bar
             Container(
               decoration: const BoxDecoration(
@@ -416,51 +428,8 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
                   top: BorderSide(color: Color(0xFFE0E0E0), width: 1),
                 ),
               ),
-              child: BottomNavigationBar(
-                type: BottomNavigationBarType.fixed,
-                selectedItemColor: const Color(0xFF2196F3),
-                unselectedItemColor: const Color(0xFF666666),
-                backgroundColor: Colors.white,
-                elevation: 0,
-                items: const [
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.home_outlined),
-                    activeIcon: Icon(Icons.home),
-                    label: 'Home',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.grid_view_outlined),
-                    activeIcon: Icon(Icons.grid_view),
-                    label: 'Services',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.calendar_today_outlined),
-                    activeIcon: Icon(Icons.calendar_today),
-                    label: 'Appointments',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.settings_outlined),
-                    activeIcon: Icon(Icons.settings),
-                    label: 'Settings',
-                  ),
-                ],
-                onTap: (index) {
-                  // Handle bottom navigation
-                  switch (index) {
-                    case 0:
-                      context.go('/home');
-                      break;
-                    case 1:
-                      // Navigate to services
-                      break;
-                    case 2:
-                      // Navigate to appointments
-                      break;
-                    case 3:
-                      // Navigate to settings
-                      break;
-                  }
-                },
+              child: const BottomNavigationWidget(
+                currentItem: BottomNavItem.services,
               ),
             ),
           ],
@@ -468,11 +437,11 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
       ),
     );
   }
-  
+
   Widget _buildStepIndicator(int stepNumber) {
     bool isActive = stepNumber <= currentStep;
     bool isCurrent = stepNumber == currentStep;
-    
+
     return Container(
       width: 32,
       height: 32,
@@ -493,7 +462,7 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
       ),
     );
   }
-  
+
   Widget _buildStepConnector() {
     return Expanded(
       child: Container(
@@ -503,7 +472,7 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
       ),
     );
   }
-  
+
   Widget _buildSectionHeader(String title) {
     return Row(
       children: [
@@ -527,7 +496,7 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
       ],
     );
   }
-  
+
   Widget _buildInfoCard(String text) {
     return Container(
       padding: const EdgeInsets.all(12),
@@ -562,7 +531,7 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
       ),
     );
   }
-  
+
   Widget _buildProcessFlowStep({
     required int stepNumber,
     required String title,
@@ -583,7 +552,9 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
                 height: 40,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: isActive ? const Color(0xFF2196F3) : const Color(0xFFE0E0E0),
+                  color: isActive
+                      ? const Color(0xFF2196F3)
+                      : const Color(0xFFE0E0E0),
                 ),
                 child: Center(
                   child: Text(
@@ -605,9 +576,9 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
                 ),
             ],
           ),
-          
+
           const SizedBox(width: 16),
-          
+
           // Step Content
           Expanded(
             child: Column(
@@ -619,7 +590,9 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: isActive ? const Color(0xFF333333) : const Color(0xFF666666),
+                    color: isActive
+                        ? const Color(0xFF333333)
+                        : const Color(0xFF666666),
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -627,7 +600,9 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
                   description,
                   style: TextStyle(
                     fontSize: 14,
-                    color: isActive ? const Color(0xFF666666) : const Color(0xFF999999),
+                    color: isActive
+                        ? const Color(0xFF666666)
+                        : const Color(0xFF999999),
                     height: 1.4,
                   ),
                 ),
