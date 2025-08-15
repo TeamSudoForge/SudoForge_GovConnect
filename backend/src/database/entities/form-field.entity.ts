@@ -11,7 +11,8 @@ export enum FieldType {
   RADIO_BUTTON = 'radio_button',
   CHECKBOX = 'checkbox',
   TEXTAREA = 'textarea',
-  NUMBER = 'number'
+  NUMBER = 'number',
+  DEPENDENCY_FORM = 'dependency_form'
 }
 
 @Entity('dynamic_form_fields')

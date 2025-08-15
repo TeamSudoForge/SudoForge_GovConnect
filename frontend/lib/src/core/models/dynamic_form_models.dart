@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 enum DynamicFieldType {
   text,
   phoneNumber,
@@ -11,6 +9,7 @@ enum DynamicFieldType {
   checkbox,
   textarea,
   number,
+  dependencyForm,
 }
 
 class DynamicFormFieldModel {
@@ -25,6 +24,9 @@ class DynamicFormFieldModel {
   final Map<String, dynamic>? validationRules;
   final Map<String, dynamic>? options;
   final Map<String, dynamic>? metadata;
+  final String sectionId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   DynamicFormFieldModel({
     required this.id,
@@ -38,6 +40,9 @@ class DynamicFormFieldModel {
     this.validationRules,
     this.options,
     this.metadata,
+    required this.sectionId,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   factory DynamicFormFieldModel.fromJson(Map<String, dynamic> json) {
@@ -53,6 +58,9 @@ class DynamicFormFieldModel {
       validationRules: json['validationRules'],
       options: json['options'],
       metadata: json['metadata'],
+      sectionId: json['sectionId'],
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt']),
     );
   }
 
@@ -69,6 +77,9 @@ class DynamicFormFieldModel {
       'validationRules': validationRules,
       'options': options,
       'metadata': metadata,
+      'sectionId': sectionId,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
     };
   }
 
@@ -94,6 +105,8 @@ class DynamicFormFieldModel {
         return DynamicFieldType.textarea;
       case 'number':
         return DynamicFieldType.number;
+      case 'dependency_form':
+        return DynamicFieldType.dependencyForm;
       default:
         return DynamicFieldType.text;
     }
@@ -106,7 +119,10 @@ class DynamicFormSectionModel {
   final String? description;
   final int pageNumber;
   final int orderIndex;
+  final String formId;
   final List<DynamicFormFieldModel> fields;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   DynamicFormSectionModel({
     required this.id,
@@ -114,7 +130,10 @@ class DynamicFormSectionModel {
     this.description,
     required this.pageNumber,
     this.orderIndex = 1,
+    required this.formId,
     required this.fields,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   factory DynamicFormSectionModel.fromJson(Map<String, dynamic> json) {
@@ -124,10 +143,13 @@ class DynamicFormSectionModel {
       description: json['description'],
       pageNumber: json['pageNumber'],
       orderIndex: json['orderIndex'] ?? 1,
+      formId: json['formId'],
       fields: (json['fields'] as List<dynamic>?)
               ?.map((field) => DynamicFormFieldModel.fromJson(field))
               .toList() ??
           [],
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt']),
     );
   }
 
@@ -138,7 +160,10 @@ class DynamicFormSectionModel {
       'description': description,
       'pageNumber': pageNumber,
       'orderIndex': orderIndex,
+      'formId': formId,
       'fields': fields.map((field) => field.toJson()).toList(),
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
     };
   }
 }
@@ -151,6 +176,8 @@ class DynamicFormModel {
   final int version;
   final Map<String, dynamic>? metadata;
   final List<DynamicFormSectionModel> sections;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   DynamicFormModel({
     required this.id,
@@ -160,6 +187,8 @@ class DynamicFormModel {
     this.version = 1,
     this.metadata,
     required this.sections,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   factory DynamicFormModel.fromJson(Map<String, dynamic> json) {
@@ -174,6 +203,8 @@ class DynamicFormModel {
               ?.map((section) => DynamicFormSectionModel.fromJson(section))
               .toList() ??
           [],
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt']),
     );
   }
 
@@ -186,6 +217,8 @@ class DynamicFormModel {
       'version': version,
       'metadata': metadata,
       'sections': sections.map((section) => section.toJson()).toList(),
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
     };
   }
 

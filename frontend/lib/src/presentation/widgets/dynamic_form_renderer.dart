@@ -11,6 +11,7 @@ import 'form_fields/dynamic_radio_button_field.dart';
 import 'form_fields/dynamic_checkbox_field.dart';
 import 'form_fields/dynamic_number_field.dart';
 import 'form_fields/dynamic_document_upload_field.dart';
+import 'form_fields/dependency_form_field.dart';
 
 class DynamicFormRenderer extends StatefulWidget {
   final DynamicFormModel form;
@@ -223,6 +224,17 @@ class _DynamicFormRendererState extends State<DynamicFormRenderer> {
           allowedExtensions: field.validationRules?['allowedExtensions']?.cast<String>(),
           maxFiles: field.metadata?['maxFiles'] ?? 5,
           maxFileSizeMB: field.validationRules?['maxFileSizeMB'],
+        );
+
+      case DynamicFieldType.dependencyForm:
+        return DependencyFormField(
+          label: field.label,
+          fieldName: field.fieldName,
+          helpText: field.helpText,
+          isRequired: field.isRequired,
+          metadata: field.metadata,
+          value: widget.formData[field.fieldName] as bool?,
+          onChanged: _handleFieldChange,
         );
 
       default:
