@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+} from 'typeorm';
+import { Notification } from '../../notifications/notification.entity';
 
 @Entity('users')
 export class User {
@@ -26,8 +34,14 @@ export class User {
   @Column({ name: 'is_two_factor_enabled', default: false })
   isTwoFactorEnabled: boolean;
 
-  @Column({ name: 'passkey_challenge', nullable: true })
+  @Column({ name: 'passkey_challenge', type: 'varchar', nullable: true })
   passkeyChallenge: string | null;
+
+  @Column({ name: 'fcm_token', type: 'varchar', nullable: true })
+  fcmToken: string | null;
+
+  @OneToMany(() => Notification, (notification) => notification.user)
+  notifications: Notification[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

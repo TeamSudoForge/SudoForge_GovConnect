@@ -9,21 +9,22 @@ import { UsersModule } from './modules/users/users.module';
 import { FormsModule } from './modules/forms/forms.module';
 import { HealthModule } from './health/health.module';
 import { RelyingPartyModule } from './relying-party/relying-party.module';
+import { NotificationModule } from './modules/notifications/notification.module';
 import configuration from './config/configuration';
 import { User } from './database/entities/user.entity';
 import { AuthSession } from './database/entities/auth-session.entity';
 import { Passkey } from './database/entities/passkey.entity';
 import { TwoFactorCode } from './modules/auth/two-factor/entities/two-factor-code.entity';
 import { EmailVerificationCode } from './database/entities';
-import { 
-  FieldType, 
-  Field, 
-  FieldAttribute, 
-  Department, 
-  Service, 
-  FormField, 
-  FormResponse, 
-  FormResponseValue 
+import {
+  FieldType,
+  Field,
+  FieldAttribute,
+  Department,
+  Service,
+  FormField,
+  FormResponse,
+  FormResponseValue,
 } from './modules/forms/entities';
 
 @Module({
@@ -55,7 +56,7 @@ import {
           Service,
           FormField,
           FormResponse,
-          FormResponseValue
+          FormResponseValue,
         ],
         synchronize: configService.get('DB_SYNCHRONIZE', 'false') === 'true',
         logging: configService.get('DB_LOGGING', 'false') === 'true',
@@ -67,6 +68,7 @@ import {
     FormsModule,
     HealthModule,
     RelyingPartyModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
