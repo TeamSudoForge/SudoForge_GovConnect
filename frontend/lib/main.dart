@@ -13,10 +13,15 @@ import 'src/injection.dart';
 import 'src/core/theme/theme_config.dart';
 import 'src/injection.dart';
 import 'src/core/routes/app_router.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'src/core/services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeServices();
+  await Firebase.initializeApp();
+  await NotificationService().init();
   runApp(const GovConnectApp());
 }
 
@@ -26,7 +31,6 @@ class GovConnectApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-
       providers: providers,
       child: Consumer2<AuthService, SettingsService>(
         builder: (context, authService, settingsService, child) {
