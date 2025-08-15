@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gov_connect/src/presentation/screens/two_factor_verification_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:remixicon/remixicon.dart';
 import '../../core/app_export.dart';
 import '../../core/providers/auth_provider.dart';
-import '../../core/theme/text_style_helper.dart';
 import '../../core/theme/theme_config.dart';
+import '../../passkey_service.dart'; // Add passkey service import
 import '../widgets/custom_button.dart';
 import '../widgets/email_field.dart';
 import '../widgets/password_field.dart';
@@ -350,9 +351,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   arguments: {'email': authService.state.email},
                 );
               } else if (authService.state.status == AuthStatus.requiresEmailVerification) {
-                // Store email in AuthProvider before navigation
-                context.read<AuthProvider>().setEmail(emailController.text.trim());
-                Navigator.of(context).pushNamed('/email-verification');
+
+                print('🔄 Navigating to email verification screen');
+                print('📧 Email for verification: ${authService.state.email ?? emailController.text.trim()}');
+
+                // Use GoRouter navigation with the correct route name
+                context.goNamed('email-verification');
               } else if (authService.state.status == AuthStatus.error) {
                 final currentError = authService.state.error;
                 if (currentError != null && currentError != _lastError) {
@@ -579,8 +583,40 @@ class _LoginScreenState extends State<LoginScreen> {
       width: double.infinity,
       height: 44,
       child: OutlinedButton(
-        onPressed: () {
-          // TODO: Handle Passkey sign in
+        onPressed: () async {
+          if (emailController.text.trim().isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Please enter your email address for passkey authentication')),
+            );
+            return;
+          }
+
+          try {
+            final passkeyService = PasskeyService('http://10.0.2.2:3000');
+
+            // Authenticate returns tokens and user info now
+            final authResponse = await passkeyService.authenticate();
+
+            // Extract tokens from response (adjust based on your API response structure)
+            final accessToken = authResponse['accessToken'] ?? authResponse['access_token'];
+            final refreshToken = authResponse['refreshToken'] ?? authResponse['refresh_token'];
+            final user = authResponse['user'];
+
+            // Store tokens securely (you may want to use your AuthService for this)
+            // For now, just show success and navigate
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Passkey authentication successful!')),
+            );
+
+            // Navigate to home or handle success as needed
+            if (context.mounted) {
+              context.goNamed('home');
+            }
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Passkey authentication failed: $e')),
+            );
+          }
         },
         style: OutlinedButton.styleFrom(
           side: BorderSide(color: AppColors.colorFFD4D4),

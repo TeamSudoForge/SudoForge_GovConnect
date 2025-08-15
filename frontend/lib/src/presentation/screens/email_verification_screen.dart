@@ -143,7 +143,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   @override
   Widget build(BuildContext context) {
     final authService = context.watch<AuthService>();
-    final email = context.watch<AuthProvider>().email;
+    final email = authService.state.email ?? 'your email';
 
     // Handle navigation based on auth state
     WidgetsBinding.instance.addPostFrameCallback((_) {

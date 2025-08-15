@@ -34,9 +34,7 @@ class ServiceLocator {
 
 // Provider setup for the app
 final providers = [
-  ChangeNotifierProvider(create: (_) => ServiceLocator()._authService),
   ChangeNotifierProvider(create: (_) => AuthProvider()),
-List<ChangeNotifierProvider> get providers => [
   ChangeNotifierProvider<AuthService>.value(
     value: ServiceLocator().authService,
   ),
