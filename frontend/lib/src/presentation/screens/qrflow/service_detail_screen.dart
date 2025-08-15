@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_remix/flutter_remix.dart';
 import '../../../core/theme/theme_config.dart';
 import '../../../core/utils/text_style_helper.dart';
+import '../../widgets/bottom_navigation_widget.dart';
 import 'queue_status_screen.dart';
 import 'indoor_map_screen.dart';
 
@@ -231,33 +231,8 @@ class ServiceDetailScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: AppColors.colorFF007B,
-        unselectedItemColor: AppColors.colorFF7373,
-        currentIndex: 1,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(FlutterRemix.apps_2_line),
-            label: 'Services',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today_outlined),
-            label: 'Appointments',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings_outlined),
-            label: 'Settings',
-          ),
-        ],
-        onTap: (index) {
-          // TODO: Handle navigation
-        },
+      bottomNavigationBar: const BottomNavigationWidget(
+        currentItem: BottomNavItem.services,
       ),
     );
   }
@@ -274,16 +249,14 @@ class ServiceDetailScreen extends StatelessWidget {
               color: isChecked ? AppColors.colorFF007B : Colors.transparent,
               shape: BoxShape.circle,
               border: Border.all(
-                color: isChecked ? AppColors.colorFF007B : AppColors.colorFFD4D4,
+                color: isChecked
+                    ? AppColors.colorFF007B
+                    : AppColors.colorFFD4D4,
                 width: 2,
               ),
             ),
             child: isChecked
-                ? Icon(
-                    Icons.check,
-                    size: 16,
-                    color: Colors.white,
-                  )
+                ? Icon(Icons.check, size: 16, color: Colors.white)
                 : null,
           ),
           const SizedBox(width: 12),

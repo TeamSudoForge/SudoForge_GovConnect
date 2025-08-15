@@ -12,6 +12,8 @@ The authentication system follows a clean architecture pattern with the followin
 - `AuthResponse` - Authentication response from API
 - `UserProfile` - User profile data
 - `Verify2FARequest` - Two-factor authentication verification
+- `VerifyEmailRequest` - Email verification request
+- `ResendVerificationCodeRequest` - Resend verification code request
 - `RefreshTokenRequest` - Token refresh request
 - `AuthState` - Application authentication state
 - `AuthStatus` - Authentication status enumeration
@@ -23,6 +25,7 @@ The authentication system follows a clean architecture pattern with the followin
 - Manages authentication tokens
 - Provides endpoints for:
   - Login/Register
+  - Email verification
   - Two-factor authentication
   - Token refresh
   - User profile management
@@ -41,6 +44,7 @@ The authentication system follows a clean architecture pattern with the followin
 - Handles authentication flow including:
   - Login with email/password
   - User registration
+  - Email verification
   - Two-factor authentication
   - Automatic token refresh
   - Session management
@@ -58,6 +62,12 @@ The authentication system follows a clean architecture pattern with the followin
 - 6-digit code input interface
 - Code verification with backend
 - Resend functionality
+
+#### Email Verification Screen (`lib/src/presentation/screens/email_verification_screen.dart`)
+- Dual-purpose verification interface for both email verification and 2FA
+- 6-digit code input with auto-focus progression
+- Resend functionality with 45-second delay
+- Context-aware UI (different titles and descriptions based on verification type)
 
 #### Home Screen (`lib/src/presentation/screens/home_screen.dart`)
 - Dashboard for authenticated users
@@ -119,17 +129,21 @@ context.read<AuthService>().login(
 ## Authentication Flow
 
 1. **Initial Load**: App checks for stored tokens and validates them
-2. **Login**: User enters credentials → API validates → Tokens stored → User authenticated
-3. **2FA**: If enabled, user must verify code before completing login
-4. **Auto-refresh**: Expired access tokens are automatically refreshed using refresh token
-5. **Logout**: All tokens and user data are cleared
+2. **Registration**: User registers → Email verification required → User verifies email → Authenticated
+3. **Login**: User enters credentials → API validates → Check email verification → Check 2FA → Tokens stored → User authenticated
+4. **Email Verification**: If email not verified, user must verify before proceeding
+5. **2FA**: If enabled and email verified, user must verify code before completing login
+6. **Auto-refresh**: Expired access tokens are automatically refreshed using refresh token
+7. **Logout**: All tokens and user data are cleared
 
 ## Security Features
 
 - Secure token storage using platform keychain/keystore
 - Automatic token refresh
 - JWT token validation
+- Email verification for new accounts
 - Two-factor authentication support
+- 45-second delay between verification code resends
 - Session timeout handling
 - Secure HTTP requests with proper headers
 
@@ -139,6 +153,8 @@ The frontend communicates with the following backend endpoints:
 
 - `POST /auth/login` - User login
 - `POST /auth/register` - User registration  
+- `POST /auth/verify-email` - Verify email address with code
+- `POST /auth/resend-verification-code` - Resend email verification code
 - `POST /auth/verify-2fa` - Verify 2FA code
 - `POST /auth/refresh` - Refresh access token
 - `GET /auth/profile` - Get user profile

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gov_connect/src/core/routes/app_routes.dart';
+import 'package:go_router/go_router.dart';
+import 'package:gov_connect/src/core/routes/app_router.dart';
 
 class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -28,14 +29,17 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     void defaultNotificationsNav() {
-      final current = ModalRoute.of(context)?.settings.name;
-      if (current != AppRoutes.notificationsScreen) {
-        Navigator.of(context).pushNamed(AppRoutes.notificationsScreen);
+      final current = GoRouterState.of(context).matchedLocation;
+      if (current != AppRoutes.notifications) {
+        context.pushNamed('notifications');
       }
     }
 
     void defaultProfileNav() {
-      // TODO add after adding the profile page
+      final current = GoRouterState.of(context).matchedLocation;
+      if (current != AppRoutes.profile) {
+        context.pushNamed('profile');
+      }
     }
 
     return AppBar(
@@ -50,7 +54,8 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
                   size: 20,
                 ),
               ),
-              onPressed: onBack ?? () => Navigator.of(context).maybePop(),
+              onPressed:
+                  onBack ?? () => context.canPop() ? context.pop() : null,
               tooltip: 'Back',
             )
           : null,

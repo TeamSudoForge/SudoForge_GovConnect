@@ -38,12 +38,14 @@ class AppTheme {
     return ThemeData(
       brightness: Brightness.light,
       primaryColor: AppColors.colorFF007B,
-      scaffoldBackgroundColor: AppColors.whiteCustom,
-      colorScheme: ColorScheme.light(
+      scaffoldBackgroundColor: const Color(0xFFF5F5F5),
+      colorScheme: const ColorScheme.light(
         primary: AppColors.colorFF007B,
         secondary: AppColors.colorFF0062,
-        background: AppColors.whiteCustom,
         surface: AppColors.whiteCustom,
+        onSurface: AppColors.colorFF1717,
+        onPrimary: AppColors.whiteCustom,
+        onSecondary: AppColors.whiteCustom,
       ),
       textTheme: TextStyleHelper.instance.textTheme(fontScale),
       appBarTheme: const AppBarTheme(
@@ -56,7 +58,37 @@ class AppTheme {
           fontWeight: FontWeight.w600,
         ),
       ),
-      // ...other theme properties as needed
+      cardTheme: CardThemeData(
+        color: AppColors.whiteCustom,
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      radioTheme: RadioThemeData(
+        fillColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.selected)) {
+            return AppColors.colorFF007B;
+          }
+          return AppColors.colorFFD4D4;
+        }),
+      ),
+      switchTheme: SwitchThemeData(
+        thumbColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.selected)) {
+            return AppColors.colorFF007B;
+          }
+          return AppColors.colorFFD4D4;
+        }),
+        trackColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.selected)) {
+            return AppColors.colorFF007B.withOpacity(0.3);
+          }
+          return AppColors.colorFFD4D4.withOpacity(0.5);
+        }),
+      ),
+      dividerTheme: const DividerThemeData(
+        color: Color(0xFFE0E0E0),
+        thickness: 0.5,
+      ),
     );
   }
 
@@ -64,12 +96,14 @@ class AppTheme {
     return ThemeData(
       brightness: Brightness.dark,
       primaryColor: AppColors.colorFF007B,
-      scaffoldBackgroundColor: AppColors.blackCustom,
-      colorScheme: ColorScheme.dark(
+      scaffoldBackgroundColor: const Color(0xFF121212),
+      colorScheme: const ColorScheme.dark(
         primary: AppColors.colorFF007B,
         secondary: AppColors.colorFF0062,
-        background: AppColors.blackCustom,
-        surface: AppColors.blackCustom,
+        surface: Color(0xFF1E1E1E),
+        onSurface: Color(0xFFE0E0E0),
+        onPrimary: AppColors.whiteCustom,
+        onSecondary: AppColors.whiteCustom,
       ),
       textTheme: TextStyleHelper.instance.textTheme(fontScale),
       appBarTheme: const AppBarTheme(
@@ -82,16 +116,60 @@ class AppTheme {
           fontWeight: FontWeight.w600,
         ),
       ),
-      // ...other theme properties as needed
+      cardTheme: CardThemeData(
+        color: const Color(0xFF1E1E1E),
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      radioTheme: RadioThemeData(
+        fillColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.selected)) {
+            return AppColors.colorFF007B;
+          }
+          return const Color(0xFF666666);
+        }),
+      ),
+      switchTheme: SwitchThemeData(
+        thumbColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.selected)) {
+            return AppColors.colorFF007B;
+          }
+          return const Color(0xFF666666);
+        }),
+        trackColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.selected)) {
+            return AppColors.colorFF007B.withOpacity(0.3);
+          }
+          return const Color(0xFF333333);
+        }),
+      ),
+      dividerTheme: const DividerThemeData(
+        color: Color(0xFF333333),
+        thickness: 0.5,
+      ),
     );
   }
 }
 
 // Convenience class for accessing theme colors
 class ThemeConfig {
-  static Color get primaryColor => AppColors.colorFF007B;
-  static Color get backgroundColor => AppColors.whiteCustom;
-  static Color get textPrimaryColor => AppColors.colorFF1717;
+  static Color primaryColor(BuildContext context) =>
+      Theme.of(context).primaryColor;
+  static Color backgroundColor(BuildContext context) =>
+      Theme.of(context).scaffoldBackgroundColor;
+  static Color surfaceColor(BuildContext context) =>
+      Theme.of(context).colorScheme.surface;
+  static Color onSurfaceColor(BuildContext context) =>
+      Theme.of(context).colorScheme.onSurface;
+  static Color textPrimaryColor(BuildContext context) =>
+      Theme.of(context).colorScheme.onSurface;
+  static Color textSecondaryColor(BuildContext context) =>
+      Theme.of(context).colorScheme.onSurface.withOpacity(0.6);
+
+  // Legacy support - these will use theme-aware colors
+  static Color get primaryColorLegacy => AppColors.colorFF007B;
+  static Color get backgroundColorLegacy => AppColors.whiteCustom;
+  static Color get textPrimaryColorLegacy => AppColors.colorFF1717;
   static Color get textBlack3 => AppColors.colorFF5252;
-  static Color get textSecondaryColor => AppColors.colorFF7373;
+  static Color get textSecondaryColorLegacy => AppColors.colorFF7373;
 }

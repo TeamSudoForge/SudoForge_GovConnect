@@ -1,0 +1,310 @@
+{
+  "id": "fa79a916-e02d-4e41-888f-ccbd7af664b4",
+  "title": "ID Recovery Application",
+  "description": "Apply for official identity document recovery services through our secure digital platform",
+  "isActive": true,
+  "version": 1,
+  "metadata": {
+    "department": "Immigration Department",
+    "announcementUrl": "https://example.com/announcement"
+  },
+  "createdAt": "2025-08-16T10:00:00.000Z",
+  "updatedAt": "2025-08-16T10:00:00.000Z",
+  "defaultValues": {
+    "personal_profile_completed": false,
+    "address_verification_completed": false,
+    "emergency_contact_completed": true
+  },
+  "sections": [
+    {
+      "id": "overview-section",
+      "title": "Auto-filled Data Requirements",
+      "description": "Complete the following forms to auto-populate your application data",
+      "pageNumber": 1,
+      "orderIndex": 1,
+      "formId": "fa79a916-e02d-4e41-888f-ccbd7af664b4",
+      "createdAt": "2025-08-16T10:00:00.000Z",
+      "updatedAt": "2025-08-16T10:00:00.000Z",
+      "fields": [
+        {
+          "id": "profile-form-dep",
+          "label": "Personal Profile Information",
+          "fieldName": "personal_profile_completed",
+          "fieldType": "dependencyForm",
+          "isRequired": true,
+          "placeholder": null,
+          "helpText": "Complete your basic personal information including name, date of birth, and contact details. This information will be used to verify your identity.",
+          "orderIndex": 1,
+          "validationRules": null,
+          "options": null,
+          "metadata": {
+            "formUrl": "profile-setup-form-001",
+            "isFilled": false
+          },
+          "sectionId": "overview-section",
+          "createdAt": "2025-08-16T10:00:00.000Z",
+          "updatedAt": "2025-08-16T10:00:00.000Z"
+        },
+        {
+          "id": "address-form-dep",
+          "label": "Address Verification",
+          "fieldName": "address_verification_completed",
+          "fieldType": "dependencyForm",
+          "isRequired": true,
+          "placeholder": null,
+          "helpText": "Provide and verify your current residential address. This helps us ensure accurate document delivery.",
+          "orderIndex": 2,
+          "validationRules": null,
+          "options": null,
+          "metadata": {
+            "formUrl": "address-verification-form-002",
+            "isFilled": false
+          },
+          "sectionId": "overview-section",
+          "createdAt": "2025-08-16T10:00:00.000Z",
+          "updatedAt": "2025-08-16T10:00:00.000Z"
+        },
+        {
+          "id": "emergency-contact-dep",
+          "label": "Emergency Contact Information",
+          "fieldName": "emergency_contact_completed",
+          "fieldType": "dependencyForm",
+          "isRequired": false,
+          "placeholder": null,
+          "helpText": "Provide emergency contact details for security purposes and in case we need to verify your identity.",
+          "orderIndex": 3,
+          "validationRules": null,
+          "options": null,
+          "metadata": {
+            "formUrl": "emergency-contact-form-003",
+            "isFilled": true
+          },
+          "sectionId": "overview-section",
+          "createdAt": "2025-08-16T10:00:00.000Z",
+          "updatedAt": "2025-08-16T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "2fd6cc13-4b2b-4b51-b7df-81f89fe6af69",
+      "title": "Application Details",
+      "description": "Basic information about your ID recovery request",
+      "pageNumber": 2,
+      "orderIndex": 2,
+      "formId": "fa79a916-e02d-4e41-888f-ccbd7af664b4",
+      "createdAt": "2025-08-16T10:00:00.000Z",
+      "updatedAt": "2025-08-16T10:00:00.000Z",
+      "fields": [
+        {
+          "id": "reason-for-recovery",
+          "label": "Reason for ID Recovery",
+          "fieldName": "recovery_reason",
+          "fieldType": "dropdown",
+          "isRequired": true,
+          "placeholder": "Select reason",
+          "helpText": "Please specify why you need to recover your ID",
+          "orderIndex": 1,
+          "validationRules": null,
+          "options": {
+            "options": [
+              {"value": "lost", "label": "Lost"},
+              {"value": "stolen", "label": "Stolen"},
+              {"value": "damaged", "label": "Damaged"},
+              {"value": "expired", "label": "Expired"}
+            ]
+          },
+          "metadata": null,
+          "sectionId": "2fd6cc13-4b2b-4b51-b7df-81f89fe6af69",
+          "createdAt": "2025-08-16T10:00:00.000Z",
+          "updatedAt": "2025-08-16T10:00:00.000Z"
+        },
+        {
+          "id": "incident-date",
+          "label": "Date of Incident",
+          "fieldName": "incident_date",
+          "fieldType": "date",
+          "isRequired": false,
+          "placeholder": null,
+          "helpText": "When did you realize your ID was lost/stolen/damaged?",
+          "orderIndex": 2,
+          "validationRules": null,
+          "options": null,
+          "metadata": null,
+          "sectionId": "2fd6cc13-4b2b-4b51-b7df-81f89fe6af69",
+          "createdAt": "2025-08-16T10:00:00.000Z",
+          "updatedAt": "2025-08-16T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "additional-info-section",
+      "title": "Additional Information",
+      "description": "Provide additional details for your application",
+      "pageNumber": 4,
+      "orderIndex": 3,
+      "formId": "fa79a916-e02d-4e41-888f-ccbd7af664b4",
+      "createdAt": "2025-08-16T10:00:00.000Z",
+      "updatedAt": "2025-08-16T10:00:00.000Z",
+      "fields": [
+        {
+          "id": "additional-details",
+          "label": "Additional Details",
+          "fieldName": "additional_details",
+          "fieldType": "textarea",
+          "isRequired": false,
+          "placeholder": "Provide any additional information...",
+          "helpText": "Any other relevant information about your ID recovery request",
+          "orderIndex": 1,
+          "validationRules": null,
+          "options": null,
+          "metadata": {
+            "maxLines": 4
+          },
+          "sectionId": "additional-info-section",
+          "createdAt": "2025-08-16T10:00:00.000Z",
+          "updatedAt": "2025-08-16T10:00:00.000Z"
+        },
+        {
+          "id": "emergency-contact-name",
+          "label": "Emergency Contact Name",
+          "fieldName": "emergency_contact_name",
+          "fieldType": "text",
+          "isRequired": false,
+          "placeholder": "Enter emergency contact name",
+          "helpText": "Name of person to contact in case of emergency",
+          "orderIndex": 2,
+          "validationRules": null,
+          "options": null,
+          "metadata": null,
+          "sectionId": "additional-info-section",
+          "createdAt": "2025-08-16T10:00:00.000Z",
+          "updatedAt": "2025-08-16T10:00:00.000Z"
+        },
+        {
+          "id": "emergency-contact-phone",
+          "label": "Emergency Contact Phone",
+          "fieldName": "emergency_contact_phone",
+          "fieldType": "phoneNumber",
+          "isRequired": false,
+          "placeholder": "Enter phone number",
+          "helpText": "Phone number of emergency contact",
+          "orderIndex": 3,
+          "validationRules": null,
+          "options": null,
+          "metadata": null,
+          "sectionId": "additional-info-section",
+          "createdAt": "2025-08-16T10:00:00.000Z",
+          "updatedAt": "2025-08-16T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "989a6047-d355-4b21-a59f-2d6e942dc082",
+      "title": "Supporting Documents",
+      "description": "Upload required supporting documents for verification",
+      "pageNumber": 3,
+      "orderIndex": 4,
+      "formId": "fa79a916-e02d-4e41-888f-ccbd7af664b4",
+      "createdAt": "2025-08-16T10:00:00.000Z",
+      "updatedAt": "2025-08-16T10:00:00.000Z",
+      "fields": [
+        {
+          "id": "a8c73444-21b3-4aef-bca3-209a10f306df",
+          "label": "Birth Certificate",
+          "fieldName": "birth_certificate",
+          "fieldType": "documentUpload",
+          "isRequired": true,
+          "placeholder": null,
+          "helpText": "Upload a clear, legible copy of your birth certificate",
+          "orderIndex": 1,
+          "validationRules": {
+            "allowedExtensions": ["pdf", "jpg", "png"],
+            "maxFileSizeMB": 5
+          },
+          "options": null,
+          "metadata": {
+            "maxFiles": 1
+          },
+          "sectionId": "989a6047-d355-4b21-a59f-2d6e942dc082",
+          "createdAt": "2025-08-16T10:00:00.000Z",
+          "updatedAt": "2025-08-16T10:00:00.000Z"
+        },
+        {
+          "id": "69bf2b4a-2cfc-4074-a36d-71b53d4047e1",
+          "label": "Proof of Address",
+          "fieldName": "address_proof",
+          "fieldType": "documentUpload",
+          "isRequired": true,
+          "placeholder": null,
+          "helpText": "Utility bill, bank statement, or lease agreement (not older than 3 months)",
+          "orderIndex": 2,
+          "validationRules": {
+            "allowedExtensions": ["pdf", "jpg", "png"],
+            "maxFileSizeMB": 5
+          },
+          "options": null,
+          "metadata": {
+            "maxFiles": 2
+          },
+          "sectionId": "989a6047-d355-4b21-a59f-2d6e942dc082",
+          "createdAt": "2025-08-16T10:00:00.000Z",
+          "updatedAt": "2025-08-16T10:00:00.000Z"
+        },
+        {
+          "id": "police-report-upload",
+          "label": "Police Report (if applicable)",
+          "fieldName": "police_report",
+          "fieldType": "documentUpload",
+          "isRequired": false,
+          "placeholder": null,
+          "helpText": "Required if ID was stolen. Upload police report or incident number",
+          "orderIndex": 3,
+          "validationRules": {
+            "allowedExtensions": ["pdf", "jpg", "png"],
+            "maxFileSizeMB": 5
+          },
+          "options": null,
+          "metadata": {
+            "maxFiles": 1
+          },
+          "sectionId": "989a6047-d355-4b21-a59f-2d6e942dc082",
+          "createdAt": "2025-08-16T10:00:00.000Z",
+          "updatedAt": "2025-08-16T10:00:00.000Z"
+        }
+      ]
+    }
+  ],
+  "ui": {
+    "overview": {
+      "title": "Recover or renew your loss ID",
+      "description": "We'll guide you through every step, document, and appointment. No more confusion or wasted time.",
+      "infoCards": [
+        "For your convenience, the following fields have been automatically filled using the verified personal data linked to your profile.",
+        "This data has been collected in accordance with applicable regulations and is securely stored. Please review and update if necessary before submission."
+      ],
+      "processSteps": [
+        {
+          "stepNumber": 1,
+          "title": "Auto Filed Data",
+          "description": "Check all the required auto filed data are available and correct."
+        },
+        {
+          "stepNumber": 2,
+          "title": "ID Recovery Form",
+          "description": "Fill the form for ID recovery application with required details."
+        },
+        {
+          "stepNumber": 3,
+          "title": "Submit",
+          "description": "Submit the form and wait until we process the request."
+        }
+      ]
+    },
+    "stepLabels": ["Overview", "Form", "Submit"],
+    "theme": {
+      "primaryColor": "#2196F3",
+      "secondaryColor": "#4CAF50",
+      "backgroundColor": "#F5F5F5"
+    }
+  }
+}

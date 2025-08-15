@@ -211,10 +211,8 @@ class DepartmentsScreen extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => ServiceDetailScreen(
-              title: title,
-              subtitle: subtitle,
-            ),
+            builder: (context) =>
+                ServiceDetailScreen(title: title, subtitle: subtitle),
           ),
         );
       },
@@ -236,10 +234,7 @@ class DepartmentsScreen extends StatelessWidget {
           children: [
             Container(
               padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: color,
-                shape: BoxShape.circle,
-              ),
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
               child: isImage && iconPath != null
                   ? Image.asset(
                       iconPath,

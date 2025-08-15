@@ -1,7 +1,7 @@
 {
   "info": {
-    "name": "GovConnect Auth API",
-    "description": "Collection for testing GovConnect authentication endpoints",
+    "name": "GovConnect API",
+    "description": "Collection for testing GovConnect API endpoints including authentication (email verification, 2FA, passkey), department management, and dynamic forms system with multi-page forms and various field types",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -24,13 +24,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/register",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "register"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
             }
           }
         },
@@ -50,13 +45,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/login",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "login"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
             }
           }
         },
@@ -76,13 +66,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/refresh",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "refresh"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "refresh"]
             }
           }
         },
@@ -98,13 +83,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/auth/profile",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "profile"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "profile"]
             }
           }
         },
@@ -124,13 +104,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/auth/enable-2fa",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "enable-2fa"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "enable-2fa"]
             }
           }
         },
@@ -150,13 +125,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/auth/disable-2fa",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "disable-2fa"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "disable-2fa"]
             }
           }
         },
@@ -176,12 +146,59 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/verify-2fa",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "verify-2fa"]
+            }
+          }
+        },
+        {
+          "name": "Verify Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@govconnect.com\",\n  \"code\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/verify-email",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "auth",
-                "verify-2fa"
+                "verify-email"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Resend Email Verification Code",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@govconnect.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/resend-verification-code",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "resend-verification-code"
               ]
             }
           }
@@ -211,15 +228,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/passkey/register/begin",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "passkey",
-                "register",
-                "begin"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "passkey", "register", "begin"]
             }
           }
         },
@@ -243,15 +253,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/passkey/register/complete",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "passkey",
-                "register",
-                "complete"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "passkey", "register", "complete"]
             }
           }
         },
@@ -267,15 +270,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/auth/passkey/authenticate/begin",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "passkey",
-                "authenticate",
-                "begin"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "passkey", "authenticate", "begin"]
             }
           }
         },
@@ -295,15 +291,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/passkey/authenticate/complete",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "passkey",
-                "authenticate",
-                "complete"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "passkey", "authenticate", "complete"]
             }
           }
         },
@@ -319,13 +308,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/auth/passkeys",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "passkeys"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "passkeys"]
             }
           }
         },
@@ -341,16 +325,531 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/auth/passkeys/{{passkeyId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "passkeys",
-                "{{passkeyId}}"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "passkeys", "{{passkeyId}}"]
             }
           }
+        }
+      ]
+    },
+    {
+      "name": "Dynamic Forms",
+      "item": [
+        {
+          "name": "Form Management",
+          "item": [
+            {
+              "name": "Create Dynamic Form",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"ID Recovery Application Form\",\n  \"description\": \"Form for citizens to apply for ID recovery services\",\n  \"sections\": [\n    {\n      \"title\": \"Personal Information\",\n      \"description\": \"Please provide your personal details\",\n      \"pageNumber\": 1,\n      \"orderIndex\": 1,\n      \"fields\": [\n        {\n          \"label\": \"Full Name\",\n          \"fieldName\": \"full_name\",\n          \"fieldType\": \"text\",\n          \"isRequired\": true,\n          \"placeholder\": \"Enter your full name\",\n          \"helpText\": \"As it appears on your original documents\",\n          \"orderIndex\": 1\n        },\n        {\n          \"label\": \"Email Address\",\n          \"fieldName\": \"email\",\n          \"fieldType\": \"email\",\n          \"isRequired\": true,\n          \"placeholder\": \"your@email.com\",\n          \"orderIndex\": 2\n        },\n        {\n          \"label\": \"Phone Number\",\n          \"fieldName\": \"phone\",\n          \"fieldType\": \"phone_number\",\n          \"isRequired\": true,\n          \"placeholder\": \"+1234567890\",\n          \"orderIndex\": 3\n        }\n      ]\n    },\n    {\n      \"title\": \"Document Upload\",\n      \"description\": \"Please upload required documents\",\n      \"pageNumber\": 2,\n      \"orderIndex\": 2,\n      \"fields\": [\n        {\n          \"label\": \"Birth Certificate\",\n          \"fieldName\": \"birth_certificate\",\n          \"fieldType\": \"document_upload\",\n          \"isRequired\": true,\n          \"helpText\": \"Upload a clear copy of your birth certificate\",\n          \"orderIndex\": 1\n        },\n        {\n          \"label\": \"Proof of Address\",\n          \"fieldName\": \"address_proof\",\n          \"fieldType\": \"document_upload\",\n          \"isRequired\": false,\n          \"helpText\": \"Utility bill or bank statement\",\n          \"orderIndex\": 2\n        }\n      ]\n    }\n  ]\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/dynamic-forms",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "dynamic-forms"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get All Forms",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/dynamic-forms",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "dynamic-forms"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Field Types",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/dynamic-forms/field-types",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "dynamic-forms",
+                    "field-types"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Form by ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/dynamic-forms/{{formId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "dynamic-forms",
+                    "{{formId}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Form Page",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/dynamic-forms/{{formId}}/page/{{pageNumber}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "dynamic-forms",
+                    "{{formId}}",
+                    "page",
+                    "{{pageNumber}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Delete Form",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/dynamic-forms/{{formId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "dynamic-forms",
+                    "{{formId}}"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Department Management",
+          "item": [
+            {
+              "name": "Create Department",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Department of Health\",\n  \"description\": \"Responsible for public health services and regulations\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get All Departments",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/departments",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Department by ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{departmentId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{departmentId}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Update Department",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Updated Department Name\",\n  \"description\": \"Updated department description\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{departmentId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{departmentId}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Delete Department",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{departmentId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{departmentId}}"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Form Submissions",
+          "item": [
+            {
+              "name": "Create Submission",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"formId\": \"{{formId}}\",\n  \"fieldValues\": [\n    {\n      \"fieldId\": \"field-uuid-1\",\n      \"value\": \"John Doe\"\n    },\n    {\n      \"fieldId\": \"field-uuid-2\",\n      \"value\": \"john.doe@example.com\"\n    },\n    {\n      \"fieldId\": \"field-uuid-3\",\n      \"value\": \"+1234567890\"\n    }\n  ],\n  \"status\": \"draft\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/dynamic-forms/submissions",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "dynamic-forms",
+                    "submissions"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Update Submission",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fieldValues\": [\n    {\n      \"fieldId\": \"field-uuid-1\",\n      \"value\": \"Jane Doe\"\n    },\n    {\n      \"fieldId\": \"field-uuid-2\",\n      \"value\": \"jane.doe@example.com\"\n    }\n  ],\n  \"status\": \"submitted\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/dynamic-forms/submissions/{{submissionId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "dynamic-forms",
+                    "submissions",
+                    "{{submissionId}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get My Submissions",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/dynamic-forms/submissions/my",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "dynamic-forms",
+                    "submissions",
+                    "my"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Submission by ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/dynamic-forms/submissions/{{submissionId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "dynamic-forms",
+                    "submissions",
+                    "{{submissionId}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Update Response Status",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"approved\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/forms/{{serviceId}}/responses/{{responseId}}/status",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "forms",
+                    "{{serviceId}}",
+                    "responses",
+                    "{{responseId}}",
+                    "status"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Delete Response",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/forms/{{serviceId}}/responses/{{responseId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "forms",
+                    "{{serviceId}}",
+                    "responses",
+                    "{{responseId}}"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Analytics",
+          "item": [
+            {
+              "name": "Individual Form Analytics",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/analytics/forms/{{serviceId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "analytics",
+                    "forms",
+                    "{{serviceId}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "System-wide Analytics",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/analytics/overview",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "analytics",
+                    "overview"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Department Analytics",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/analytics/departments/{{departmentId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "analytics",
+                    "departments",
+                    "{{departmentId}}"
+                  ]
+                }
+              }
+            }
+          ]
         }
       ]
     }
@@ -374,6 +873,36 @@
     {
       "key": "passkeyId",
       "value": "",
+      "type": "string"
+    },
+    {
+      "key": "serviceId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "responseId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "departmentId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "formId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "submissionId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "pageNumber",
+      "value": "1",
       "type": "string"
     }
   ]

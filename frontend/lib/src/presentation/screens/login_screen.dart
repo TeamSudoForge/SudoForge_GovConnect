@@ -1,26 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
+import 'package:gov_connect/src/presentation/screens/two_factor_verification_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:remixicon/remixicon.dart';
 import '../../core/app_export.dart';
+import '../../core/providers/auth_provider.dart';
 import '../../core/theme/theme_config.dart';
+import '../../passkey_service.dart'; // Add passkey service import
 import '../widgets/custom_button.dart';
 import '../widgets/email_field.dart';
 import '../widgets/password_field.dart';
-import 'two_factor_verification_screen.dart';
 
 // --- Add FirstNameField, LastNameField, ConfirmPasswordField widgets inline for now ---
 class FirstNameField extends StatelessWidget {
   final TextEditingController controller;
   final TextStyleHelper styles;
   static const String routeName = '/signInSignUpPage';
-  const FirstNameField({Key? key, required this.controller, required this.styles}) : super(key: key);
+  const FirstNameField({
+    Key? key,
+    required this.controller,
+    required this.styles,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('First Name', style: styles.body14Regular.copyWith(color: AppColors.colorFF4040, height: 1.21)),
+        Text(
+          'First Name',
+          style: styles.body14Regular.copyWith(
+            color: AppColors.colorFF4040,
+            height: 1.21,
+          ),
+        ),
         const SizedBox(height: 8),
         Container(
           height: 46,
@@ -33,8 +47,13 @@ class FirstNameField extends StatelessWidget {
             controller: controller,
             decoration: InputDecoration(
               hintText: 'Enter your first name',
-              hintStyle: styles.body14Regular.copyWith(color: AppColors.colorFFADAE),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              hintStyle: styles.body14Regular.copyWith(
+                color: AppColors.colorFFADAE,
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
               border: InputBorder.none,
             ),
             style: styles.body14Regular.copyWith(color: AppColors.colorFFADAE),
@@ -48,14 +67,24 @@ class FirstNameField extends StatelessWidget {
 class LastNameField extends StatelessWidget {
   final TextEditingController controller;
   final TextStyleHelper styles;
-  const LastNameField({Key? key, required this.controller, required this.styles}) : super(key: key);
+  const LastNameField({
+    Key? key,
+    required this.controller,
+    required this.styles,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Last Name', style: styles.body14Regular.copyWith(color: AppColors.colorFF4040, height: 1.21)),
+        Text(
+          'Last Name',
+          style: styles.body14Regular.copyWith(
+            color: AppColors.colorFF4040,
+            height: 1.21,
+          ),
+        ),
         const SizedBox(height: 8),
         Container(
           height: 46,
@@ -68,8 +97,13 @@ class LastNameField extends StatelessWidget {
             controller: controller,
             decoration: InputDecoration(
               hintText: 'Enter your last name',
-              hintStyle: styles.body14Regular.copyWith(color: AppColors.colorFFADAE),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              hintStyle: styles.body14Regular.copyWith(
+                color: AppColors.colorFFADAE,
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
               border: InputBorder.none,
             ),
             style: styles.body14Regular.copyWith(color: AppColors.colorFFADAE),
@@ -99,7 +133,13 @@ class ConfirmPasswordField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Confirm Password', style: styles.body14Regular.copyWith(color: AppColors.colorFF4040, height: 1.21)),
+        Text(
+          'Confirm Password',
+          style: styles.body14Regular.copyWith(
+            color: AppColors.colorFF4040,
+            height: 1.21,
+          ),
+        ),
         const SizedBox(height: 8),
         Container(
           height: 46,
@@ -113,8 +153,13 @@ class ConfirmPasswordField extends StatelessWidget {
             obscureText: !isPasswordVisible,
             decoration: InputDecoration(
               hintText: 'Re-enter your password',
-              hintStyle: styles.body14Regular.copyWith(color: AppColors.colorFFADAE),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              hintStyle: styles.body14Regular.copyWith(
+                color: AppColors.colorFFADAE,
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
               suffixIcon: GestureDetector(
                 onTap: onToggleVisibility,
                 child: Icon(
@@ -219,8 +264,8 @@ class _LoginScreenState extends State<LoginScreen> {
   void _signup() {
     if (signUpStepOne) {
       // Validate step one fields
-      if (firstNameController.text.trim().isEmpty || 
-          lastNameController.text.trim().isEmpty || 
+      if (firstNameController.text.trim().isEmpty ||
+          lastNameController.text.trim().isEmpty ||
           emailController.text.trim().isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please fill in all fields')),
@@ -241,7 +286,8 @@ class _LoginScreenState extends State<LoginScreen> {
       _nextSignUpStep();
     } else {
       // Validate step two fields
-      if (passwordController.text.isEmpty || confirmPasswordController.text.isEmpty) {
+      if (passwordController.text.isEmpty ||
+          confirmPasswordController.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please fill in all fields')),
         );
@@ -251,15 +297,17 @@ class _LoginScreenState extends State<LoginScreen> {
       // Password strength validation
       if (passwordController.text.length < 8) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Password must be at least 8 characters long')),
+          const SnackBar(
+            content: Text('Password must be at least 8 characters long'),
+          ),
         );
         return;
       }
 
       if (passwordController.text != confirmPasswordController.text) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Passwords do not match')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Passwords do not match')));
         return;
       }
 
@@ -269,7 +317,9 @@ class _LoginScreenState extends State<LoginScreen> {
         password: passwordController.text,
         firstName: firstNameController.text.trim(),
         lastName: lastNameController.text.trim(),
-        username: emailController.text.split('@')[0], // Use email prefix as username
+        username: emailController.text.split(
+          '@',
+        )[0], // Use email prefix as username
       );
     }
   }
@@ -292,19 +342,28 @@ class _LoginScreenState extends State<LoginScreen> {
             // Handle navigation based on auth state
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (authService.state.status == AuthStatus.authenticated) {
-                Navigator.of(context).pushReplacementNamed('/home');
+                context.goNamed('home');
               } else if (authService.state.status == AuthStatus.requires2FA) {
+                // Store email in AuthProvider before navigation
+                context.read<AuthProvider>().setEmail(authService.state.email);
                 Navigator.of(context).pushNamed(
                   TwoFactorVerificationScreen.routeName,
                   arguments: {'email': authService.state.email},
                 );
+              } else if (authService.state.status == AuthStatus.requiresEmailVerification) {
+
+                print('🔄 Navigating to email verification screen');
+                print('📧 Email for verification: ${authService.state.email ?? emailController.text.trim()}');
+
+                // Use GoRouter navigation with the correct route name
+                context.goNamed('email-verification');
               } else if (authService.state.status == AuthStatus.error) {
                 final currentError = authService.state.error;
                 if (currentError != null && currentError != _lastError) {
                   _lastError = currentError;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(currentError)),
-                  );
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(currentError)));
                 }
               }
             });
@@ -409,7 +468,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: () => _toggleSignInSignUp(true),
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 24, vertical: 12),
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6),
                   ),
@@ -446,7 +507,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: () => _toggleSignInSignUp(false),
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 24, vertical: 12),
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6),
                   ),
@@ -502,12 +565,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildSeparator(TextStyleHelper styles) {
     return Row(
       children: [
-        Expanded(
-          child: Divider(
-            color: AppColors.colorFFD4D4,
-            thickness: 1,
-          ),
-        ),
+        Expanded(child: Divider(color: AppColors.colorFFD4D4, thickness: 1)),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Text(
@@ -515,12 +573,7 @@ class _LoginScreenState extends State<LoginScreen> {
             style: styles.body14Regular.copyWith(color: AppColors.colorFF7373),
           ),
         ),
-        Expanded(
-          child: Divider(
-            color: AppColors.colorFFD4D4,
-            thickness: 1,
-          ),
-        ),
+        Expanded(child: Divider(color: AppColors.colorFFD4D4, thickness: 1)),
       ],
     );
   }
@@ -530,14 +583,44 @@ class _LoginScreenState extends State<LoginScreen> {
       width: double.infinity,
       height: 44,
       child: OutlinedButton(
-        onPressed: () {
-          // TODO: Handle Passkey sign in
+        onPressed: () async {
+          if (emailController.text.trim().isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Please enter your email address for passkey authentication')),
+            );
+            return;
+          }
+
+          try {
+            final passkeyService = PasskeyService('http://10.0.2.2:3000');
+
+            // Authenticate returns tokens and user info now
+            final authResponse = await passkeyService.authenticate();
+
+            // Extract tokens from response (adjust based on your API response structure)
+            final accessToken = authResponse['accessToken'] ?? authResponse['access_token'];
+            final refreshToken = authResponse['refreshToken'] ?? authResponse['refresh_token'];
+            final user = authResponse['user'];
+
+            // Store tokens securely (you may want to use your AuthService for this)
+            // For now, just show success and navigate
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Passkey authentication successful!')),
+            );
+
+            // Navigate to home or handle success as needed
+            if (context.mounted) {
+              context.goNamed('home');
+            }
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Passkey authentication failed: $e')),
+            );
+          }
         },
         style: OutlinedButton.styleFrom(
           side: BorderSide(color: AppColors.colorFFD4D4),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -546,7 +629,9 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(width: 8),
             Text(
               'Sign in with Passkey',
-              style: styles.title16Regular.copyWith(color: AppColors.colorFF007B),
+              style: styles.title16Regular.copyWith(
+                color: AppColors.colorFF007B,
+              ),
             ),
           ],
         ),
@@ -616,22 +701,22 @@ class _LoginScreenState extends State<LoginScreen> {
                 decoration: BoxDecoration(
                   border: Border.all(color: AppColors.colorFFD4D4),
                   borderRadius: BorderRadius.circular(2),
-                  color: rememberMe ? AppColors.colorFF007B : AppColors.whiteCustom,
+                  color: rememberMe
+                      ? AppColors.colorFF007B
+                      : AppColors.whiteCustom,
                 ),
                 child: rememberMe
-                    ? Icon(
-                        Icons.check,
-                        size: 12,
-                        color: AppColors.whiteCustom,
-                      )
+                    ? Icon(Icons.check, size: 12, color: AppColors.whiteCustom)
                     : null,
               ),
             ),
             const SizedBox(width: 8),
             Text(
               'Remember me',
-              style: styles.body14Regular
-                  .copyWith(color: AppColors.colorFF5252, height: 1.21),
+              style: styles.body14Regular.copyWith(
+                color: AppColors.colorFF5252,
+                height: 1.21,
+              ),
             ),
           ],
         ),
@@ -641,8 +726,10 @@ class _LoginScreenState extends State<LoginScreen> {
           },
           child: Text(
             'Forgot password?',
-            style: styles.body14Regular
-                .copyWith(color: AppColors.colorFF007B, height: 1.21),
+            style: styles.body14Regular.copyWith(
+              color: AppColors.colorFF007B,
+              height: 1.21,
+            ),
           ),
         ),
       ],
