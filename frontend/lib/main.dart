@@ -16,11 +16,16 @@ import 'src/core/routes/app_router.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'src/core/services/notification_service.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
+Future<void> _backgroundHandler(RemoteMessage message) async {
+  // Handle background message
+}
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeServices();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await NotificationService().init();
   runApp(const GovConnectApp());
 }
