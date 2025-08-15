@@ -35,4 +35,17 @@ export class NotificationService {
   async markAsRead(notificationId: string): Promise<void> {
     await this.notificationRepo.update(notificationId, { read: true });
   }
+
+  async saveFcmToken(userId: string, token: string): Promise<void> {
+    const user = await this.notificationRepo.manager.findOne(User, {
+      where: { id: userId },
+    });
+
+    if (user) {
+      user.fcmToken = token;
+      await this.notificationRepo.manager.save(user);
+    } else {
+      throw new Error('User not found');
+    }
+  }
 }

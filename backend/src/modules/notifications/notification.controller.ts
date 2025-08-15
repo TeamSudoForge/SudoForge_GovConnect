@@ -33,4 +33,17 @@ export class NotificationController {
     await this.notificationService.markAsRead(id);
     return { success: true };
   }
+
+  @Post('register-token')
+  async registerFcmToken(
+    @Body('token') token: string,
+    @Request() req: RequestWithUser,
+  ) {
+    if (req.user) {
+      const userId = req.user.id;
+      await this.notificationService.saveFcmToken(userId, token);
+      return { success: true, message: 'FCM token registered successfully' };
+    }
+    return { success: false, message: 'User not authenticated' };
+  }
 }

@@ -1,17 +1,39 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:gov_connect/src/core/services/auth_service.dart';
 
-class NotificationService {
+import 'api_service.dart';
+
+class NotificationService extends ChangeNotifier {
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _localNotifications =
       FlutterLocalNotificationsPlugin();
 
-  Future<void> init() async {
-    // Request permissions
+  AuthService? _authService; // inject AuthService
+  String? _fcmToken;
+  String? get fcmToken => _fcmToken;
+
+  final List<RemoteMessage> _notifications = [];
+  List<RemoteMessage> get notifications => List.unmodifiable(_notifications);
+
+  void setAuthService(AuthService authService) {
+    _authService = authService;
+    // Listen for login/logout
+    _authService!.addListener(() {
+      if (_authService!.isAuthenticated) {
+        _initializeNotifications();
+      } else {
+        clearNotifications();
+      }
+    });
+  }
+
+  Future<void> _initializeNotifications() async {
+    debugPrint('Initializing Notification Service');
+
     await _messaging.requestPermission();
 
-    // Initialize local notifications
     const androidSettings = AndroidInitializationSettings(
       '@mipmap/ic_launcher',
     );
@@ -22,15 +44,33 @@ class NotificationService {
     );
     await _localNotifications.initialize(initSettings);
 
-    // Foreground message handler
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      showLocalNotification(message);
-    });
+    await _registerFcmToken();
 
-    // Background/terminated message handler
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      // Handle navigation or actions here
+    FirebaseMessaging.onMessage.listen(_handleMessage);
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleOpenedApp);
+  }
+
+  Future<void> _registerFcmToken() async {
+    _fcmToken = await _messaging.getToken();
+    if (_fcmToken != null) {
+      debugPrint('FCM Token: $_fcmToken');
+      await ApiService().registerFcmToken(_fcmToken!);
+    }
+
+    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) async {
+      _fcmToken = newToken;
+      await ApiService().registerFcmToken(newToken);
     });
+  }
+
+  void _handleMessage(RemoteMessage message) {
+    _notifications.insert(0, message);
+    showLocalNotification(message);
+    notifyListeners();
+  }
+
+  void _handleOpenedApp(RemoteMessage message) {
+    // Handle navigation/actions here
   }
 
   Future<void> showLocalNotification(RemoteMessage message) async {
@@ -47,6 +87,7 @@ class NotificationService {
         android: androidDetails,
         iOS: iosDetails,
       );
+
       await _localNotifications.show(
         notification.hashCode,
         notification.title,
@@ -56,7 +97,8 @@ class NotificationService {
     }
   }
 
-  Future<String?> getToken() async {
-    return await _messaging.getToken();
+  void clearNotifications() {
+    _notifications.clear();
+    notifyListeners();
   }
 }

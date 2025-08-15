@@ -53,7 +53,8 @@ class ApiService {
       final response = await _dio.post('/auth/login', data: request.toJson());
       return AuthResponse.fromJson(response.data);
     } on DioException catch (e) {
-      throw _handleDioError(e);
+      print('[API Error] Failed to register FCM token: ${e.message}');
+      throw Exception('Failed to register FCM token: ${_handleDioError(e)}');
     }
   }
 
@@ -207,7 +208,7 @@ class ApiService {
     try {
       await _dio.post('/notifications/register-token', data: {'token': token});
     } on DioException catch (e) {
-      throw _handleDioError(e);
+      throw Exception(_handleDioError(e));
     }
   }
 
