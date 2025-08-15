@@ -48,6 +48,7 @@ class AuthResponse {
   final String? refreshToken;
   final UserProfile? user;
   final bool? requires2FA;
+  final bool? requiresEmailVerification;
   final String? email;
   final String? message;
 
@@ -56,6 +57,7 @@ class AuthResponse {
     this.refreshToken,
     this.user,
     this.requires2FA,
+    this.requiresEmailVerification,
     this.email,
     this.message,
   });
@@ -66,6 +68,7 @@ class AuthResponse {
       refreshToken: json['refreshToken'] as String?,
       user: json['user'] != null ? UserProfile.fromJson(json['user']) : null,
       requires2FA: json['requires2FA'] as bool?,
+      requiresEmailVerification: json['requiresEmailVerification'] as bool?,
       email: json['email'] as String?,
       message: json['message'] as String?,
     );
@@ -129,6 +132,37 @@ class Verify2FARequest {
   }
 }
 
+class VerifyEmailRequest {
+  final String email;
+  final String verificationCode;
+
+  VerifyEmailRequest({
+    required this.email,
+    required this.verificationCode,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'email': email,
+      'verificationCode': verificationCode,
+    };
+  }
+}
+
+class ResendVerificationCodeRequest {
+  final String email;
+
+  ResendVerificationCodeRequest({
+    required this.email,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'email': email,
+    };
+  }
+}
+
 class RefreshTokenRequest {
   final String refreshToken;
 
@@ -149,6 +183,7 @@ enum AuthStatus {
   authenticated,
   unauthenticated,
   requires2FA,
+  requiresEmailVerification,
   error,
 }
 

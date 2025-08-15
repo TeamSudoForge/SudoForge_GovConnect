@@ -11,6 +11,10 @@ import '../../presentation/screens/appointment_details.dart';
 import '../../presentation/screens/appointment_update_screen.dart';
 import '../../presentation/screens/notifications_screen.dart';
 import '../../presentation/screens/settings_screen.dart';
+import '../../presentation/screens/add_passkey_screen.dart';
+import '../../presentation/screens/forms/id_recovery_process_screen.dart';
+import '../../presentation/screens/forms/id_recovery_form_content_screen.dart';
+import '../../presentation/screens/forms/id_recovery_success_screen.dart';
 
 class AppRouter {
   // Session-based flag to track if splash has been shown
@@ -118,6 +122,28 @@ class AppRouter {
               builder: (context, state) => const SettingsScreen(),
             ),
             GoRoute(
+              path: 'add-passkey',
+              name: 'add-passkey',
+              builder: (context, state) => const AddPasskeyScreen(),
+            ),
+            GoRoute(
+              path: 'id-recovery-process',
+              name: 'id-recovery-process',
+              builder: (context, state) => const IdRecoveryProcessScreen(),
+              routes: [
+                GoRoute(
+                  path: 'form-content',
+                  name: 'id-recovery-form-content',
+                  builder: (context, state) => const IdRecoveryFormContentScreen(),
+                ),
+                GoRoute(
+                  path: 'success',
+                  name: 'id-recovery-success',
+                  builder: (context, state) => const IdRecoverySuccessScreen(),
+                ),
+              ],
+            ),
+            GoRoute(
               path: 'app-navigation',
               name: 'app-navigation',
               builder: (context, state) => const AppNavigationScreen(),
@@ -152,6 +178,7 @@ class AppRoutes {
   static const String home = '/home';
   static const String notifications = '/home/notifications';
   static const String settings = '/home/settings';
+  static const String addPasskey = '/home/add-passkey';
   static const String appNavigation = '/home/app-navigation';
   // static const String idCardRenewal = '/id-card-renewal'; // TODO: Uncomment when screen is created
   static const String appointmentDetails = '/appointment-details';
@@ -169,6 +196,8 @@ extension GoRouterExtension on GoRouter {
   void pushNotifications() => pushNamed('notifications');
 
   void pushSettings() => pushNamed('settings');
+
+  void pushAddPasskey() => pushNamed('add-passkey');
 
   void pushAppointmentDetails() => pushNamed('appointment-details');
 

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../core/app_export.dart';
 import '../../core/theme/theme_config.dart';
+import '../../core/providers/auth_provider.dart';
 import '../widgets/custom_button.dart';
 
 class TwoFactorVerificationScreen extends StatefulWidget {
@@ -134,7 +135,7 @@ class _TwoFactorVerificationScreenState
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Text(
-            'We\'ve sent a 6-digit verification code to\n${widget.email}',
+            'We\'ve sent a 6-digit verification code to\n${context.read<AuthService>().state.email}',
             textAlign: TextAlign.center,
             style: styles.body14Regular.copyWith(
               color: AppColors.colorFF3838,
