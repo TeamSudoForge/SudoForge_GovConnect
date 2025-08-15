@@ -21,10 +21,16 @@ import {
   FieldAttribute, 
   Department, 
   Service, 
-  FormField, 
+  FormField as OldFormField, 
   FormResponse, 
   FormResponseValue 
 } from './modules/forms/entities';
+import {
+  Form,
+  FormSection,
+  FormField,
+  FormSubmission
+} from './database/entities';
 
 @Module({
   imports: [
@@ -53,9 +59,14 @@ import {
           FieldAttribute,
           Department,
           Service,
-          FormField,
+          OldFormField,
           FormResponse,
-          FormResponseValue
+          FormResponseValue,
+          // Dynamic Forms entities
+          Form,
+          FormSection,
+          FormField,
+          FormSubmission
         ],
         synchronize: configService.get('DB_SYNCHRONIZE', 'false') === 'true',
         logging: configService.get('DB_LOGGING', 'false') === 'true',

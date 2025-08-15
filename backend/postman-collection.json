@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "GovConnect API",
-    "description": "Collection for testing GovConnect authentication endpoints including email verification, 2FA, passkey authentication, and dynamic forms system",
+    "description": "Collection for testing GovConnect API endpoints including authentication (email verification, 2FA, passkey), department management, and dynamic forms system with multi-page forms and various field types",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -339,28 +339,7 @@
           "name": "Form Management",
           "item": [
             {
-              "name": "Get All Forms",
-              "request": {
-                "method": "GET",
-                "header": [
-                  {
-                    "key": "Authorization",
-                    "value": "Bearer {{accessToken}}"
-                  }
-                ],
-                "url": {
-                  "raw": "{{baseUrl}}/forms",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "forms"
-                  ]
-                }
-              }
-            },
-            {
-              "name": "Create Form",
+              "name": "Create Dynamic Form",
               "request": {
                 "method": "POST",
                 "header": [
@@ -375,15 +354,36 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"service\": {\n    \"name\": \"Business License Application\",\n    \"description\": \"Apply for a new business license\",\n    \"department_id\": 1,\n    \"is_active\": true\n  },\n  \"form_fields\": [\n    {\n      \"field_id\": 1,\n      \"order_index\": 1,\n      \"section\": \"Business Information\"\n    }\n  ],\n  \"new_fields\": [\n    {\n      \"ftype_id\": 1,\n      \"label\": \"Business Name\",\n      \"placeholder\": \"Enter your business name\",\n      \"is_required\": true,\n      \"attributes\": [\n        { \"attr_key\": \"minLength\", \"attr_value\": \"2\" },\n        { \"attr_key\": \"maxLength\", \"attr_value\": \"100\" }\n      ]\n    }\n  ]\n}"
+                  "raw": "{\n  \"title\": \"ID Recovery Application Form\",\n  \"description\": \"Form for citizens to apply for ID recovery services\",\n  \"sections\": [\n    {\n      \"title\": \"Personal Information\",\n      \"description\": \"Please provide your personal details\",\n      \"pageNumber\": 1,\n      \"orderIndex\": 1,\n      \"fields\": [\n        {\n          \"label\": \"Full Name\",\n          \"fieldName\": \"full_name\",\n          \"fieldType\": \"text\",\n          \"isRequired\": true,\n          \"placeholder\": \"Enter your full name\",\n          \"helpText\": \"As it appears on your original documents\",\n          \"orderIndex\": 1\n        },\n        {\n          \"label\": \"Email Address\",\n          \"fieldName\": \"email\",\n          \"fieldType\": \"email\",\n          \"isRequired\": true,\n          \"placeholder\": \"your@email.com\",\n          \"orderIndex\": 2\n        },\n        {\n          \"label\": \"Phone Number\",\n          \"fieldName\": \"phone\",\n          \"fieldType\": \"phone_number\",\n          \"isRequired\": true,\n          \"placeholder\": \"+1234567890\",\n          \"orderIndex\": 3\n        }\n      ]\n    },\n    {\n      \"title\": \"Document Upload\",\n      \"description\": \"Please upload required documents\",\n      \"pageNumber\": 2,\n      \"orderIndex\": 2,\n      \"fields\": [\n        {\n          \"label\": \"Birth Certificate\",\n          \"fieldName\": \"birth_certificate\",\n          \"fieldType\": \"document_upload\",\n          \"isRequired\": true,\n          \"helpText\": \"Upload a clear copy of your birth certificate\",\n          \"orderIndex\": 1\n        },\n        {\n          \"label\": \"Proof of Address\",\n          \"fieldName\": \"address_proof\",\n          \"fieldType\": \"document_upload\",\n          \"isRequired\": false,\n          \"helpText\": \"Utility bill or bank statement\",\n          \"orderIndex\": 2\n        }\n      ]\n    }\n  ]\n}"
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/forms",
+                  "raw": "{{baseUrl}}/dynamic-forms",
                   "host": [
                     "{{baseUrl}}"
                   ],
                   "path": [
-                    "forms"
+                    "dynamic-forms"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get All Forms",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/dynamic-forms",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "dynamic-forms"
                   ]
                 }
               }
@@ -399,19 +399,19 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/forms/field-types",
+                  "raw": "{{baseUrl}}/dynamic-forms/field-types",
                   "host": [
                     "{{baseUrl}}"
                   ],
                   "path": [
-                    "forms",
+                    "dynamic-forms",
                     "field-types"
                   ]
                 }
               }
             },
             {
-              "name": "Get All Fields",
+              "name": "Get Form by ID",
               "request": {
                 "method": "GET",
                 "header": [
@@ -421,19 +421,19 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/forms/fields",
+                  "raw": "{{baseUrl}}/dynamic-forms/{{formId}}",
                   "host": [
                     "{{baseUrl}}"
                   ],
                   "path": [
-                    "forms",
-                    "fields"
+                    "dynamic-forms",
+                    "{{formId}}"
                   ]
                 }
               }
             },
             {
-              "name": "Get Specific Form",
+              "name": "Get Form Page",
               "request": {
                 "method": "GET",
                 "header": [
@@ -443,43 +443,15 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/forms/{{serviceId}}",
+                  "raw": "{{baseUrl}}/dynamic-forms/{{formId}}/page/{{pageNumber}}",
                   "host": [
                     "{{baseUrl}}"
                   ],
                   "path": [
-                    "forms",
-                    "{{serviceId}}"
-                  ]
-                }
-              }
-            },
-            {
-              "name": "Update Form",
-              "request": {
-                "method": "PUT",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  },
-                  {
-                    "key": "Authorization",
-                    "value": "Bearer {{accessToken}}"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"service\": {\n    \"name\": \"Updated Business License Application\",\n    \"description\": \"Updated description for business license application\",\n    \"is_active\": true\n  },\n  \"form_fields\": [\n    {\n      \"field_id\": 1,\n      \"order_index\": 1,\n      \"section\": \"Updated Business Information\"\n    }\n  ]\n}"
-                },
-                "url": {
-                  "raw": "{{baseUrl}}/forms/{{serviceId}}",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "forms",
-                    "{{serviceId}}"
+                    "dynamic-forms",
+                    "{{formId}}",
+                    "page",
+                    "{{pageNumber}}"
                   ]
                 }
               }
@@ -495,13 +467,13 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/forms/{{serviceId}}",
+                  "raw": "{{baseUrl}}/dynamic-forms/{{formId}}",
                   "host": [
                     "{{baseUrl}}"
                   ],
                   "path": [
-                    "forms",
-                    "{{serviceId}}"
+                    "dynamic-forms",
+                    "{{formId}}"
                   ]
                 }
               }
@@ -638,10 +610,10 @@
           ]
         },
         {
-          "name": "Form Responses",
+          "name": "Form Submissions",
           "item": [
             {
-              "name": "Submit Form Response",
+              "name": "Create Submission",
               "request": {
                 "method": "POST",
                 "header": [
@@ -656,23 +628,53 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"values\": [\n    {\n      \"field_id\": 1,\n      \"value\": \"Acme Corporation\"\n    },\n    {\n      \"field_id\": 2,\n      \"value\": \"john@acmecorp.com\"\n    },\n    {\n      \"field_id\": 3,\n      \"value\": \"123-456-7890\"\n    }\n  ]\n}"
+                  "raw": "{\n  \"formId\": \"{{formId}}\",\n  \"fieldValues\": [\n    {\n      \"fieldId\": \"field-uuid-1\",\n      \"value\": \"John Doe\"\n    },\n    {\n      \"fieldId\": \"field-uuid-2\",\n      \"value\": \"john.doe@example.com\"\n    },\n    {\n      \"fieldId\": \"field-uuid-3\",\n      \"value\": \"+1234567890\"\n    }\n  ],\n  \"status\": \"draft\"\n}"
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/forms/{{serviceId}}/responses",
+                  "raw": "{{baseUrl}}/dynamic-forms/submissions",
                   "host": [
                     "{{baseUrl}}"
                   ],
                   "path": [
-                    "forms",
-                    "{{serviceId}}",
-                    "responses"
+                    "dynamic-forms",
+                    "submissions"
                   ]
                 }
               }
             },
             {
-              "name": "Get Service Responses (Admin)",
+              "name": "Update Submission",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fieldValues\": [\n    {\n      \"fieldId\": \"field-uuid-1\",\n      \"value\": \"Jane Doe\"\n    },\n    {\n      \"fieldId\": \"field-uuid-2\",\n      \"value\": \"jane.doe@example.com\"\n    }\n  ],\n  \"status\": \"submitted\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/dynamic-forms/submissions/{{submissionId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "dynamic-forms",
+                    "submissions",
+                    "{{submissionId}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get My Submissions",
               "request": {
                 "method": "GET",
                 "header": [
@@ -682,85 +684,37 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/forms/{{serviceId}}/responses?page=1&limit=10&status=pending",
+                  "raw": "{{baseUrl}}/dynamic-forms/submissions/my",
                   "host": [
                     "{{baseUrl}}"
                   ],
                   "path": [
-                    "forms",
-                    "{{serviceId}}",
-                    "responses"
-                  ],
-                  "query": [
-                    {
-                      "key": "page",
-                      "value": "1"
-                    },
-                    {
-                      "key": "limit",
-                      "value": "10"
-                    },
-                    {
-                      "key": "status",
-                      "value": "pending"
-                    }
-                  ]
-                }
-              }
-            },
-            {
-              "name": "Get Specific Response",
-              "request": {
-                "method": "GET",
-                "header": [
-                  {
-                    "key": "Authorization",
-                    "value": "Bearer {{accessToken}}"
-                  }
-                ],
-                "url": {
-                  "raw": "{{baseUrl}}/forms/{{serviceId}}/responses/{{responseId}}",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "forms",
-                    "{{serviceId}}",
-                    "responses",
-                    "{{responseId}}"
-                  ]
-                }
-              }
-            },
-            {
-              "name": "Get My Responses",
-              "request": {
-                "method": "GET",
-                "header": [
-                  {
-                    "key": "Authorization",
-                    "value": "Bearer {{accessToken}}"
-                  }
-                ],
-                "url": {
-                  "raw": "{{baseUrl}}/forms/responses/my?page=1&limit=10",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "forms",
-                    "responses",
+                    "dynamic-forms",
+                    "submissions",
                     "my"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Submission by ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/dynamic-forms/submissions/{{submissionId}}",
+                  "host": [
+                    "{{baseUrl}}"
                   ],
-                  "query": [
-                    {
-                      "key": "page",
-                      "value": "1"
-                    },
-                    {
-                      "key": "limit",
-                      "value": "10"
-                    }
+                  "path": [
+                    "dynamic-forms",
+                    "submissions",
+                    "{{submissionId}}"
                   ]
                 }
               }
@@ -933,6 +887,21 @@
     },
     {
       "key": "departmentId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "formId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "submissionId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "pageNumber",
       "value": "1",
       "type": "string"
     }
