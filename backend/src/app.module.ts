@@ -9,6 +9,7 @@ import { UsersModule } from './modules/users/users.module';
 import { FormsModule } from './modules/forms/forms.module';
 import { HealthModule } from './health/health.module';
 import { RelyingPartyModule } from './relying-party/relying-party.module';
+import { StorageModule } from './modules/storage/storage.module';
 import configuration from './config/configuration';
 import { User } from './database/entities/user.entity';
 import { AuthSession } from './database/entities/auth-session.entity';
@@ -67,6 +68,7 @@ import {
     FormsModule,
     HealthModule,
     RelyingPartyModule,
+    StorageModule,
   ],
   controllers: [AppController],
   providers: [AppService],

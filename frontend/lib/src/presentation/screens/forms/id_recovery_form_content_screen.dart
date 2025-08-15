@@ -4,24 +4,28 @@ import 'package:gov_connect/src/presentation/widgets/form_fields/email_input_fie
 import 'package:gov_connect/src/presentation/widgets/form_fields/phone_input_field.dart';
 import 'package:gov_connect/src/presentation/widgets/form_fields/telephone_input_field.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:gov_connect/src/presentation/widgets/form_fields/file_upload_field.dart';
 
 class IdRecoveryFormContentScreen extends StatefulWidget {
   const IdRecoveryFormContentScreen({Key? key}) : super(key: key);
 
   @override
-  State<IdRecoveryFormContentScreen> createState() => _IdRecoveryFormContentScreenState();
+  State<IdRecoveryFormContentScreen> createState() =>
+      _IdRecoveryFormContentScreenState();
 }
 
-class _IdRecoveryFormContentScreenState extends State<IdRecoveryFormContentScreen> {
+class _IdRecoveryFormContentScreenState
+    extends State<IdRecoveryFormContentScreen> {
   final _formKey = GlobalKey<FormState>();
-  
+
   // Form field controllers
   String? _email;
   String? _mobileNumber;
   String? _telephoneNumber;
   String? _districtSecretaryDivision;
   String? _villageOfficerDivision;
+  String? _birthCertificateUrl;
+  String? _proofOfAddressUrl;
 
   // Sample data for dropdowns - these would typically come from API
   final List<DropdownOption> _districtDivisions = [
@@ -38,15 +42,38 @@ class _IdRecoveryFormContentScreenState extends State<IdRecoveryFormContentScree
   ];
 
   final List<DropdownOption> _villageOfficerDivisions = [
-    const DropdownOption(value: 'village_1', label: 'Village Officer Division 1'),
-    const DropdownOption(value: 'village_2', label: 'Village Officer Division 2'),
-    const DropdownOption(value: 'village_3', label: 'Village Officer Division 3'),
-    const DropdownOption(value: 'village_4', label: 'Village Officer Division 4'),
-    const DropdownOption(value: 'village_5', label: 'Village Officer Division 5'),
+    const DropdownOption(
+      value: 'village_1',
+      label: 'Village Officer Division 1',
+    ),
+    const DropdownOption(
+      value: 'village_2',
+      label: 'Village Officer Division 2',
+    ),
+    const DropdownOption(
+      value: 'village_3',
+      label: 'Village Officer Division 3',
+    ),
+    const DropdownOption(
+      value: 'village_4',
+      label: 'Village Officer Division 4',
+    ),
+    const DropdownOption(
+      value: 'village_5',
+      label: 'Village Officer Division 5',
+    ),
   ];
 
   void _handleFormSubmit() {
     if (_formKey.currentState!.validate()) {
+      if (_birthCertificateUrl == null || _proofOfAddressUrl == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please upload all required documents.'),
+          ),
+        );
+        return;
+      }
       // Process form submission
       print('Form submitted with data:');
       print('Email: $_email');
@@ -54,7 +81,9 @@ class _IdRecoveryFormContentScreenState extends State<IdRecoveryFormContentScree
       print('Telephone: $_telephoneNumber');
       print('District Secretary Division: $_districtSecretaryDivision');
       print('Village Officer Division: $_villageOfficerDivision');
-      
+      print('Birth Certificate URL: $_birthCertificateUrl');
+      print('Proof of Address URL: $_proofOfAddressUrl');
+
       // Navigate to success screen
       context.go('/home/id-recovery-process/success');
     }
@@ -115,10 +144,7 @@ class _IdRecoveryFormContentScreenState extends State<IdRecoveryFormContentScree
                         ),
                         // Line
                         Expanded(
-                          child: Container(
-                            height: 2,
-                            color: Colors.white,
-                          ),
+                          child: Container(height: 2, color: Colors.white),
                         ),
                         // Step 2 - current
                         Container(
@@ -141,10 +167,7 @@ class _IdRecoveryFormContentScreenState extends State<IdRecoveryFormContentScree
                         ),
                         // Line
                         Expanded(
-                          child: Container(
-                            height: 2,
-                            color: Colors.white30,
-                          ),
+                          child: Container(height: 2, color: Colors.white30),
                         ),
                         // Step 3 - pending
                         Container(
@@ -181,10 +204,7 @@ class _IdRecoveryFormContentScreenState extends State<IdRecoveryFormContentScree
                     const SizedBox(height: 8),
                     const Text(
                       'Please provide your contact information for identity verification',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 16,
-                      ),
+                      style: TextStyle(color: Colors.white70, fontSize: 16),
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -200,7 +220,7 @@ class _IdRecoveryFormContentScreenState extends State<IdRecoveryFormContentScree
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 20),
-                    
+
                     // Email field
                     EmailInputField(
                       label: 'Email Address',
@@ -210,26 +230,28 @@ class _IdRecoveryFormContentScreenState extends State<IdRecoveryFormContentScree
                       onChanged: (value) => setState(() => _email = value),
                     ),
                     const SizedBox(height: 20),
-                    
+
                     // Mobile number field
                     PhoneInputField(
                       label: 'Mobile Number',
                       placeholder: '771234567',
                       value: _mobileNumber,
                       isRequired: true,
-                      onChanged: (value) => setState(() => _mobileNumber = value),
+                      onChanged: (value) =>
+                          setState(() => _mobileNumber = value),
                     ),
                     const SizedBox(height: 20),
-                    
+
                     // Telephone number field
                     TelephoneInputField(
                       label: 'Telephone Number',
                       placeholder: '011-2345678',
                       value: _telephoneNumber,
-                      onChanged: (value) => setState(() => _telephoneNumber = value),
+                      onChanged: (value) =>
+                          setState(() => _telephoneNumber = value),
                     ),
                     const SizedBox(height: 20),
-                    
+
                     // District Secretary Division dropdown
                     DropdownField(
                       label: 'District Secretary Division',
@@ -237,10 +259,11 @@ class _IdRecoveryFormContentScreenState extends State<IdRecoveryFormContentScree
                       value: _districtSecretaryDivision,
                       options: _districtDivisions,
                       isRequired: true,
-                      onChanged: (value) => setState(() => _districtSecretaryDivision = value),
+                      onChanged: (value) =>
+                          setState(() => _districtSecretaryDivision = value),
                     ),
                     const SizedBox(height: 20),
-                    
+
                     // Village Officer Division dropdown
                     DropdownField(
                       label: 'Village Officer Division',
@@ -248,10 +271,54 @@ class _IdRecoveryFormContentScreenState extends State<IdRecoveryFormContentScree
                       value: _villageOfficerDivision,
                       options: _villageOfficerDivisions,
                       isRequired: true,
-                      onChanged: (value) => setState(() => _villageOfficerDivision = value),
+                      onChanged: (value) =>
+                          setState(() => _villageOfficerDivision = value),
                     ),
                     const SizedBox(height: 40),
-                    
+
+                    // Document upload section
+                    const Text(
+                      'Upload Required Documents',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF333333),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    FileUploadField(
+                      label: 'Birth Certificate (Photo or PDF)',
+                      helperText:
+                          'Upload a clear photo or PDF of your birth certificate.',
+                      isRequired: true,
+                      folder: 'id-recovery',
+                      allowedMimeTypes: const [
+                        'image/png',
+                        'image/jpeg',
+                        'application/pdf',
+                      ],
+                      onUploaded: (result) {
+                        setState(() => _birthCertificateUrl = result?.url);
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    FileUploadField(
+                      label: 'Proof of Address (Photo or PDF)',
+                      helperText:
+                          'Utility bill, bank statement, or government letter.',
+                      isRequired: true,
+                      folder: 'id-recovery',
+                      allowedMimeTypes: const [
+                        'image/png',
+                        'image/jpeg',
+                        'application/pdf',
+                      ],
+                      onUploaded: (result) {
+                        setState(() => _proofOfAddressUrl = result?.url);
+                      },
+                    ),
+                    const SizedBox(height: 40),
+
                     // Submit button
                     SizedBox(
                       width: double.infinity,
@@ -276,7 +343,7 @@ class _IdRecoveryFormContentScreenState extends State<IdRecoveryFormContentScree
                       ),
                     ),
                     const SizedBox(height: 20),
-                    
+
                     // Back button
                     SizedBox(
                       width: double.infinity,

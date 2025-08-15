@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import '../models/auth_models.dart';
+import '../models/upload_models.dart';
+import 'package:http_parser/http_parser.dart' as http_parser;
 import 'dart:io';
 
 class ApiService {
@@ -83,14 +85,19 @@ class ApiService {
 
   Future<AuthResponse> verifyEmail(VerifyEmailRequest request) async {
     try {
-      final response = await _dio.post('/auth/verify-email', data: request.toJson());
+      final response = await _dio.post(
+        '/auth/verify-email',
+        data: request.toJson(),
+      );
       return AuthResponse.fromJson(response.data);
     } on DioException catch (e) {
       throw _handleDioError(e);
     }
   }
 
-  Future<void> resendEmailVerificationCode(ResendVerificationCodeRequest request) async {
+  Future<void> resendEmailVerificationCode(
+    ResendVerificationCodeRequest request,
+  ) async {
     try {
       await _dio.post('/auth/resend-verification-code', data: request.toJson());
     } on DioException catch (e) {
@@ -127,6 +134,34 @@ class ApiService {
   Future<void> disable2FA() async {
     try {
       await _dio.post('/auth/disable-2fa');
+    } on DioException catch (e) {
+      throw _handleDioError(e);
+    }
+  }
+
+  // Storage endpoints
+  Future<UploadResult> uploadFile(
+    String filePath, {
+    String? folder,
+    String? contentType,
+    String? fileName,
+  }) async {
+    try {
+      final file = await MultipartFile.fromFile(
+        filePath,
+        filename: fileName,
+        contentType: contentType != null
+            ? http_parser.MediaType.parse(contentType)
+            : null,
+      );
+
+      final formData = FormData.fromMap({
+        'file': file,
+        if (folder != null) 'folder': folder,
+      });
+
+      final response = await _dio.post('/storage/upload', data: formData);
+      return UploadResult.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
       throw _handleDioError(e);
     }
