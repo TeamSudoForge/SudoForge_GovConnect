@@ -3,6 +3,7 @@ import 'package:gov_connect/src/presentation/widgets/common_app_bar.dart';
 import '../../core/theme/theme_config.dart';
 import '../../core/theme/text_style_helper.dart';
 import '../../core/models/appointment_models.dart';
+import '../widgets/bottom_navigation_widget.dart';
 
 class AppointmentUpdateScreen extends StatefulWidget {
   static const String routeName = '/appointment-update';
@@ -286,6 +287,9 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
             const SizedBox(height: 24),
           ],
         ),
+      ),
+      bottomNavigationBar: const BottomNavigationWidget(
+        currentItem: BottomNavItem.appointments,
       ),
     );
   }

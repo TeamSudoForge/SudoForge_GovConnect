@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/app_export.dart';
-import '../../core/models/settings_models.dart';
-import '../../core/services/settings_service.dart';
+import '../widgets/bottom_navigation_widget.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -59,7 +58,9 @@ class SettingsScreen extends StatelessWidget {
           );
         },
       ),
-      bottomNavigationBar: _buildBottomNavigation(context),
+      bottomNavigationBar: const BottomNavigationWidget(
+        currentItem: BottomNavItem.settings,
+      ),
     );
   }
 
@@ -401,81 +402,6 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildBottomNavigation(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Container(
-      height: 80,
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        border: Border(
-          top: BorderSide(color: theme.dividerTheme.color!, width: 0.5),
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildNavItem(Icons.home_outlined, 'Home', false, () {
-            Navigator.of(context).pop();
-          }, theme),
-          _buildNavItem(
-            Icons.grid_view_outlined,
-            'Services',
-            false,
-            () {},
-            theme,
-          ),
-          _buildNavItem(
-            Icons.calendar_today_outlined,
-            'Appointments',
-            false,
-            () {},
-            theme,
-          ),
-          _buildNavItem(Icons.settings, 'Settings', true, () {}, theme),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNavItem(
-    IconData icon,
-    String label,
-    bool isSelected,
-    VoidCallback onTap,
-    ThemeData theme,
-  ) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              size: 24,
-              color: isSelected
-                  ? theme.primaryColor
-                  : theme.colorScheme.onSurface.withOpacity(0.6),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                color: isSelected
-                    ? theme.primaryColor
-                    : theme.colorScheme.onSurface.withOpacity(0.6),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

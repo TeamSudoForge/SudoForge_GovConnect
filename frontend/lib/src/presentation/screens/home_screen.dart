@@ -5,6 +5,7 @@ import 'package:remixicon/remixicon.dart';
 import '../../core/app_export.dart';
 import '../../core/theme/theme_config.dart';
 import '../widgets/custom_button.dart';
+import '../widgets/bottom_navigation_widget.dart';
 import 'login_screen.dart';
 import 'qrflow/qr_scan_screen.dart';
 
@@ -79,6 +80,9 @@ class HomeScreen extends StatelessWidget {
             ),
           );
         },
+      ),
+      bottomNavigationBar: const BottomNavigationWidget(
+        currentItem: BottomNavItem.home,
       ),
     );
   }
