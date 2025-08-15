@@ -55,6 +55,7 @@ import { JwtStrategy } from 'src/common/strategies/jwt.strategy';
   exports: [
     AuthService, 
     JwtStrategy, 
+    PassportModule,
     AuthSessionRepository, 
     PasskeyRepository, 
     UserRepository, 

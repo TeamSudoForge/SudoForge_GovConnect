@@ -6,6 +6,8 @@ import 'package:gov_connect/src/core/app_export.dart';
 import 'src/presentation/screens/login_screen.dart';
 import 'src/presentation/screens/home_screen.dart';
 import 'src/presentation/screens/two_factor_verification_screen.dart';
+import 'package:gov_connect/src/screens/add_passkey_screen.dart';
+import 'package:gov_connect/src/screens/passkey_login_screen.dart';
 import 'src/core/theme/theme_config.dart';
 import 'src/injection.dart';
 
@@ -53,13 +55,15 @@ class GovConnectApp extends StatelessWidget {
                   case AuthStatus.requiresEmailVerification:
                     return const EmailVerificationScreen();
                   default:
-                    return const LoginScreen();
+                    return const PasskeyLoginScreen();
                 }
               },
             ),
             routes: {
               '/login': (context) => const LoginScreen(),
+              '/passkey-login': (context) => const PasskeyLoginScreen(),
               '/home': (context) => const HomeScreen(),
+              '/add-passkey': (context) => const AddPasskeyScreen(),
               '/email-verification': (context) => const EmailVerificationScreen(),
               '/two-factor': (context) => const TwoFactorVerificationScreen(),
             },

@@ -7,6 +7,7 @@ import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { HealthModule } from './health/health.module';
+import { RelyingPartyModule } from './relying-party/relying-party.module';
 import configuration from './config/configuration';
 import { User } from './database/entities/user.entity';
 import { AuthSession } from './database/entities/auth-session.entity';
@@ -45,6 +46,7 @@ import { EmailVerificationCode } from './database/entities';
     AuthModule,
     UsersModule,
     HealthModule,
+    RelyingPartyModule,
   ],
   controllers: [AppController],
   providers: [AppService],
