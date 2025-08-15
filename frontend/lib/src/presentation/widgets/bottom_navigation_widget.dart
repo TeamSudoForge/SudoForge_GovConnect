@@ -12,15 +12,13 @@ enum BottomNavItem {
     icon: Icons.grid_view_outlined,
     activeIcon: Icons.grid_view,
     label: 'Services',
-    route:
-        '/services', // TODO: Update with actual services route when implemented
+    route: '/services', // TODO: Update with actual route
   ),
   appointments(
     icon: Icons.calendar_today_outlined,
     activeIcon: Icons.calendar_today,
     label: 'Appointments',
-    route:
-        '/appointments', // TODO: Update with actual appointments route when implemented
+    route: '/appointments',
   ),
   settings(
     icon: Icons.settings_outlined,
@@ -57,7 +55,7 @@ class BottomNavigationWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      height: 85, // Increased height slightly
+      height: 85,
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         border: Border(
@@ -90,40 +88,35 @@ class BottomNavigationWidget extends StatelessWidget {
     required ThemeData theme,
   }) {
     return Expanded(
-      // Wrap in Expanded to distribute space evenly
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(8),
         child: Container(
-          padding: const EdgeInsets.symmetric(
-            vertical: 6,
-            horizontal: 4,
-          ), // Reduced padding
+          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center, // Center the content
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 icon,
-                size: 22, // Slightly smaller icon
+                size: 22,
                 color: isSelected
                     ? theme.primaryColor
                     : theme.colorScheme.onSurface.withOpacity(0.6),
               ),
-              const SizedBox(height: 3), // Reduced spacing
+              const SizedBox(height: 3),
               Flexible(
-                // Allow text to shrink if needed
                 child: Text(
                   label,
                   style: TextStyle(
-                    fontSize: 11, // Slightly smaller font
+                    fontSize: 11,
                     fontWeight: FontWeight.w400,
                     color: isSelected
                         ? theme.primaryColor
                         : theme.colorScheme.onSurface.withOpacity(0.6),
                   ),
                   textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis, // Handle long text
+                  overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                 ),
               ),
@@ -135,33 +128,27 @@ class BottomNavigationWidget extends StatelessWidget {
   }
 
   void _handleItemTap(BuildContext context, BottomNavItem item) {
-    // If a custom onItemTapped is provided, use it
+    // Use custom callback if provided
     if (onItemTapped != null) {
       onItemTapped!(item);
       return;
     }
 
-    // Default navigation behavior
-    final currentLocation = GoRouterState.of(context).matchedLocation;
-
-    // Don't navigate if already on the target route
-    if (currentLocation == item.route) {
-      return;
-    }
+    // Default navigation using GoRouter
+    final router = GoRouter.of(context);
 
     switch (item) {
       case BottomNavItem.home:
-        context.go('/home');
+        router.go('/home');
         break;
       case BottomNavItem.services:
-        // TODO: Implement services navigation when route is available
         _showNotImplementedMessage(context, 'Services');
         break;
       case BottomNavItem.appointments:
-        context.go('/appointments');
+        router.go('/appointments');
         break;
       case BottomNavItem.settings:
-        context.go('/home/settings');
+        router.go('/home/settings');
         break;
     }
   }

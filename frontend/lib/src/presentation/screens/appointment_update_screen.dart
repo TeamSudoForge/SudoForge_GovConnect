@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gov_connect/src/presentation/widgets/common_app_bar.dart';
-import '../../core/theme/theme_config.dart';
 import '../../core/theme/text_style_helper.dart';
 import '../../core/models/appointment_models.dart';
 import '../widgets/bottom_navigation_widget.dart';
@@ -68,8 +67,9 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
   @override
   Widget build(BuildContext context) {
     final styles = TextStyleHelper.instance;
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: AppColors.whiteCustom,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: CommonAppBar(
         title: widget.appointment.serviceTitle.replaceAll('\n', ' '),
         showNotifications: true,
@@ -83,22 +83,38 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
             Text(
               "New ${widget.appointment.serviceTitle.replaceAll('\n', ' ')} appointment",
               style: styles.headline20Regular.copyWith(
-                color: AppColors.colorFF0062,
+                color: theme.primaryColor,
               ),
             ),
             const SizedBox(height: 20),
-            Text('Service Description', style: styles.title18Medium),
+            Text(
+              'Service Description',
+              style: styles.title18Medium.copyWith(
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
             const SizedBox(height: 8),
             Text(
               widget.appointment.serviceDescription,
-              style: styles.body14.copyWith(height: 1.5),
+              style: styles.body14.copyWith(
+                height: 1.5,
+                color: theme.colorScheme.onSurface.withOpacity(0.8),
+              ),
             ),
             const SizedBox(height: 20),
-            Text('Requirements', style: styles.title18Medium),
+            Text(
+              'Requirements',
+              style: styles.title18Medium.copyWith(
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
             const SizedBox(height: 8),
             Text(
               'Original documents needed',
-              style: styles.body14.copyWith(height: 1.5),
+              style: styles.body14.copyWith(
+                height: 1.5,
+                color: theme.colorScheme.onSurface.withOpacity(0.8),
+              ),
             ),
             const SizedBox(height: 12),
             ...widget.appointment.requiredDocuments.map(
@@ -111,8 +127,8 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
                       margin: const EdgeInsets.only(top: 8),
                       width: 6,
                       height: 6,
-                      decoration: const BoxDecoration(
-                        color: AppColors.colorFF0062,
+                      decoration: BoxDecoration(
+                        color: theme.primaryColor,
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -120,7 +136,10 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
                     Expanded(
                       child: Text(
                         document,
-                        style: styles.body14.copyWith(height: 1.5),
+                        style: styles.body14.copyWith(
+                          height: 1.5,
+                          color: theme.colorScheme.onSurface.withOpacity(0.8),
+                        ),
                       ),
                     ),
                   ],
@@ -132,13 +151,16 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
               onTap: () {},
               child: Text(
                 'More info',
-                style: styles.body14Medium.copyWith(
-                  color: AppColors.colorFF007B,
-                ),
+                style: styles.body14Medium.copyWith(color: theme.primaryColor),
               ),
             ),
             const SizedBox(height: 28),
-            Text('Service Locations', style: styles.title18Medium),
+            Text(
+              'Service Locations',
+              style: styles.title18Medium.copyWith(
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
               value: locations.contains(selectedLocation)
@@ -162,7 +184,10 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: AppColors.colorFFD4D4),
+                  borderSide: BorderSide(
+                    color:
+                        theme.dividerTheme.color ?? theme.colorScheme.outline,
+                  ),
                 ),
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -173,31 +198,44 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
             const SizedBox(height: 8),
             Text(
               'Select location to book appointments',
-              style: styles.body12.copyWith(color: AppColors.colorFF7373),
+              style: styles.body12.copyWith(
+                color: theme.colorScheme.onSurface.withOpacity(0.6),
+              ),
             ),
             const SizedBox(height: 8),
             GestureDetector(
               onTap: () {},
               child: Text(
                 'View location details',
-                style: styles.body14Medium.copyWith(
-                  color: AppColors.colorFF007B,
-                ),
+                style: styles.body14Medium.copyWith(color: theme.primaryColor),
               ),
             ),
             const SizedBox(height: 28),
-            Text('Book a Time Slot', style: styles.title18Medium),
+            Text(
+              'Book a Time Slot',
+              style: styles.title18Medium.copyWith(
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
             const SizedBox(height: 12),
-            Text('Select a date', style: styles.body14Medium),
+            Text(
+              'Select a date',
+              style: styles.body14Medium.copyWith(
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
             const SizedBox(height: 8),
             GestureDetector(
               onTap: _pickDate,
               child: Container(
                 height: 50,
                 decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.colorFFD4D4),
+                  border: Border.all(
+                    color:
+                        theme.dividerTheme.color ?? theme.colorScheme.outline,
+                  ),
                   borderRadius: BorderRadius.circular(8),
-                  color: AppColors.whiteCustom,
+                  color: theme.colorScheme.surface,
                 ),
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -206,19 +244,26 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
                   children: [
                     Text(
                       "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}",
-                      style: styles.body14Medium,
+                      style: styles.body14Medium.copyWith(
+                        color: theme.colorScheme.onSurface,
+                      ),
                     ),
-                    const Icon(
+                    Icon(
                       Icons.calendar_today,
                       size: 20,
-                      color: AppColors.colorFF007B,
+                      color: theme.primaryColor,
                     ),
                   ],
                 ),
               ),
             ),
             const SizedBox(height: 20),
-            Text('Select a time slot', style: styles.body14Medium),
+            Text(
+              'Select a time slot',
+              style: styles.body14Medium.copyWith(
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
             const SizedBox(height: 12),
             Wrap(
               spacing: 12,
@@ -239,20 +284,21 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: isSelected
-                            ? AppColors.colorFF007B
-                            : AppColors.colorFFD4D4,
+                            ? theme.primaryColor
+                            : (theme.dividerTheme.color ??
+                                  theme.colorScheme.outline),
                       ),
                       color: isSelected
-                          ? AppColors.colorFF007B.withOpacity(0.08)
-                          : AppColors.whiteCustom,
+                          ? theme.primaryColor.withOpacity(0.08)
+                          : theme.colorScheme.surface,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
                       slot,
                       style: styles.body14Medium.copyWith(
                         color: isSelected
-                            ? AppColors.colorFF007B
-                            : AppColors.colorFF0062,
+                            ? theme.primaryColor
+                            : theme.colorScheme.onSurface,
                       ),
                     ),
                   ),
@@ -268,8 +314,8 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
               child: ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.colorFF007B,
-                  foregroundColor: AppColors.whiteCustom,
+                  backgroundColor: theme.primaryColor,
+                  foregroundColor: theme.colorScheme.onPrimary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -278,7 +324,7 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
                 child: Text(
                   'Continue',
                   style: styles.title16Medium.copyWith(
-                    color: AppColors.whiteCustom,
+                    color: theme.colorScheme.onPrimary,
                   ),
                 ),
               ),

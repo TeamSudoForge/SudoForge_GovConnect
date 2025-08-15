@@ -69,14 +69,6 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(height: 32),
                 _buildUserInfo(user, styles, theme),
                 const SizedBox(height: 24),
-                // Button to navigate to app navigation screen
-                CustomButton(
-                  text: 'appointment details',
-                  onPressed: () {
-                    context.pushNamed('appointment-details');
-                  },
-                  backgroundColor: AppColors.colorFF007B,
-                ),
               ],
             ),
           );
