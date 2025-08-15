@@ -2,6 +2,7 @@
 import 'package:provider/provider.dart';
 import 'core/app_export.dart';
 import 'core/providers/auth_provider.dart';
+import 'core/providers/notification_provider.dart';
 import 'core/services/settings_service.dart';
 
 class ServiceLocator {
@@ -38,6 +39,7 @@ final providers = [
   ChangeNotifierProvider<AuthService>.value(
     value: ServiceLocator().authService,
   ),
+  ChangeNotifierProvider(create: (_) => NotificationProvider()),
   ChangeNotifierProvider<SettingsService>.value(
     value: ServiceLocator().settingsService,
   ),

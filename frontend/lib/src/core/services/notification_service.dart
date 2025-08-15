@@ -24,7 +24,7 @@ class NotificationService {
 
     // Foreground message handler
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      _showLocalNotification(message);
+      showLocalNotification(message);
     });
 
     // Background/terminated message handler
@@ -33,7 +33,7 @@ class NotificationService {
     });
   }
 
-  Future<void> _showLocalNotification(RemoteMessage message) async {
+  Future<void> showLocalNotification(RemoteMessage message) async {
     final notification = message.notification;
     if (notification != null) {
       const androidDetails = AndroidNotificationDetails(
