@@ -32,7 +32,6 @@ services:
           sleep 1
         done &&
         echo 'Database is ready!' &&
-        npm run migration:run &&
         npm run start:dev
       "
     environment:

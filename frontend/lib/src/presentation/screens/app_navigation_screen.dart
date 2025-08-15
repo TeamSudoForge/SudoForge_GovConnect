@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
 import '../../core/routes/app_routes.dart';
-import '../../core/theme/text_style_helper.dart';
+import '../../core/app_export.dart';
+
+// Example JSON list of routes
+const List<Map<String, String>> navigationRoutes = [
+  {"name": "Sign In", "route": AppRoutes.govConnectSignInScreen},
+  {"name": "Email Verification", "route": AppRoutes.emailVerificationScreen},
+  {"name": "Home", "route": AppRoutes.initialRoute},
+  // Add more routes here as needed
+];
 
 class AppNavigationScreen extends StatelessWidget {
+  static const String routeName = '/appNavigation';
+
   const AppNavigationScreen({Key? key}) : super(key: key);
 
   @override
@@ -19,49 +29,25 @@ class AppNavigationScreen extends StatelessWidget {
       ),
       body: SizedBox(
         width: double.maxFinite,
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Colors.grey[300]!,
-                    width: 1,
-                  ),
-                ),
+        child: ListView.separated(
+          itemCount: navigationRoutes.length,
+          separatorBuilder: (_, __) => Divider(height: 1, color: Colors.grey[300]),
+          itemBuilder: (context, index) {
+            final routeItem = navigationRoutes[index];
+            return ListTile(
+              title: Text(
+                routeItem['name'] ?? '',
+                style: styles.body14Regular,
               ),
-              child: ListTile(
-                title: Text(
-                  "Sign In",
-                  style: styles.body14Regular,
-                ),
-                trailing: Icon(Icons.arrow_forward_ios, size: 20),
-                onTap: () {
-                  Navigator.pushNamed(context, AppRoutes.govConnectSignInScreen);
-                },
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Colors.grey[300]!,
-                    width: 1,
-                  ),
-                ),
-              ),
-              child: ListTile(
-                title: Text(
-                  "Email Verification",
-                  style: styles.body14Regular,
-                ),
-                trailing: Icon(Icons.arrow_forward_ios, size: 20),
-                onTap: () {
-                  Navigator.pushNamed(context, AppRoutes.emailVerificationScreen);
-                },
-              ),
-            ),
-          ],
+              trailing: Icon(Icons.arrow_forward_ios, size: 20),
+              onTap: () {
+                final routePath = routeItem['route'];
+                if (routePath != null && routePath.isNotEmpty) {
+                  Navigator.pushNamed(context, routePath);
+                }
+              },
+            );
+          },
         ),
       ),
     );

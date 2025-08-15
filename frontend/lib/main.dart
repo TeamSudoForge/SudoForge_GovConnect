@@ -1,56 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:gov_connect/src/core/providers/auth_provider.dart';
+import 'package:gov_connect/src/presentation/screens/email_verification_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:gov_connect/src/core/app_export.dart';
 import 'src/presentation/screens/login_screen.dart';
+import 'src/presentation/screens/home_screen.dart';
+import 'src/presentation/screens/two_factor_verification_screen.dart';
+import 'package:gov_connect/src/presentation/screens/add_passkey_screen.dart';
+import 'package:gov_connect/src/presentation/screens/passkey_login_screen.dart';
 import 'src/core/theme/theme_config.dart';
-import 'src/presentation/widgets/common_app_bar.dart';
-import 'src/core/routes/app_routes.dart';
+import 'src/injection.dart';
+import 'src/core/theme/theme_config.dart';
+import 'src/injection.dart';
+import 'src/core/routes/app_router.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeServices();
   runApp(const GovConnectApp());
 }
 
 class GovConnectApp extends StatelessWidget {
-  const GovConnectApp({Key? key}) : super(key: key);
+  const GovConnectApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Example font scale, can be made dynamic via settings/provider
-    const double fontScale = 1.0;
-    return MaterialApp(
-      title: 'GovConnect',
-      theme: AppTheme.lightTheme(fontScale),
-      darkTheme: AppTheme.darkTheme(fontScale),
-      routes: {...AppRoutes.routes..remove(AppRoutes.initialRoute)},
-      home: const HomePage(),
-    );
-  }
-}
+    return MultiProvider(
 
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+      providers: providers,
+      child: Consumer2<AuthService, SettingsService>(
+        builder: (context, authService, settingsService, child) {
+          final fontScale = settingsService.currentFontScale;
+          final router = AppRouter.createRouter(authService);
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CommonAppBar(
-        title: 'GovConnect Home',
-        showBackButton: false,
-        showNotifications: true,
-        showProfile: true,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(
-                  context,
-                ).push(MaterialPageRoute(builder: (_) => const LoginScreen()));
-              },
-              child: const Text('Go to Login'),
-            ),
-          ],
-        ),
+          return MaterialApp.router(
+            title: 'GovConnect',
+            theme: AppTheme.lightTheme(fontScale),
+            darkTheme: AppTheme.darkTheme(fontScale),
+            themeMode: settingsService.settings.materialThemeMode,
+            routerConfig: router,
+          );
+        },
       ),
     );
   }

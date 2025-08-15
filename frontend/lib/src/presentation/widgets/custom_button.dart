@@ -15,6 +15,7 @@ class CustomButton extends StatelessWidget {
     this.padding,
     this.hasShadow,
     this.isFullWidth,
+    this.isLoading,
   }) : super(key: key);
 
   final String text;
@@ -28,6 +29,7 @@ class CustomButton extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final bool? hasShadow;
   final bool? isFullWidth;
+  final bool? isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class CustomButton extends StatelessWidget {
       width: isFullWidth ?? false ? double.infinity : width,
       height: height ?? 48,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: (isLoading ?? false) ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor ?? appTheme.colorFF007B,
           foregroundColor: textColor ?? appTheme.whiteCustom,
@@ -50,14 +52,25 @@ class CustomButton extends StatelessWidget {
                 vertical: 12,
               ),
         ),
-        child: Text(
-          text,
-          style: TextStyle(
-            fontSize: fontSize ?? 16,
-            fontWeight: FontWeight.normal,
-            fontFamily: 'Roboto',
-          ),
-        ),
+        child: (isLoading ?? false)
+            ? SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    textColor ?? appTheme.whiteCustom,
+                  ),
+                ),
+              )
+            : Text(
+                text,
+                style: TextStyle(
+                  fontSize: fontSize ?? 16,
+                  fontWeight: FontWeight.normal,
+                  fontFamily: 'Roboto',
+                ),
+              ),
       ),
     );
   }

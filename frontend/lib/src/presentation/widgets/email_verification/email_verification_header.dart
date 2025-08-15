@@ -26,7 +26,6 @@ class EmailVerificationHeader extends StatelessWidget {
               ),
               child: Center(
                 child: CustomImageView(
-                  imagePath: ImageConstant.imgArrowleft,
                   height: 20,
                   width: 20,
                 ),

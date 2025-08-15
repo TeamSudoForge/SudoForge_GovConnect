@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>GovConnect - Verify Your Email Address</title>
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      line-height: 1.6;
+      color: #333;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .container { 
+      border: 1px solid #ddd; 
+      border-radius: 5px; 
+      padding: 20px; 
+      background-color: #f9f9f9;
+    }
+    .code {
+      font-size: 32px;
+      font-weight: bold;
+      text-align: center;
+      letter-spacing: 5px;
+      padding: 15px;
+      margin: 20px 0;
+      background: #007bff;
+      color: white;
+      border-radius: 5px;
+    }
+    .footer {
+      font-size: 12px;
+      color: #777;
+      margin-top: 30px;
+      text-align: center;
+    }
+    .header {
+      text-align: center;
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2> GovConnect Email Verification</h2>
+    </div>
+    
+    <p>Hello {{name}},</p>
+    <p>Welcome to GovConnect! To complete your registration and secure your account, please verify your email address.</p>
+    <p>Your verification code is:</p>
+    
+    <div class="code">{{code}}</div>
+    
+    <p>This code will expire in 10 minutes for security purposes.</p>
+    <p>If you didn't create a GovConnect account, please ignore this email or contact our support team if you have concerns.</p>
+    
+    <p>Once verified, you'll have access to all government services through your secure GovConnect portal.</p>
+    
+    <div class="footer">
+      <p>This is an automated message, please do not reply to this email.</p>
+      <p>&copy; GovConnect - Your gateway to government services</p>
+    </div>
+  </div>
+</body>
+</html>

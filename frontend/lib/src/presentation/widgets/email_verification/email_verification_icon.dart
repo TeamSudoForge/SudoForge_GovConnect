@@ -19,7 +19,6 @@ class EmailVerificationIcon extends StatelessWidget {
           ),
           child: Center(
             child: CustomImageView(
-              imagePath: ImageConstant.imgI,
               height: 42,
               width: 42,
             ),
