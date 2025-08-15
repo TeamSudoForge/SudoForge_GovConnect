@@ -9,8 +9,9 @@ import '../../core/models/appointment_models.dart';
 
 class AppointmentDetailsScreen extends StatefulWidget {
   static const String routeName = '/appointment-details';
+  final String? appointmentId;
 
-  const AppointmentDetailsScreen({super.key});
+  const AppointmentDetailsScreen({super.key, this.appointmentId});
 
   @override
   State<AppointmentDetailsScreen> createState() =>
@@ -18,8 +19,14 @@ class AppointmentDetailsScreen extends StatefulWidget {
 }
 
 class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
-  // Sample appointment data
-  final AppointmentDetails appointmentData = sampleAppointment;
+  // Get appointment data based on ID, fall back to sample
+  AppointmentDetails get appointmentData {
+    if (widget.appointmentId != null &&
+        sampleAppointmentsDetails.containsKey(widget.appointmentId)) {
+      return sampleAppointmentsDetails[widget.appointmentId]!;
+    }
+    return sampleAppointment; // fallback to original sample
+  }
 
   // Map controller for flutter_map
   final MapController _mapController = MapController();
@@ -63,15 +70,21 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Title section
-                      Text(
-                        appointmentData.serviceTitle,
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                          height: 1.2,
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        child: Text(
+                          appointmentData.serviceTitle,
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
+                            height: 1.2,
+                          ),
+                          softWrap: true,
+                          overflow: TextOverflow.visible,
                         ),
                       ),
+
                       const SizedBox(height: 12),
 
                       // Date and time section - positioned to the right

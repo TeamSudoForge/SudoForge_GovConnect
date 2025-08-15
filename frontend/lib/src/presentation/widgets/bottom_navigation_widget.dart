@@ -158,8 +158,7 @@ class BottomNavigationWidget extends StatelessWidget {
         _showNotImplementedMessage(context, 'Services');
         break;
       case BottomNavItem.appointments:
-        // TODO: Implement appointments navigation when route is available
-        _showNotImplementedMessage(context, 'Appointments');
+        context.go('/appointments');
         break;
       case BottomNavItem.settings:
         context.go('/home/settings');
