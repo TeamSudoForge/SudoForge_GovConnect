@@ -1,24 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../core/app_export.dart';
-import '../../core/theme/text_style_helper.dart';
 import '../../core/theme/theme_config.dart';
 import '../../core/providers/auth_provider.dart';
 import '../widgets/custom_button.dart';
 
 class TwoFactorVerificationScreen extends StatefulWidget {
   static const String routeName = '/two-factor-verification';
-  
-  const TwoFactorVerificationScreen({
-    Key? key,
-  }) : super(key: key);
+
+  final String email;
+
+  const TwoFactorVerificationScreen({Key? key, required this.email})
+    : super(key: key);
 
   @override
-  State<TwoFactorVerificationScreen> createState() => _TwoFactorVerificationScreenState();
+  State<TwoFactorVerificationScreen> createState() =>
+      _TwoFactorVerificationScreenState();
 }
 
-class _TwoFactorVerificationScreenState extends State<TwoFactorVerificationScreen> {
-  final List<TextEditingController> _controllers = List.generate(6, (index) => TextEditingController());
+class _TwoFactorVerificationScreenState
+    extends State<TwoFactorVerificationScreen> {
+  final List<TextEditingController> _controllers = List.generate(
+    6,
+    (index) => TextEditingController(),
+  );
   final List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
 
   @override
@@ -54,9 +60,9 @@ class _TwoFactorVerificationScreenState extends State<TwoFactorVerificationScree
 
   void _resendCode() {
     // TODO: Implement resend functionality
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Verification code sent!')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Verification code sent!')));
   }
 
   @override
@@ -71,7 +77,7 @@ class _TwoFactorVerificationScreenState extends State<TwoFactorVerificationScree
             // Handle navigation based on auth state
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (authService.state.status == AuthStatus.authenticated) {
-                Navigator.of(context).pushReplacementNamed('/home');
+                context.goNamed('home');
               } else if (authService.state.status == AuthStatus.error) {
                 if (authService.state.error != null) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -117,11 +123,7 @@ class _TwoFactorVerificationScreenState extends State<TwoFactorVerificationScree
             color: AppColors.colorFF007B.withOpacity(0.1),
             borderRadius: BorderRadius.circular(32),
           ),
-          child: Icon(
-            Icons.security,
-            color: AppColors.colorFF007B,
-            size: 32,
-          ),
+          child: Icon(Icons.security, color: AppColors.colorFF007B, size: 32),
         ),
         const SizedBox(height: 24),
         Text(
@@ -158,7 +160,7 @@ class _TwoFactorVerificationScreenState extends State<TwoFactorVerificationScree
             textAlign: TextAlign.center,
             keyboardType: TextInputType.number,
             maxLength: 1,
-            style: styles.headline20Regular.copyWith(
+            style: styles.title20.copyWith(
               color: AppColors.colorFF0062,
             ),
             decoration: InputDecoration(

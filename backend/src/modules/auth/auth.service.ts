@@ -188,15 +188,22 @@ export class AuthService {
   ): Promise<void> {
     const user = await this.usersService.findById(userId);
 
+    // Extract public key from credential response
+    let publicKey = 'default-public-key';
+    
+    if (credential.response && credential.response.publicKey) {
+      publicKey = credential.response.publicKey;
+    } else if (credential.response) {
+      publicKey = JSON.stringify(credential.response);
+    }
+
     // For now, we'll store the passkey without full WebAuthn verification
     await this.passkeyRepository.save({
       userId: user.id,
       credentialId: credential.id,
-      credentialPublicKey: credential.response.publicKey || JSON.stringify(credential.response),
-      credentialCounter: 0,
+      publicKey: publicKey,
+      counter: 0,
       displayName,
-      credentialBackedUp: false,
-      transports: credential.response.transports || [],
     });
   }
 

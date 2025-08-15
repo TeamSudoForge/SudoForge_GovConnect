@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm';
 
-export class CreateTwoFactorCodesTable1692841540004 implements MigrationInterface {
+export class CreateTwoFactorCodesTable1755000902666 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     // Check if the table already exists
     const tableExists = await queryRunner.hasTable('two_factor_codes');

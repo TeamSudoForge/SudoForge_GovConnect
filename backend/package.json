@@ -27,7 +27,12 @@
     "prod:down": "docker compose -f docker-compose.prod.yml down",
     "typeorm": "typeorm-ts-node-commonjs",
     "migration:run": "npm run typeorm -- migration:run -d src/config/typeorm.config.ts",
-    "migration:create": "npm run typeorm -- migration:create"
+    "migration:create": "npm run typeorm -- migration:create",
+    "migration:show": "npm run typeorm -- migration:show -d src/config/typeorm.config.ts",
+    "migration:revert": "npm run typeorm -- migration:revert -d src/config/typeorm.config.ts",
+    "db:seed": "ts-node -r tsconfig-paths/register src/scripts/seed-database.ts",
+    "db:seed-field-types": "ts-node -r tsconfig-paths/register src/scripts/seed-field-types.ts",
+    "db:reset": "docker compose -f docker-compose.dev.yml down -v && docker compose -f docker-compose.dev.yml up -d"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

@@ -10,6 +10,9 @@ import 'package:gov_connect/src/screens/add_passkey_screen.dart';
 import 'package:gov_connect/src/screens/passkey_login_screen.dart';
 import 'src/core/theme/theme_config.dart';
 import 'src/injection.dart';
+import 'src/core/theme/theme_config.dart';
+import 'src/injection.dart';
+import 'src/core/routes/app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,50 +26,19 @@ class GovConnectApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        Provider<ServiceLocator>(
-          create: (_) => ServiceLocator(),
-        ),
-        ChangeNotifierProvider<AuthService>(
-          create: (context) => ServiceLocator().authService,
-        ),
-        ChangeNotifierProvider<AuthProvider>(
-          create: (_) => AuthProvider(),
-        ),
-      ],
-      child: Builder(
-        builder: (context) {
-          return MaterialApp(
-            title: 'GovConnect',
-            theme: AppTheme.lightTheme(1.0),
-            darkTheme: AppTheme.darkTheme(1.0),
-            home: Consumer<AuthService>(
-              builder: (context, auth, _) {
-                // Store email in AuthProvider when authentication status changes
-                if (auth.state.email != null) {
-                  context.read<AuthProvider>().setEmail(auth.state.email);
-                }
 
-                switch (auth.state.status) {
-                  case AuthStatus.authenticated:
-                    return const HomeScreen();
-                  case AuthStatus.requires2FA:
-                    return const TwoFactorVerificationScreen();
-                  case AuthStatus.requiresEmailVerification:
-                    return const EmailVerificationScreen();
-                  default:
-                    return const PasskeyLoginScreen();
-                }
-              },
-            ),
-            routes: {
-              '/login': (context) => const LoginScreen(),
-              '/passkey-login': (context) => const PasskeyLoginScreen(),
-              '/home': (context) => const HomeScreen(),
-              '/add-passkey': (context) => const AddPasskeyScreen(),
-              '/email-verification': (context) => const EmailVerificationScreen(),
-              '/two-factor': (context) => const TwoFactorVerificationScreen(),
-            },
+      providers: providers,
+      child: Consumer2<AuthService, SettingsService>(
+        builder: (context, authService, settingsService, child) {
+          final fontScale = settingsService.currentFontScale;
+          final router = AppRouter.createRouter(authService);
+
+          return MaterialApp.router(
+            title: 'GovConnect',
+            theme: AppTheme.lightTheme(fontScale),
+            darkTheme: AppTheme.darkTheme(fontScale),
+            themeMode: settingsService.settings.materialThemeMode,
+            routerConfig: router,
           );
         },
       ),

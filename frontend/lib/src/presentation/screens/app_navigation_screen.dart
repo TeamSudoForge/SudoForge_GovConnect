@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/routes/app_routes.dart';
-import '../../core/theme/text_style_helper.dart';
+import '../../core/app_export.dart';
 
 // Example JSON list of routes
 const List<Map<String, String>> navigationRoutes = [
