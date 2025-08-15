@@ -10,6 +10,7 @@ import '../../presentation/screens/two_factor_verification_screen.dart';
 import '../../presentation/screens/app_navigation_screen.dart';
 import '../../presentation/screens/appointment_details.dart';
 import '../../presentation/screens/appointment_update_screen.dart';
+import '../../presentation/screens/appointments_screen.dart';
 import '../../presentation/screens/notifications_screen.dart';
 import '../../presentation/screens/settings_screen.dart';
 import '../../presentation/screens/add_passkey_screen.dart';
@@ -174,9 +175,21 @@ class AppRouter {
         ),
 
         GoRoute(
+          path: '/appointments',
+          name: 'appointments',
+          builder: (context, state) => const AppointmentsScreen(),
+        ),
+        GoRoute(
           path: '/appointment-details',
+          redirect: (context, state) => '/appointment-details/1',
+        ),
+        GoRoute(
+          path: '/appointment-details/:id',
           name: 'appointment-details',
-          builder: (context, state) => const AppointmentDetailsScreen(),
+          builder: (context, state) {
+            final appointmentId = state.pathParameters['id'] ?? '1';
+            return AppointmentDetailsScreen(appointmentId: appointmentId);
+          },
         ),
         GoRoute(
           path: '/appointment-update',
@@ -205,6 +218,7 @@ class AppRoutes {
   static const String demoForm = '/home/demo-form';
   static const String appNavigation = '/home/app-navigation';
   // static const String idCardRenewal = '/id-card-renewal'; // TODO: Uncomment when screen is created
+  static const String appointments = '/appointments';
   static const String appointmentDetails = '/appointment-details';
   static const String appointmentUpdate = '/appointment-update';
 }
@@ -235,9 +249,15 @@ extension GoRouterExtension on GoRouter {
     }
   }
 
-  void pushAppointmentDetails() => pushNamed('appointment-details');
+  void pushAppointments() => pushNamed('appointments');
 
-
+  void pushAppointmentDetails([String? appointmentId]) {
+    if (appointmentId != null) {
+      pushNamed('appointment-details', pathParameters: {'id': appointmentId});
+    } else {
+      pushNamed('appointment-details', pathParameters: {'id': '1'});
+    }
+  }
 
   void pushTwoFactorVerification(String email) =>
       pushNamed('two-factor-verification', queryParameters: {'email': email});

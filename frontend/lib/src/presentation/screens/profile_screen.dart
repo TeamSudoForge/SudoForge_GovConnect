@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gov_connect/src/presentation/widgets/bottom_navigation_widget.dart';
 import 'package:provider/provider.dart';
 import '../../core/app_export.dart';
 import '../widgets/custom_button.dart';
@@ -38,6 +39,9 @@ class ProfileScreen extends StatelessWidget {
             ),
           );
         },
+      ),
+      bottomNavigationBar: const BottomNavigationWidget(
+        currentItem: BottomNavItem.home,
       ),
     );
   }
