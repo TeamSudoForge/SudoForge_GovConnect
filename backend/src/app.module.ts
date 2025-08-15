@@ -7,11 +7,16 @@ import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { HealthModule } from './health/health.module';
+import { ChatbotModule } from './modules/chatbot/chatbot.module';
 import configuration from './config/configuration';
 import { User } from './database/entities/user.entity';
 import { AuthSession } from './database/entities/auth-session.entity';
 import { Passkey } from './database/entities/passkey.entity';
 import { TwoFactorCode } from './modules/auth/two-factor/entities/two-factor-code.entity';
+import { ChatMessage } from './modules/chatbot/entities/chat-message.entity';
+import { ChatSession } from './modules/chatbot/entities/chat-session.entity';
+import { Tag } from './modules/chatbot/entities/tag.entity';
+import { FaqQuestion } from './modules/chatbot/entities/faq-question.entity';
 
 @Module({
   imports: [
@@ -34,8 +39,12 @@ import { TwoFactorCode } from './modules/auth/two-factor/entities/two-factor-cod
           AuthSession,
           Passkey,
           TwoFactorCode,
+          ChatMessage,
+          ChatSession,
+          Tag,
+          FaqQuestion,
         ],
-        synchronize: configService.get('DB_SYNCHRONIZE', 'false') === 'true',
+        synchronize: false, // Disabled to prevent schema conflicts
         logging: configService.get('DB_LOGGING', 'false') === 'true',
       }),
     }),
@@ -43,6 +52,7 @@ import { TwoFactorCode } from './modules/auth/two-factor/entities/two-factor-cod
     AuthModule,
     UsersModule,
     HealthModule,
+    ChatbotModule,
   ],
   controllers: [AppController],
   providers: [AppService],

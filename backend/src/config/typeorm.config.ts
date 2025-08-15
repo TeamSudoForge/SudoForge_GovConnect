@@ -13,8 +13,8 @@ export default new DataSource({
   username: configService.get('DB_USERNAME', 'postgres'),
   password: configService.get('DB_PASSWORD', 'password'),
   database: configService.get('DB_NAME', 'govconnect'),
-  entities: ['dist/**/*.entity{.ts,.js}'],
-  migrations: ['dist/database/migrations/*{.ts,.js}'],
+  entities: ['src/**/*.entity{.ts,.js}'],
+  migrations: ['src/database/migrations/*{.ts,.js}'],
   migrationsTableName: 'typeorm_migrations',
   synchronize: false,
 });

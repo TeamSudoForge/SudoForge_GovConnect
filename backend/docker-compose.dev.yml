@@ -8,13 +8,13 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - postgres_data_dev:/var/lib/postgresql/data
     networks:
       - govconnect-network-dev
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -32,11 +32,11 @@ services:
           sleep 1
         done &&
         echo 'Database is ready!' &&
-        npm run migration:run &&
         npm run start:dev
       "
     environment:
       NODE_ENV: development
+      PORT: 3000
       DB_HOST: database
       DB_PORT: 5432
       DB_USERNAME: postgres
@@ -48,8 +48,9 @@ services:
       MAIL_HOST: mail-dev
       MAIL_PORT: 1025
       MAIL_FROM: noreply@govconnect.com
+      DB_SYNCHRONIZE: true
     ports:
-      - "3000:3000"
+      - '3000:3000'
     volumes:
       - .:/app
       - ./node_modules:/app/node_modules
@@ -58,12 +59,19 @@ services:
     networks:
       - govconnect-network-dev
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health"]
+      test:
+        [
+          'CMD',
+          'wget',
+          '--quiet',
+          '--tries=1',
+          '--spider',
+          'http://localhost:3000/health',
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
     restart: unless-stopped
-
 
   # File Storage Service (MinIO S3-compatible)
   file-storage:
@@ -73,15 +81,15 @@ services:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin123
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - '9000:9000'
+      - '9001:9001'
     volumes:
       - minio_data_dev:/data
     command: server /data --console-address ":9001"
     networks:
       - govconnect-network-dev
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -92,8 +100,8 @@ services:
     image: mailhog/mailhog:latest
     container_name: govconnect-mail-dev-server
     ports:
-      - "1025:1025"  # SMTP port
-      - "8025:8025"  # Web UI port
+      - '1025:1025' # SMTP port
+      - '8025:8025' # Web UI port
     networks:
       - govconnect-network-dev
     restart: unless-stopped

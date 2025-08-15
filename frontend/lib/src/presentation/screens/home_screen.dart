@@ -6,6 +6,7 @@ import '../../core/theme/theme_config.dart';
 import '../widgets/custom_button.dart';
 import 'login_screen.dart';
 import 'qrflow/qr_scan_screen.dart';
+import 'chatbot_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String routeName = '/home';
@@ -57,6 +58,18 @@ class HomeScreen extends StatelessWidget {
             ),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const ChatbotScreen()),
+          );
+        },
+        backgroundColor: AppColors.colorFF007B,
+        child: Icon(
+          Remix.customer_service_2_line,
+          color: AppColors.whiteCustom,
+        ),
       ),
     );
   }
@@ -133,6 +146,19 @@ class HomeScreen extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const QrScanScreen()),
+            );
+          },
+          styles: styles,
+        ),
+        const SizedBox(height: 16),
+        _buildNavigationButton(
+          context: context,
+          text: 'GovConnect Assistant',
+          icon: Remix.customer_service_2_line,
+          backgroundColor: AppColors.colorFF007B,
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const ChatbotScreen()),
             );
           },
           styles: styles,

@@ -16,7 +16,7 @@ import { UserRepository } from './repositories/user.repository';
 import { TwoFactorService } from './two-factor/two-factor.service';
 import { TwoFactorCode } from './two-factor/entities/two-factor-code.entity';
 import { MailService } from '../notifications/mail/mail.service';
-import { JwtStrategy } from 'src/common/strategies/jwt.strategy';
+import { JwtStrategy } from '../../common/strategies/jwt.strategy';
 import { TwoFactorModule } from './two-factor/two-factor.module';
 
 @Module({
