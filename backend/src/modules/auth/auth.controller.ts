@@ -27,6 +27,8 @@ import { LocalAuthGuard } from '../../common/guards/local-auth.guard';
 import { User } from '../../database/entities';
 import { Verify2faDto } from './two-factor/dto/verify-2fa.dto';
 import { TwoFactorService } from './two-factor/two-factor.service';
+import { EmailVerificationService } from './email-verification/email-verification.service';
+import { VerifyEmailDto, ResendVerificationCodeDto } from './email-verification/dto/email-verification.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -35,11 +37,25 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly twoFactorService: TwoFactorService,
+    private readonly emailVerificationService: EmailVerificationService,
   ) {}
 
   @Post('register')
   async register(@Body() registerDto: RegisterDto): Promise<AuthResponseDto> {
-    return this.authService.register(registerDto);
+    const result = await this.authService.register(registerDto);
+    
+    // Send email verification code after registration
+    if (result.requiresEmailVerification) {
+      try {
+        const user = await this.authService.findByEmail(registerDto.email);
+        await this.emailVerificationService.generateAndSendVerificationCode(user.id);
+      } catch (error) {
+        this.logger.warn(`Failed to send verification email during registration: ${error.message}`);
+        // Don't throw error here, registration was successful
+      }
+    }
+    
+    return result;
   }
 
   @Post('login')
@@ -49,6 +65,25 @@ export class AuthController {
 
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
+    }
+
+    // Check if email is verified first
+    if (!user.isEmailVerified) {
+      try {
+        await this.emailVerificationService.generateAndSendVerificationCode(user.id);
+        return {
+          message: 'Please verify your email address. Verification code sent to your email.',
+          requiresEmailVerification: true,
+          email: user.email,
+        };
+      } catch (error) {
+        // If we can't send verification email, still inform user they need to verify
+        return {
+          message: 'Please verify your email address to continue.',
+          requiresEmailVerification: true,
+          email: user.email,
+        };
+      }
     }
     
     try {
@@ -71,6 +106,36 @@ export class AuthController {
         return this.authService.loginWithUser(user);
       }
       throw error;
+    }
+  }
+
+  @Post('verify-email')
+  @HttpCode(HttpStatus.OK)
+  async verifyEmail(@Body() verifyEmailDto: VerifyEmailDto) {
+    const isValid = await this.emailVerificationService.verifyEmailCode(
+      verifyEmailDto.email,
+      verifyEmailDto.verificationCode,
+    );
+
+    if (!isValid) {
+      throw new UnauthorizedException('Invalid or expired verification code');
+    }
+
+    const user = await this.authService.findByEmail(verifyEmailDto.email);
+    return this.authService.loginWithUser(user);
+  }
+
+  @Post('resend-verification-code')
+  @HttpCode(HttpStatus.OK)
+  async resendVerificationCode(@Body() resendDto: ResendVerificationCodeDto) {
+    try {
+      await this.emailVerificationService.resendVerificationCode(resendDto.email);
+      return { message: 'Verification code sent to your email' };
+    } catch (error) {
+      if (error.message.includes('wait') || error.message.includes('Too many')) {
+        throw new UnauthorizedException(error.message);
+      }
+      throw new UnauthorizedException('Failed to send verification code. Please try again.');
     }
   }
 

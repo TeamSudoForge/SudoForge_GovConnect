@@ -14,8 +14,8 @@ export class UsersService {
     private configService: ConfigService,
   ) {}
 
-  async create(registerDto: RegisterDto): Promise<User> {
-    const { email, password, firstName, lastName, username } = registerDto;
+  async create(registerDto: RegisterDto & { isEmailVerified?: boolean }): Promise<User> {
+    const { email, password, firstName, lastName, username, isEmailVerified = true } = registerDto;
 
     // Check if user already exists
     const existingUser = await this.userRepository.findOne({
@@ -42,6 +42,7 @@ export class UsersService {
       passwordHash,
       firstName,
       lastName,
+      isEmailVerified,
     });
 
     return this.userRepository.save(user);

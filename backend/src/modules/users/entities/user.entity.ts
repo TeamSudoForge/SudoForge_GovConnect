@@ -26,6 +26,9 @@ export class User {
   @Column({ name: 'is_two_factor_enabled', default: false })
   isTwoFactorEnabled: boolean;
 
+  @Column({ name: 'passkey_challenge', nullable: true })
+  passkeyChallenge: string | null;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

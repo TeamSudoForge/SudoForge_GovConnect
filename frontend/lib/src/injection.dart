@@ -1,6 +1,7 @@
 // Dependency injection setup
 import 'package:provider/provider.dart';
 import 'core/app_export.dart';
+import 'core/providers/auth_provider.dart';
 import 'core/services/settings_service.dart';
 
 class ServiceLocator {
@@ -32,7 +33,8 @@ class ServiceLocator {
 }
 
 // Provider setup for the app
-List<ChangeNotifierProvider> get providers => [
+final providers = [
+  ChangeNotifierProvider(create: (_) => AuthProvider()),
   ChangeNotifierProvider<AuthService>.value(
     value: ServiceLocator().authService,
   ),

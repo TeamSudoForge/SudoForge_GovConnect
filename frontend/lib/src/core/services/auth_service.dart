@@ -15,6 +15,7 @@ class AuthService extends ChangeNotifier {
   bool get isAuthenticated => _state.status == AuthStatus.authenticated;
   bool get isLoading => _state.isLoading;
   bool get requires2FA => _state.status == AuthStatus.requires2FA;
+  bool get requiresEmailVerification => _state.status == AuthStatus.requiresEmailVerification;
 
   AuthService({
     ApiService? apiService,
@@ -85,7 +86,14 @@ class AuthService extends ChangeNotifier {
       // Save remember me preference
       await _storageService.setRememberMe(rememberMe);
 
-      if (response.requires2FA == true) {
+      if (response.requiresEmailVerification == true) {
+        // Email verification is required
+        _updateState(_state.copyWith(
+          status: AuthStatus.requiresEmailVerification,
+          email: response.email ?? email,
+          isLoading: false,
+        ));
+      } else if (response.requires2FA == true) {
         // 2FA is required
         _updateState(_state.copyWith(
           status: AuthStatus.requires2FA,
@@ -130,9 +138,75 @@ class AuthService extends ChangeNotifier {
       
       if (response.accessToken != null && response.refreshToken != null) {
         await _handleSuccessfulAuth(response);
+      } else if (response.requiresEmailVerification == true) {
+        // Email verification is required after registration
+        _updateState(_state.copyWith(
+          status: AuthStatus.requiresEmailVerification,
+          email: response.email ?? email,
+          isLoading: false,
+        ));
       } else {
         throw Exception('Registration failed');
       }
+    } catch (e) {
+      _updateState(_state.copyWith(
+        status: AuthStatus.error,
+        error: e.toString(),
+        isLoading: false,
+      ));
+    }
+  }
+
+  // Verify email with verification code
+  Future<void> verifyEmail(String verificationCode) async {
+    if (_state.email == null) {
+      _updateState(_state.copyWith(
+        status: AuthStatus.error,
+        error: 'Email not found for email verification',
+        isLoading: false,
+      ));
+      return;
+    }
+
+    _updateState(_state.copyWith(isLoading: true, error: null));
+
+    try {
+      final request = VerifyEmailRequest(
+        email: _state.email!,
+        verificationCode: verificationCode,
+      );
+      
+      final response = await _apiService.verifyEmail(request);
+      
+      if (response.accessToken != null && response.refreshToken != null) {
+        await _handleSuccessfulAuth(response);
+      } else {
+        throw Exception('Email verification failed');
+      }
+    } catch (e) {
+      _updateState(_state.copyWith(
+        status: AuthStatus.error,
+        error: e.toString(),
+        isLoading: false,
+      ));
+    }
+  }
+
+  // Resend email verification code
+  Future<void> resendEmailVerificationCode() async {
+    if (_state.email == null) {
+      _updateState(_state.copyWith(
+        status: AuthStatus.error,
+        error: 'Email not found for resending verification code',
+        isLoading: false,
+      ));
+      return;
+    }
+
+    try {
+      final request = ResendVerificationCodeRequest(email: _state.email!);
+      await _apiService.resendEmailVerificationCode(request);
+      // Don't change the loading state, just show success message via UI
     } catch (e) {
       _updateState(_state.copyWith(
         status: AuthStatus.error,

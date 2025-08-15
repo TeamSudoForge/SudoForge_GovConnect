@@ -81,6 +81,23 @@ class ApiService {
     }
   }
 
+  Future<AuthResponse> verifyEmail(VerifyEmailRequest request) async {
+    try {
+      final response = await _dio.post('/auth/verify-email', data: request.toJson());
+      return AuthResponse.fromJson(response.data);
+    } on DioException catch (e) {
+      throw _handleDioError(e);
+    }
+  }
+
+  Future<void> resendEmailVerificationCode(ResendVerificationCodeRequest request) async {
+    try {
+      await _dio.post('/auth/resend-verification-code', data: request.toJson());
+    } on DioException catch (e) {
+      throw _handleDioError(e);
+    }
+  }
+
   Future<AuthResponse> refreshToken(RefreshTokenRequest request) async {
     try {
       final response = await _dio.post('/auth/refresh', data: request.toJson());

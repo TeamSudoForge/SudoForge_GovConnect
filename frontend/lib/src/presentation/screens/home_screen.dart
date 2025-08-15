@@ -167,6 +167,30 @@ class HomeScreen extends StatelessWidget {
           styles: styles,
           theme: theme,
         ),
+        const SizedBox(height: 16),
+        _buildNavigationButton(
+          context: context,
+          text: 'Add Passkey',
+          icon: Remix.fingerprint_line,
+          backgroundColor: AppColors.colorFF007B,
+          onPressed: () {
+            context.pushNamed('add-passkey');
+          },
+          styles: styles,
+          theme: theme,
+        ),
+        const SizedBox(height: 16),
+        _buildNavigationButton(
+          context: context,
+          text: 'ID Recovery Process',
+          icon: Remix.id_card_line,
+          backgroundColor: const Color(0xFF2196F3),
+          onPressed: () {
+            context.pushNamed('id-recovery-process');
+          },
+          styles: styles,
+          theme: theme,
+        ),
       ],
     );
   }
