@@ -13,6 +13,7 @@ class NotificationProvider extends ChangeNotifier {
   Future<void> init() async {
     _fcmToken = await NotificationService().getToken();
     if (_fcmToken != null) {
+      debugPrint('FCM Token: $_fcmToken');
       await ApiService().registerFcmToken(_fcmToken!);
     }
     FirebaseMessaging.onMessage.listen((message) {
