@@ -214,6 +214,27 @@ class ApiService {
     }
   }
 
+  // Fetch notifications
+  Future<List<NotificationDto>> fetchNotifications() async {
+    try {
+      final response = await _dio.get('/notifications');
+      return (response.data as List)
+          .map((n) => NotificationDto.fromJson(n))
+          .toList();
+    } on DioException catch (e) {
+      throw _handleDioError(e);
+    }
+  }
+
+  // Mark notification as read
+  Future<void> markNotificationAsRead(String id) async {
+    try {
+      await _dio.post('/notifications/mark-read/$id');
+    } on DioException catch (e) {
+      throw _handleDioError(e);
+    }
+  }
+
   String _handleDioError(DioException e) {
     if (e.response != null) {
       final data = e.response!.data;
@@ -228,5 +249,30 @@ class ApiService {
     } else {
       return 'Network error. Please check your connection.';
     }
+  }
+}
+
+// Notification DTO
+class NotificationDto {
+  final String id;
+  final String title;
+  final String body;
+  final bool read;
+  final DateTime createdAt;
+  NotificationDto({
+    required this.id,
+    required this.title,
+    required this.body,
+    required this.read,
+    required this.createdAt,
+  });
+  factory NotificationDto.fromJson(Map<String, dynamic> json) {
+    return NotificationDto(
+      id: json['id'],
+      title: json['title'],
+      body: json['body'],
+      read: json['read'],
+      createdAt: DateTime.parse(json['createdAt']),
+    );
   }
 }
