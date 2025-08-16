@@ -79,12 +79,12 @@ export default function AnalyticsPage() {
       label: "Cancelled",
       color: "hsl(var(--chart-3))",
     },
-    services: {
-      label: "Services",
+    certificates: {
+      label: "Certificates",
       color: "hsl(var(--chart-4))",
     },
-    departments: {
-      label: "Departments",
+    applications: {
+      label: "Applications",
       color: "hsl(var(--chart-5))",
     },
   }
@@ -192,22 +192,20 @@ export default function AnalyticsPage() {
               <ChartContainer config={chartConfig}>
                 <ResponsiveContainer width="100%" height={300}>
                   {timeRange === "daily" ? (
-                    <BarChart data={dailyData}>
+                    <LineChart data={dailyData}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="date" />
                       <YAxis />
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                      <Bar dataKey="appointments" fill="var(--color-appointments)" />
-                      <Bar dataKey="completed" fill="var(--color-completed)" />
-                    </BarChart>
+                      <Line type="monotone" dataKey="appointments" stroke="#0088FE" strokeWidth={3} />
+                      <Line type="monotone" dataKey="completed" stroke="#00C49F" strokeWidth={3} />
+                    </LineChart>
                   ) : (
                     <LineChart data={monthlyData}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="month" />
                       <YAxis />
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                      <Line type="monotone" dataKey="appointments" stroke="var(--color-appointments)" strokeWidth={2} />
-                      <Line type="monotone" dataKey="services" stroke="var(--color-services)" strokeWidth={2} />
+                      <Line type="monotone" dataKey="appointments" stroke="#0088FE" strokeWidth={3} />
+                      <Line type="monotone" dataKey="certificates" stroke="#FFBB28" strokeWidth={3} />
                     </LineChart>
                   )}
                 </ResponsiveContainer>

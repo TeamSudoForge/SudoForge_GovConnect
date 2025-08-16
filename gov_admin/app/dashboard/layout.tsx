@@ -31,7 +31,7 @@ const navigation = [
   { name: "Appointments", href: "/dashboard/appointments", icon: Calendar },
   { name: "Citizens", href: "/dashboard/citizens", icon: Users },
   { name: "Messages", href: "/dashboard/messages", icon: MessageSquare },
-  { name: "Notifications", href: "/dashboard/notifications", icon: Bell },
+  { name: "Announcements", href: "/dashboard/announcements", icon: Bell },
   { name: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
 ]
 
