@@ -3,6 +3,7 @@ import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { DynamicFormsService } from './dynamic-forms.service';
 import { FormSeederService } from './seeders/form-seeder.service';
 import { CreateDynamicFormDto } from './dto/create-dynamic-form.dto';
+import { UpdateDynamicFormDto } from './dto/update-dynamic-form.dto';
 import { CreateFormSubmissionDto, UpdateFormSubmissionDto } from './dto/form-submission.dto';
 
 @Controller('dynamic-forms')
@@ -16,6 +17,11 @@ export class DynamicFormsController {
   @Post()
   async createForm(@Body() createFormDto: CreateDynamicFormDto) {
     return this.dynamicFormsService.createForm(createFormDto);
+  }
+
+  @Put(':id')
+  async updateForm(@Param('id') id: string, @Body() updateFormDto: UpdateDynamicFormDto) {
+    return this.dynamicFormsService.updateForm(id, updateFormDto);
   }
 
   @Get()
