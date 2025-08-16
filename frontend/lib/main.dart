@@ -41,10 +41,6 @@ class GovConnectApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Initialize notification provider after app starts
-    // Future.microtask(
-    //   () => Provider.of<NotificationProvider>(context, listen: false).init(),
-    // );
     return MultiProvider(
       providers: providers,
       child: Consumer2<AuthService, SettingsService>(
