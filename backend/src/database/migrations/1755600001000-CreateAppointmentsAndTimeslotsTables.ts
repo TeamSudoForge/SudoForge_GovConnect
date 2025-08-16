@@ -18,7 +18,7 @@ export class CreateAppointmentsAndTimeslotsTables1755600001000
       CREATE TABLE IF NOT EXISTS appointments (
         id SERIAL PRIMARY KEY,
         ref VARCHAR(50) UNIQUE NOT NULL,
-        user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
         service_id INT NOT NULL REFERENCES services(service_id) ON DELETE CASCADE,
         department_id INT NOT NULL REFERENCES departments(department_id) ON DELETE CASCADE,
         timeslot_id INT NOT NULL REFERENCES timeslots(id) ON DELETE CASCADE,

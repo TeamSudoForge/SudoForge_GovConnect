@@ -11,8 +11,8 @@ import {
 import { Department } from './department.entity';
 import { FormField } from './form-field.entity';
 import { FormResponse } from './form-response.entity';
-import { Timeslot } from 'src/database/entities/timeslot.entity';
-import { RequiredDocument } from 'src/database/entities/required-document.entity';
+import { Timeslot } from '../../../database/entities/timeslot.entity';
+import { RequiredDocument } from '../../../database/entities/required-document.entity';
 
 @Entity('services')
 export class Service {

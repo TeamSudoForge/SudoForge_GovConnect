@@ -1,4 +1,4 @@
-import { Service } from 'src/modules/forms/entities';
+import { Service } from '../../modules/forms/entities/service.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 @Entity('timeslots')

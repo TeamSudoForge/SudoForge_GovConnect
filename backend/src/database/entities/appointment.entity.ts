@@ -7,7 +7,8 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 import { Timeslot } from './timeslot.entity';
-import { Department, Service } from 'src/modules/forms/entities';
+import { Service } from '../../modules/forms/entities/service.entity';
+import { Department } from '../../modules/forms/entities/department.entity';
 
 @Entity('appointments')
 export class Appointment {
@@ -19,6 +20,9 @@ export class Appointment {
 
   @ManyToOne(() => User)
   user: User;
+
+  @Column({ type: 'uuid' })
+  userId: string;
 
   @ManyToOne(() => Service)
   service: Service;

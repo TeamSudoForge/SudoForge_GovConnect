@@ -1,6 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { Service } from 'src/modules/forms/entities/service.entity';
-
+import { Service } from '../../modules/forms/entities/service.entity';
 @Entity('required_documents')
 export class RequiredDocument {
   @PrimaryGeneratedColumn()
