@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,11 +10,7 @@ import { Switch } from '@/components/ui/switch';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Plus, Trash2, Calendar, Edit3, Settings, Loader2, AlertCircle } from 'lucide-react';
-import { ServicesService } from '@/lib/services/services.service';
-import { DepartmentAuthService } from '@/lib/services/department-auth.service';
-import { Department } from '@/lib/services/departments.service';
+import { Plus, Trash2, Calendar, Edit3, Settings } from 'lucide-react';
 
 // Field Type Definitions
 interface BaseField {
@@ -145,38 +141,13 @@ export default function CreateServicePage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedFieldType, setSelectedFieldType] = useState<FieldType>('text');
   
-  // Current department state
-  const [currentDepartment, setCurrentDepartment] = useState<Department | null>(null);
-  
   // Form state  
   const [formData, setFormData] = useState({
     name: '',
     description: '',
+    department: '',
     fields: [] as FormField[]
   });
-
-  // Load current department on component mount
-  useEffect(() => {
-    loadCurrentDepartment();
-  }, []);
-
-  const loadCurrentDepartment = async () => {
-    try {
-      const departmentAuthService = DepartmentAuthService.getInstance();
-      const dept = departmentAuthService.getCurrentDepartment();
-      
-      if (!dept) {
-        setError('No department found. Please log in again.');
-        router.push('/auth/login');
-        return;
-      }
-      
-      setCurrentDepartment(dept);
-    } catch (error) {
-      console.error('Failed to load current department:', error);
-      setError('Failed to load department information');
-    }
-  };
 
   // Form functions
   const generateFieldId = () => `field_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -333,49 +304,16 @@ export default function CreateServicePage() {
   const handleSaveForm = async () => {
     try {
       setIsLoading(true);
-      setError(null);
       
-      if (!formData.name.trim()) {
-        throw new Error('Form name is required');
-      }
+      // Here you would save the form to your backend
+      console.log('Saving form:', formData);
       
-      if (!currentDepartment) {
-        throw new Error('Department information not available');
-      }
-
-      // Prepare the service data for the backend
-      const serviceData = {
-        title: formData.name,
-        description: formData.description,
-        sections: formData.fields.length > 0 ? [{
-          title: 'Form Fields',
-          description: 'Main form section',
-          pageNumber: 1,
-          orderIndex: 1,
-          fields: formData.fields.map((field, index) => ({
-            label: field.label,
-            fieldName: field.label.toLowerCase().replace(/\s+/g, '_'),
-            fieldType: field.type,
-            isRequired: field.required,
-            placeholder: field.placeholder,
-            orderIndex: index + 1,
-            validationRules: ('validations' in field) ? field.validations : undefined,
-            options: ('properties' in field) ? field.properties : undefined,
-            metadata: {
-              fieldConfig: field
-            }
-          }))
-        }] : []
-      };
-
-      const servicesService = ServicesService.getInstance();
-      await servicesService.createService(serviceData);
+      // For now, just simulate a save
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Navigate back to services list
       router.push('/dashboard/services');
-    } catch (error: any) {
-      console.error('Failed to save form:', error);
-      setError(error.message || 'Failed to save form');
+    } catch (error) {
+      setError('Failed to save form');
     } finally {
       setIsLoading(false);
     }
@@ -1137,34 +1075,11 @@ export default function CreateServicePage() {
   return (
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold">Create Service Form</h1>
-          <p className="text-gray-600 mt-1">
-            Create a new service for {currentDepartment?.name || 'your department'}
-          </p>
-        </div>
-        <Button 
-          onClick={handleSaveForm} 
-          disabled={!formData.name || !currentDepartment || isLoading}
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              Saving...
-            </>
-          ) : (
-            'Save Form'
-          )}
+        <h1 className="text-2xl font-bold">Create Service Form</h1>
+        <Button onClick={handleSaveForm} disabled={!formData.name || !formData.department}>
+          Save Form
         </Button>
       </div>
-
-      {/* Error Alert */}
-      {error && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Form Configuration */}
@@ -1194,18 +1109,21 @@ export default function CreateServicePage() {
             </div>
             
             <div className="space-y-2">
-              <Label>Department</Label>
-              <div className="p-3 bg-gray-50 rounded-md border">
-                <div className="flex items-center space-x-2">
-                  <div className="p-1 bg-blue-100 rounded">
-                    <Settings className="h-4 w-4 text-blue-600" />
-                  </div>
-                  <div>
-                    <p className="font-medium">{currentDepartment?.name || 'Loading...'}</p>
-                    <p className="text-sm text-gray-500">Creating service for your department</p>
-                  </div>
-                </div>
-              </div>
+              <Label htmlFor="form-department">Department</Label>
+              <Select
+                value={formData.department}
+                onValueChange={(value) => setFormData({ ...formData, department: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select department" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="health">Health Department</SelectItem>
+                  <SelectItem value="transport">Transport Department</SelectItem>
+                  <SelectItem value="education">Education Department</SelectItem>
+                  <SelectItem value="social">Social Services</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-2">

@@ -20,7 +20,7 @@ export default function HomePage() {
               <Button variant="outline">Sign In</Button>
             </Link>
             <Link href="/auth/register">
-              <Button>Register Official</Button>
+              <Button>Register Department</Button>
             </Link>
           </div>
         </div>
@@ -31,17 +31,17 @@ export default function HomePage() {
         <div className="container mx-auto text-center">
           <h2 className="text-4xl font-bold text-foreground mb-6">Streamline Government Services</h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Empower government officials to manage services, appointments, and citizen interactions efficiently.
+            Manage departments, services, appointments, and citizen interactions all in one comprehensive platform.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/auth/register">
               <Button size="lg" className="w-full sm:w-auto">
-                Register as Official
+                Register Your Department
               </Button>
             </Link>
             <Link href="/auth/login">
               <Button variant="outline" size="lg" className="w-full sm:w-auto bg-transparent">
-                Official Sign In
+                Department Sign In
               </Button>
             </Link>
           </div>
@@ -56,8 +56,8 @@ export default function HomePage() {
             <Card>
               <CardHeader>
                 <Building2 className="h-12 w-12 text-primary mb-4" />
-                <CardTitle>Official Management</CardTitle>
-                <CardDescription>Register and authenticate government officials with secure access control</CardDescription>
+                <CardTitle>Department Management</CardTitle>
+                <CardDescription>Register and manage government departments with secure authentication</CardDescription>
               </CardHeader>
             </Card>
 
