@@ -91,9 +91,7 @@ export class AppointmentService {
         appointmentDate: slot.startAt.toISOString().split('T')[0],
         appointmentTime: slot.startAt.toISOString().split('T')[1].slice(0, 5),
         location:
-          typeof department.contact_phone === 'string'
-            ? department.contact_phone
-            : '',
+          typeof department.address === 'string' ? department.address : '',
         referenceNumber: ref,
         qrCodeUrl,
         mapUrl: department['mapUrl'] || '',
@@ -109,9 +107,7 @@ export class AppointmentService {
         appointmentDate: slot.startAt.toISOString().split('T')[0],
         appointmentTime: slot.startAt.toISOString().split('T')[1].slice(0, 5),
         location:
-          typeof department.contact_phone === 'string'
-            ? department.contact_phone
-            : '',
+          typeof department.address === 'string' ? department.address : '',
         referenceNumber: ref,
         requiredDocuments,
         qrCodeUrl,
@@ -204,8 +200,8 @@ export class AppointmentService {
           .split('T')[1]
           .slice(0, 5),
         location:
-          typeof appointment.department.contact_phone === 'string'
-            ? appointment.department.contact_phone
+          typeof appointment.department.address === 'string'
+            ? appointment.department.address
             : '',
         referenceNumber: appointment.ref,
         qrCodeUrl: appointment.qrCodeUrl,
@@ -234,8 +230,8 @@ export class AppointmentService {
           .split('T')[1]
           .slice(0, 5),
         location:
-          typeof appointment.department.contact_phone === 'string'
-            ? appointment.department.contact_phone
+          typeof appointment.department.address === 'string'
+            ? appointment.department.address
             : '',
         referenceNumber: appointment.ref,
         requiredDocuments,
@@ -303,7 +299,8 @@ export class AppointmentService {
     page: number;
     pageSize: number;
   }> {
-    const query = this.appointmentRepo.createQueryBuilder('appointment')
+    const query = this.appointmentRepo
+      .createQueryBuilder('appointment')
       .where('appointment.userId = :userId', { userId });
     if (status) {
       query.andWhere('appointment.status = :status', { status });
