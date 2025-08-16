@@ -81,7 +81,7 @@ class _AppointmentUpdateScreenState extends State<AppointmentUpdateScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "New ${widget.appointment.serviceTitle.replaceAll('\n', ' ')} appointment",
+              "Update ${widget.appointment.serviceTitle.replaceAll('\n', ' ')} appointment",
               style: styles.headline20Regular.copyWith(
                 color: theme.primaryColor,
               ),

@@ -1,6 +1,7 @@
 class ApiConfig {
   // Base URL for the API - update this to match your backend URL
-  static const String baseUrl = 'http://10.0.2.2:3000'; // Removed /api
+  // static const String baseUrl = 'http://10.0.2.2:3000'; // Removed /api
+  static const String baseUrl = 'http://192.168.1.138:3000'; // Removed /api
 
   // Authentication endpoints
   static const String authEndpoint = '/auth';
@@ -8,15 +9,20 @@ class ApiConfig {
   static const String registerEndpoint = '$authEndpoint/register';
   static const String refreshTokenEndpoint = '$authEndpoint/refresh';
   static const String verifyEmailEndpoint = '$authEndpoint/verify-email';
-  static const String resendVerificationEndpoint = '$authEndpoint/resend-verification-code';
+  static const String resendVerificationEndpoint =
+      '$authEndpoint/resend-verification-code';
   static const String twoFactorEndpoint = '$authEndpoint/verify-2fa';
   static const String profileEndpoint = '$authEndpoint/profile';
 
   // Passkey endpoints
-  static const String passkeyRegisterBeginEndpoint = '$authEndpoint/passkey/register/begin';
-  static const String passkeyRegisterCompleteEndpoint = '$authEndpoint/passkey/register/complete';
-  static const String passkeyAuthBeginEndpoint = '$authEndpoint/passkey/authenticate/begin';
-  static const String passkeyAuthCompleteEndpoint = '$authEndpoint/passkey/authenticate/complete';
+  static const String passkeyRegisterBeginEndpoint =
+      '$authEndpoint/passkey/register/begin';
+  static const String passkeyRegisterCompleteEndpoint =
+      '$authEndpoint/passkey/register/complete';
+  static const String passkeyAuthBeginEndpoint =
+      '$authEndpoint/passkey/authenticate/begin';
+  static const String passkeyAuthCompleteEndpoint =
+      '$authEndpoint/passkey/authenticate/complete';
   static const String passkeysEndpoint = '$authEndpoint/passkeys';
 
   // Forms endpoints
@@ -39,10 +45,6 @@ class ApiConfig {
 
   // Get authorization header with token
   static Map<String, String> getAuthHeaders(String token) {
-    return {
-      ...defaultHeaders,
-      'Authorization': 'Bearer $token',
-    };
+    return {...defaultHeaders, 'Authorization': 'Bearer $token'};
   }
 }
-
