@@ -19,6 +19,7 @@ import {
   Bell,
   LogOut,
   Home,
+  Users
 } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -26,11 +27,12 @@ import { cn } from "@/lib/utils"
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
-  { name: "Departments", href: "/dashboard/departments", icon: Building2 },
-  { name: "Services", href: "/dashboard/services", icon: FileText },
+  { name: "Documents", href: "/dashboard/documents", icon: FileText },
   { name: "Appointments", href: "/dashboard/appointments", icon: Calendar },
+  { name: "Citizens", href: "/dashboard/citizens", icon: Users },
+  { name: "Messages", href: "/dashboard/messages", icon: MessageSquare },
+  { name: "Notifications", href: "/dashboard/notifications", icon: Bell },
   { name: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
-  { name: "Chat", href: "/dashboard/chat", icon: MessageSquare },
 ]
 
 export default function DashboardLayout({
@@ -66,8 +68,8 @@ export default function DashboardLayout({
               <div className="flex items-center space-x-2">
                 <Building2 className="h-8 w-8 text-primary" />
                 <div>
-                  <h1 className="text-lg font-bold text-foreground">Gov Services</h1>
-                  <p className="text-xs text-muted-foreground">Management Portal</p>
+                  <h1 className="text-lg font-bold text-foreground">GN Portal</h1>
+                  <p className="text-xs text-muted-foreground">Grama Niladhari System</p>
                 </div>
               </div>
             )}
@@ -198,8 +200,8 @@ export default function DashboardLayout({
                   <AvatarFallback>JD</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col min-w-0">
-                  <span className="text-sm font-medium text-foreground leading-tight truncate">John Doe</span>
-                  <span className="text-xs text-muted-foreground truncate">Department of Health</span>
+                  <span className="text-sm font-medium text-foreground leading-tight truncate">K.P. Silva</span>
+                  <span className="text-xs text-muted-foreground truncate">Grama Niladhari - Colombo 10</span>
                 </div>
                 
               </div>
