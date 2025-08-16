@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>GovConnect - Appointment Reminder</title>
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      line-height: 1.6;
+      color: #333;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .container { 
+      border: 1px solid #ddd; 
+      border-radius: 5px; 
+      padding: 20px; 
+      background-color: #f9f9f9;
+    }
+    .reminder-box {
+      font-size: 18px;
+      text-align: center;
+      padding: 15px;
+      margin: 20px 0;
+      background: #ff9800;
+      color: white;
+      border-radius: 5px;
+    }
+    .appointment-details {
+      background: #f0f0f0;
+      border-left: 4px solid #007bff;
+      padding: 15px;
+      margin: 15px 0;
+    }
+    .detail-row {
+      display: flex;
+      margin-bottom: 8px;
+    }
+    .detail-label {
+      font-weight: bold;
+      width: 120px;
+    }
+    .document-checklist {
+      background: #e8f4fc;
+      border: 1px solid #b8daff;
+      border-radius: 5px;
+      padding: 15px;
+      margin: 20px 0;
+    }
+    .document-checklist h3 {
+      color: #0056b3;
+      margin-top: 0;
+    }
+    .checklist-item {
+      margin-bottom: 10px;
+      padding-left: 25px;
+      position: relative;
+    }
+    .checklist-item:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #28a745;
+      font-weight: bold;
+    }
+    .important-note {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 10px 15px;
+      margin: 20px 0;
+    }
+    .footer {
+      font-size: 12px;
+      color: #777;
+      margin-top: 30px;
+      text-align: center;
+    }
+    .header {
+      text-align: center;
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+    .qr-code-section {
+      text-align: center;
+      margin: 25px 0;
+    }
+    .qr-placeholder {
+      width: 150px;
+      height: 150px;
+      background: #ddd;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>GovConnect Appointment Reminder</h2>
+    </div>
+    
+    <p>Hello {{name}},</p>
+    <p>This is a reminder about your appointment tomorrow with {{departmentName}}.</p>
+    
+    <div class="reminder-box">24-Hour Reminder</div>
+    
+    <div class="appointment-details">
+      <div class="detail-row">
+        <div class="detail-label">Service:</div>
+        <div>{{serviceName}}</div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-label">Date:</div>
+        <div>{{appointmentDate}}</div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-label">Time:</div>
+        <div>{{appointmentTime}}</div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-label">Location:</div>
+        <div>{{location}}</div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-label">Reference No:</div>
+        <div>{{referenceNumber}}</div>
+      </div>
+    </div>
+
+    <div class="document-checklist">
+      <h3>Required Original Documents Checklist</h3>
+      {{#each requiredDocuments}}
+        <div class="checklist-item">{{this}}</div>
+      {{/each}}
+    </div>
+
+    <div class="important-note">
+      <strong>Important:</strong> Please bring all original documents listed above. Missing documents may result in your appointment being rescheduled.
+    </div>
+
+    <p>Please arrive 15 minutes before your scheduled time.</p>
+
+    <div class="qr-code-section">
+      <p>Show this QR code when you arrive:</p>
+      <div class="qr-placeholder">
+        <!-- QR code image will be embedded here -->
+        {{#if qrCodeUrl}}
+        <img src="{{qrCodeUrl}}" alt="Appointment QR Code" width="150" height="150">
+        {{else}}
+        QR Code Placeholder
+        {{/if}}
+      </div>
+    </div>
+
+    <p>If you need to reschedule or cancel this appointment, please log in to your GovConnect account as soon as possible or contact our support team.</p>
+    
+    <div class="footer">
+      <p>This is an automated message, please do not reply to this email.</p>
+      <p>&copy; GovConnect - Your gateway to government services</p>
+    </div>
+  </div>
+</body>
+</html>

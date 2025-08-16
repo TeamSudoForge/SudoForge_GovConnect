@@ -19,10 +19,10 @@
       background-color: #f9f9f9;
     }
     .notification-box {
-      font-size: 32px;
+      font-size: 28px;
       font-weight: bold;
       text-align: center;
-      letter-spacing: 2px;
+      letter-spacing: 1px;
       padding: 15px;
       margin: 20px 0;
       background: #007bff;
@@ -35,16 +35,31 @@
       margin: 15px 0;
       border-radius: 5px;
     }
+    .detail-row {
+      display: flex;
+      margin-bottom: 10px;
+      padding: 5px 0;
+      border-bottom: 1px solid #ddd;
+    }
+    .detail-label {
+      font-weight: bold;
+      width: 150px;
+      color: #007bff;
+    }
+    .detail-value {
+      flex: 1;
+    }
     .action-button {
       display: inline-block;
       margin: 15px 0;
-      padding: 10px 20px;
+      padding: 12px 25px;
       background: #007bff;
       color: white;
       text-decoration: none;
       border-radius: 5px;
       text-align: center;
       font-weight: bold;
+      letter-spacing: 1px;
     }
     .footer {
       font-size: 12px;
@@ -61,8 +76,8 @@
       background: #e8f4fc;
       border: 1px solid #b8daff;
       border-radius: 5px;
-      padding: 10px;
-      margin: 10px 0;
+      padding: 15px;
+      margin: 15px 0;
       font-family: monospace;
       font-size: 14px;
       white-space: pre-wrap;
@@ -83,9 +98,26 @@
       {{title}}
     </div>
     
-    {{#if data}}
+    {{#if details}}
       <div class="content">
-        <div class="data-section">{{data}}</div>
+        <div class="details-section">
+          {{#each details}}
+            <div class="detail-row">
+              <div class="detail-label">{{@key}}:</div>
+              <div class="detail-value">{{this}}</div>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    {{/if}}
+
+    {{#if data}}
+      <div class="data-section">
+        {{#if isJsonData}}
+          <pre>{{data}}</pre>
+        {{else}}
+          {{data}}
+        {{/if}}
       </div>
     {{/if}}
 
