@@ -11,3 +11,4 @@ export { Form } from './form.entity';
 export { FormSection } from './form-section.entity';
 export { FormField, FieldType } from './form-field.entity';
 export { FormSubmission, SubmissionStatus } from './form-submission.entity';
+export { Notification } from './notification.entity';

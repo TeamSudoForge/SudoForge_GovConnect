@@ -7,9 +7,9 @@ class ApiService {
     // When running on Android emulator, localhost needs to be changed to 10.0.2.2
     if (Platform.isAndroid) {
       // if using Android emulator
-      return 'http://10.0.2.2:3000';
+      // return 'http://10.0.2.2:3000';
       // if using real Android device
-      // return "http://192.168.96.103:3000";
+      return "http://192.168.142.69:3000";
     }
     // For iOS simulator or physical devices, you might need to use your machine's IP address
     return 'http://localhost:3000';
@@ -86,14 +86,19 @@ class ApiService {
 
   Future<AuthResponse> verifyEmail(VerifyEmailRequest request) async {
     try {
-      final response = await _dio.post('/auth/verify-email', data: request.toJson());
+      final response = await _dio.post(
+        '/auth/verify-email',
+        data: request.toJson(),
+      );
       return AuthResponse.fromJson(response.data);
     } on DioException catch (e) {
       throw _handleDioError(e);
     }
   }
 
-  Future<void> resendEmailVerificationCode(ResendVerificationCodeRequest request) async {
+  Future<void> resendEmailVerificationCode(
+    ResendVerificationCodeRequest request,
+  ) async {
     try {
       await _dio.post('/auth/resend-verification-code', data: request.toJson());
     } on DioException catch (e) {
@@ -195,6 +200,15 @@ class ApiService {
   Future<void> deletePasskey(String passkeyId) async {
     try {
       await _dio.delete('/auth/passkeys/$passkeyId');
+    } on DioException catch (e) {
+      throw _handleDioError(e);
+    }
+  }
+
+  // Register FCM token for push notifications
+  Future<void> registerFcmToken(String token) async {
+    try {
+      await _dio.post('/notifications/register-token', data: {'token': token});
     } on DioException catch (e) {
       throw _handleDioError(e);
     }

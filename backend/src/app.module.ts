@@ -10,6 +10,7 @@ import { FormsModule } from './modules/forms/forms.module';
 import { HealthModule } from './health/health.module';
 import { ChatbotModule } from './modules/chatbot/chatbot.module';
 import { RelyingPartyModule } from './relying-party/relying-party.module';
+import { NotificationModule } from './modules/notifications/notification.module';
 import configuration from './config/configuration';
 import { User } from './database/entities/user.entity';
 import { AuthSession } from './database/entities/auth-session.entity';
@@ -20,22 +21,23 @@ import { ChatSession } from './modules/chatbot/entities/chat-session.entity';
 import { Tag } from './modules/chatbot/entities/tag.entity';
 import { FaqQuestion } from './modules/chatbot/entities/faq-question.entity';
 import { EmailVerificationCode } from './database/entities';
-import { 
-  FieldType, 
-  Field, 
-  FieldAttribute, 
-  Department, 
-  Service, 
-  FormField as OldFormField, 
-  FormResponse, 
-  FormResponseValue 
+import {
+  FieldType,
+  Field,
+  FieldAttribute,
+  Department,
+  Service,
+  FormField as OldFormField,
+  FormResponse,
+  FormResponseValue,
 } from './modules/forms/entities';
 import {
   Form,
   FormSection,
   FormField,
-  FormSubmission
+  FormSubmission,
 } from './database/entities';
+import { Notification } from './database/entities/notification.entity';
 
 @Module({
   imports: [
@@ -71,11 +73,12 @@ import {
           OldFormField,
           FormResponse,
           FormResponseValue,
+          Notification,
           // Dynamic Forms entities
           Form,
           FormSection,
           FormField,
-          FormSubmission
+          FormSubmission,
         ],
         synchronize: false, // Disabled to prevent schema conflicts
         logging: configService.get('DB_LOGGING', 'false') === 'true',
@@ -88,6 +91,7 @@ import {
     HealthModule,
     ChatbotModule,
     RelyingPartyModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
