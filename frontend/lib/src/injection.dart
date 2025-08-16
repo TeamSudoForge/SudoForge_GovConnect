@@ -7,6 +7,7 @@ import 'core/providers/auth_provider.dart';
 import 'core/providers/notification_provider.dart';
 import 'core/services/notification_service.dart';
 import 'core/services/settings_service.dart';
+import 'core/services/onboarding_service.dart';
 
 class ServiceLocator {
   static final ServiceLocator _instance = ServiceLocator._internal();
@@ -71,6 +72,7 @@ Future<void> initializeServices() async {
   ServiceLocator().init();
   await ServiceLocator().settingsService.initialize();
   await ServiceLocator().authService.initialize();
+  await OnboardingService.instance.initialize();
 
   // Inject AuthService into NotificationService
   ServiceLocator().notificationService.setAuthService(

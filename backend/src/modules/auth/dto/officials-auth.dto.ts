@@ -40,6 +40,11 @@ export class OfficialRegisterDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(100)
+  division?: string;
+
+  @IsOptional()
+  @IsString()
   @MaxLength(20)
   contact_phone?: string;
 }
@@ -51,6 +56,7 @@ export class OfficialAuthResponseDto {
     email: string;
     designation?: string;
     department?: string;
+    division?: string;
     contact_phone?: string;
     isActive: boolean;
     role: string;

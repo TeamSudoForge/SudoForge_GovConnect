@@ -1,7 +1,9 @@
 import 'package:go_router/go_router.dart';
 import '../../core/app_export.dart';
 import '../../core/models/appointment_models.dart';
+import '../../core/services/onboarding_service.dart';
 import '../../presentation/screens/splash_screen.dart';
+import '../../presentation/screens/welcome_screens.dart';
 import '../../presentation/screens/login_screen.dart';
 import '../../presentation/screens/home_screen.dart';
 import '../../presentation/screens/profile_screen.dart';
@@ -36,10 +38,13 @@ class AppRouter {
       debugLogDiagnostics: true,
       refreshListenable: authService,
       redirect: (context, state) {
+        print('[Router] Current location: ${state.matchedLocation}');
+        
         final authStatus = authService.state.status;
         final isLoggedIn = authStatus == AuthStatus.authenticated;
         final isLoggingIn = state.matchedLocation == '/login';
         final isOnSplash = state.matchedLocation == '/splash';
+        final isOnWelcome = state.matchedLocation == '/welcome';
         final isOnAuth =
             isLoggingIn ||
             state.matchedLocation == '/email-verification' ||
@@ -48,27 +53,43 @@ class AppRouter {
         // Show splash only on first app launch (during this session)
         // This ensures splash is only shown when app starts, not during login/logout flows
         if (isOnSplash && !_hasShownSplash) {
+          print('[Router] Showing splash screen');
           return null; // Allow splash to show
         }
 
-        // Skip splash if already shown and redirect based on auth status
+        // Skip splash if already shown
         if (isOnSplash && _hasShownSplash) {
+          // This shouldn't happen as splash navigates directly
+          print('[Router] Splash already shown, redirecting to login');
+          return '/login';
+        }
+
+        // Allow welcome screens to show if user hasn't seen them
+        if (isOnWelcome && !OnboardingService.instance.hasSeenWelcomeScreens) {
+          return null;
+        }
+
+        // Skip welcome if already seen
+        if (isOnWelcome && OnboardingService.instance.hasSeenWelcomeScreens) {
           if (isLoggedIn) {
             return '/home';
-          } else if (authStatus == AuthStatus.requires2FA) {
-            return '/two-factor-verification';
           } else {
             return '/login';
           }
         }
 
-        // Redirect to login if not authenticated and not on auth screens
-        if (!isLoggedIn && !isOnAuth) {
+        // Redirect to welcome if not authenticated, not on auth screens, and haven't seen welcome
+        if (!isLoggedIn && !isOnAuth && !isOnWelcome && !OnboardingService.instance.hasSeenWelcomeScreens) {
+          return '/welcome';
+        }
+
+        // Redirect to login if not authenticated and not on auth/welcome screens
+        if (!isLoggedIn && !isOnAuth && !isOnWelcome) {
           return '/login';
         }
 
-        // Redirect to home if authenticated and on auth screens
-        if (isLoggedIn && isOnAuth) {
+        // Redirect to home if authenticated and on auth/welcome screens
+        if (isLoggedIn && (isOnAuth || isOnWelcome)) {
           return '/home';
         }
 
@@ -86,6 +107,13 @@ class AppRouter {
           path: '/splash',
           name: 'splash',
           builder: (context, state) => SplashScreen(),
+        ),
+
+        // Welcome Screens Route
+        GoRoute(
+          path: '/welcome',
+          name: 'welcome',
+          builder: (context, state) => const WelcomeScreens(),
         ),
 
         // Authentication Routes
@@ -220,6 +248,7 @@ class AppRouter {
 // Route names for type-safe navigation
 class AppRoutes {
   static const String splash = '/splash';
+  static const String welcome = '/welcome';
   static const String login = '/login';
   static const String emailVerification = '/email-verification';
   static const String twoFactorVerification = '/two-factor-verification';
@@ -242,6 +271,8 @@ class AppRoutes {
 // Extension for type-safe navigation
 extension GoRouterExtension on GoRouter {
   void pushSplash() => pushNamed('splash');
+
+  void pushWelcome() => pushNamed('welcome');
 
   void pushLogin() => pushNamed('login');
 

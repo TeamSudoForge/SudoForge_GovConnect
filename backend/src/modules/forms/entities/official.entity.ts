@@ -30,6 +30,9 @@ export class Official {
   department?: string;
 
   @Column({ nullable: true })
+  division?: string;
+
+  @Column({ nullable: true })
   contact_phone?: string;
 
   @Column({ default: true })
