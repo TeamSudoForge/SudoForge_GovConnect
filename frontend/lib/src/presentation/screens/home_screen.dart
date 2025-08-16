@@ -69,8 +69,8 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     _buildWelcomeSection(user, styles, theme),
                     const SizedBox(height: 32),
-                    _buildQuickActions(context, styles, theme),
-                    const SizedBox(height: 32),
+                    // _buildQuickActions(context, styles, theme),
+                    // const SizedBox(height: 32),
                     _buildUpcomingAppointments(
                       context,
                       appointmentService,
@@ -110,73 +110,184 @@ class HomeScreen extends StatelessWidget {
   ) {
     return Consumer<AppointmentService>(
       builder: (context, appointmentService, child) {
-        final upcomingCount = appointmentService.upcomingAppointments.length;
-
-        return Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [theme.primaryColor, theme.colorScheme.secondary],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Welcome header
+            Text(
+              'Welcome, ${user?.firstName ?? 'Kavindu'}',
+              style: styles.headline24Regular.copyWith(
+                color: theme.colorScheme.onSurface,
+                fontWeight: FontWeight.bold,
+                fontSize: 28,
+              ),
             ),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Welcome, ${user?.firstName ?? 'Kavindu'}',
-                style: styles.headline24Regular.copyWith(
-                  color: theme.colorScheme.onPrimary,
-                  fontWeight: FontWeight.bold,
-                ),
+            const SizedBox(height: 8),
+            Text(
+              'Here\'s your current status',
+              style: styles.body14Regular.copyWith(
+                fontSize: 16,
+                color: theme.colorScheme.onSurface.withOpacity(0.6),
               ),
-              const SizedBox(height: 8),
-              Text(
-                'Here\'s your current status',
-                style: styles.body14Regular.copyWith(
-                  fontSize: 16,
-                  color: theme.colorScheme.onPrimary.withOpacity(0.8),
-                ),
-              ),
-              const SizedBox(height: 24),
-              // Status Cards
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: _buildStatusCard(
-                        icon: Remix.calendar_line,
-                        title: 'Appointments',
-                        count: upcomingCount.toString(),
-                        subtitle: 'Upcoming this week',
-                        iconColor: const Color(0xFFFF9500),
-                        styles: styles,
-                      ),
+            ),
+            const SizedBox(height: 24),
+
+            // Status Cards
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surface,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: _buildStatusCard(
-                        icon: Remix.service_line,
-                        title: 'Services',
-                        count: '6',
-                        subtitle: 'In progress',
-                        iconColor: const Color(0xFF34C759),
-                        styles: styles,
-                      ),
+                    child: _buildStatusCard(
+                      icon: Remix.calendar_line,
+                      title: 'Appointments',
+                      count: '4',
+                      subtitle: 'Upcoming this week',
+                      iconColor: const Color(0xFFFF9500),
+                      styles: styles,
                     ),
-                  ],
+                  ),
                 ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surface,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: _buildStatusCard(
+                      icon: Remix.service_line,
+                      title: 'Services',
+                      count: '6',
+                      subtitle: 'In progress',
+                      iconColor: const Color(0xFF34C759),
+                      styles: styles,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+
+            // Blue banner with robot
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const QrScanScreen()),
+                );
+              },
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final screenWidth = MediaQuery.of(context).size.width;
+                  final screenHeight = MediaQuery.of(context).size.height;
+
+                  // Scale factors
+                  final fontSizeTitle = screenWidth * 0.05; // ~5% of width
+                  final fontSizeBody = screenWidth * 0.035; // ~3.5% of width
+                  final robotHeight = screenHeight * 0.18; // 18% of height
+
+                  return Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 16,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Left side
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Your Service Starts Here Just Scan!',
+                                style: styles.headline24Regular.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: fontSizeTitle.clamp(
+                                    16,
+                                    22,
+                                  ), // min 16, max 22
+                                  height: 1.2,
+                                ),
+                              ),
+
+                              SizedBox(height: screenHeight * 0.015),
+
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(screenWidth * 0.02),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.2),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Icon(
+                                      Icons.qr_code,
+                                      color: Colors.white,
+                                      size: screenWidth * 0.06,
+                                    ),
+                                  ),
+                                  SizedBox(width: screenWidth * 0.04),
+                                  Expanded(
+                                    child: Text(
+                                      'Get instant directions to your counter with one quick scan.',
+                                      style: styles.body14Regular.copyWith(
+                                        color: Colors.white.withOpacity(0.9),
+                                        fontSize: fontSizeBody.clamp(12, 16),
+                                        height: 1.3,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // Right side (Robot)
+                        SizedBox(
+                          height: robotHeight.clamp(
+                            100,
+                            160,
+                          ), // min 100, max 160
+                          child: Image.asset(
+                            'assets/robot.png',
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );
@@ -223,6 +334,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  // ignore: unused_element
   Widget _buildQuickActions(
     BuildContext context,
     TextStyleHelper styles,
