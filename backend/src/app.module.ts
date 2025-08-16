@@ -20,16 +20,7 @@ import { ChatSession } from './modules/chatbot/entities/chat-session.entity';
 import { Tag } from './modules/chatbot/entities/tag.entity';
 import { FaqQuestion } from './modules/chatbot/entities/faq-question.entity';
 import { EmailVerificationCode } from './database/entities';
-import { 
-  FieldType, 
-  Field, 
-  FieldAttribute, 
-  Department, 
-  Service, 
-  FormField as OldFormField, 
-  FormResponse, 
-  FormResponseValue 
-} from './modules/forms/entities';
+import { Department } from './modules/forms/entities';
 import {
   Form,
   FormSection,
@@ -63,15 +54,7 @@ import {
           Tag,
           FaqQuestion,
           EmailVerificationCode,
-          FieldType,
-          Field,
-          FieldAttribute,
           Department,
-          Service,
-          OldFormField,
-          FormResponse,
-          FormResponseValue,
-          // Dynamic Forms entities
           Form,
           FormSection,
           FormField,

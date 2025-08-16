@@ -3,6 +3,7 @@ import 'package:gov_connect/src/core/app_export.dart';
 import 'package:gov_connect/src/core/models/dynamic_form_models.dart';
 import 'package:gov_connect/src/core/services/dynamic_forms_service.dart';
 import 'package:gov_connect/src/presentation/widgets/dynamic_form_renderer.dart';
+import 'package:gov_connect/src/presentation/widgets/bottom_navigation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 
@@ -194,6 +195,9 @@ class _DynamicFormScreenState extends State<DynamicFormScreen> {
         ],
       ),
       body: _buildBody(),
+      bottomNavigationBar: const BottomNavigationWidget(
+        currentItem: BottomNavItem.services,
+      ),
     );
   }
 

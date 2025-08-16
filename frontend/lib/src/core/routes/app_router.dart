@@ -4,16 +4,17 @@ import '../../core/models/appointment_models.dart';
 import '../../presentation/screens/splash_screen.dart';
 import '../../presentation/screens/login_screen.dart';
 import '../../presentation/screens/home_screen.dart';
-import '../../presentation/screens/profile_screen.dart';
 import '../../presentation/screens/email_verification_screen.dart';
 import '../../presentation/screens/two_factor_verification_screen.dart';
 import '../../presentation/screens/app_navigation_screen.dart';
+import '../../presentation/screens/appointments_screen.dart';
 import '../../presentation/screens/appointment_details.dart';
 import '../../presentation/screens/appointment_update_screen.dart';
-import '../../presentation/screens/appointments_screen.dart';
 import '../../presentation/screens/notifications_screen.dart';
 import '../../presentation/screens/settings_screen.dart';
 import '../../presentation/screens/add_passkey_screen.dart';
+import '../../presentation/screens/services_screen.dart';
+import '../../presentation/screens/all_services_screen.dart';
 import '../../presentation/screens/forms/id_recovery_process_screen.dart';
 import '../../presentation/screens/forms/id_recovery_form_content_screen.dart';
 import '../../presentation/screens/forms/id_recovery_success_screen.dart';
@@ -121,11 +122,6 @@ class AppRouter {
               builder: (context, state) => const NotificationsScreen(),
             ),
             GoRoute(
-              path: 'profile',
-              name: 'profile',
-              builder: (context, state) => const ProfileScreen(),
-            ),
-            GoRoute(
               path: 'settings',
               name: 'settings',
               builder: (context, state) => const SettingsScreen(),
@@ -156,8 +152,7 @@ class AppRouter {
                 GoRoute(
                   path: 'form-content',
                   name: 'id-recovery-form-content',
-                  builder: (context, state) =>
-                      const IdRecoveryFormContentScreen(),
+                  builder: (context, state) => const IdRecoveryFormContentScreen(),
                 ),
                 GoRoute(
                   path: 'success',
@@ -174,6 +169,19 @@ class AppRouter {
           ],
         ),
 
+        // Service Routes
+        GoRoute(
+          path: '/services',
+          name: 'services',
+          builder: (context, state) => const ServicesScreen(),
+        ),
+        GoRoute(
+          path: '/all-services',
+          name: 'all-services',
+          builder: (context, state) => const AllServicesScreen(),
+        ),
+
+        // Appointment Routes
         GoRoute(
           path: '/appointments',
           name: 'appointments',
@@ -181,15 +189,8 @@ class AppRouter {
         ),
         GoRoute(
           path: '/appointment-details',
-          redirect: (context, state) => '/appointment-details/1',
-        ),
-        GoRoute(
-          path: '/appointment-details/:id',
           name: 'appointment-details',
-          builder: (context, state) {
-            final appointmentId = state.pathParameters['id'] ?? '1';
-            return AppointmentDetailsScreen(appointmentId: appointmentId);
-          },
+          builder: (context, state) => const AppointmentDetailsScreen(),
         ),
         GoRoute(
           path: '/appointment-update',
@@ -212,13 +213,14 @@ class AppRoutes {
   static const String twoFactorVerification = '/two-factor-verification';
   static const String home = '/home';
   static const String notifications = '/home/notifications';
-  static const String profile = '/home/profile';
   static const String settings = '/home/settings';
   static const String addPasskey = '/home/add-passkey';
   static const String demoForm = '/home/demo-form';
   static const String appNavigation = '/home/app-navigation';
-  // static const String idCardRenewal = '/id-card-renewal'; // TODO: Uncomment when screen is created
+  static const String services = '/services';
+  static const String allServices = '/all-services';
   static const String appointments = '/appointments';
+  // static const String idCardRenewal = '/id-card-renewal'; // TODO: Uncomment when screen is created
   static const String appointmentDetails = '/appointment-details';
   static const String appointmentUpdate = '/appointment-update';
 }
@@ -232,8 +234,6 @@ extension GoRouterExtension on GoRouter {
   void pushHome() => pushNamed('home');
 
   void pushNotifications() => pushNamed('notifications');
-
-  void pushProfile() => pushNamed('profile');
 
   void pushSettings() => pushNamed('settings');
 
@@ -249,15 +249,9 @@ extension GoRouterExtension on GoRouter {
     }
   }
 
-  void pushAppointments() => pushNamed('appointments');
+  void pushAppointmentDetails() => pushNamed('appointment-details');
 
-  void pushAppointmentDetails([String? appointmentId]) {
-    if (appointmentId != null) {
-      pushNamed('appointment-details', pathParameters: {'id': appointmentId});
-    } else {
-      pushNamed('appointment-details', pathParameters: {'id': '1'});
-    }
-  }
+
 
   void pushTwoFactorVerification(String email) =>
       pushNamed('two-factor-verification', queryParameters: {'email': email});

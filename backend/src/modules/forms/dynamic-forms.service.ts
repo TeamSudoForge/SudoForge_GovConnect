@@ -5,7 +5,6 @@ import { Form, FormSection, FormField, FormSubmission, FieldType, SubmissionStat
 import { CreateDynamicFormDto } from './dto/create-dynamic-form.dto';
 import { UpdateDynamicFormDto } from './dto/update-dynamic-form.dto';
 import { CreateFormSubmissionDto, UpdateFormSubmissionDto } from './dto/form-submission.dto';
-import { FieldAttribute } from './entities';
 
 @Injectable()
 export class DynamicFormsService {

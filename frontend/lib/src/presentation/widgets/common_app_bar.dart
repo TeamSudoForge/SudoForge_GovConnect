@@ -37,8 +37,8 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     void defaultProfileNav() {
       final current = GoRouterState.of(context).matchedLocation;
-      if (current != AppRoutes.profile) {
-        context.pushNamed('profile');
+      if (current != AppRoutes.settings) {
+        context.pushNamed('settings');
       }
     }
 

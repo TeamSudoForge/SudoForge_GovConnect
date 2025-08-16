@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gov_connect/src/core/models/dynamic_form_models.dart';
 import 'package:gov_connect/src/presentation/widgets/dynamic_form_renderer.dart';
+import 'package:gov_connect/src/presentation/widgets/bottom_navigation_widget.dart';
 
 class ServiceOverviewScreen extends StatefulWidget {
   final DynamicFormModel form;
@@ -365,6 +366,9 @@ class _ServiceOverviewScreenState extends State<ServiceOverviewScreen> {
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: const BottomNavigationWidget(
+        currentItem: BottomNavItem.services,
       ),
     );
   }

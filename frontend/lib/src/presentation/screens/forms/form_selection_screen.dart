@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gov_connect/src/presentation/widgets/bottom_navigation_widget.dart';
 
 class FormSelectionScreen extends StatelessWidget {
   static const String routeName = '/form-selection';
@@ -210,6 +211,9 @@ class FormSelectionScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: const BottomNavigationWidget(
+        currentItem: BottomNavItem.services,
       ),
     );
   }

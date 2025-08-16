@@ -2,11 +2,9 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Service } from './service.entity';
 
 @Entity('departments')
 export class Department {
@@ -43,7 +41,4 @@ export class Department {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
-
-  @OneToMany(() => Service, (service) => service.department)
-  services: Service[];
 }
