@@ -142,7 +142,7 @@ class BottomNavigationWidget extends StatelessWidget {
         router.go('/home');
         break;
       case BottomNavItem.services:
-        _showNotImplementedMessage(context, 'Services');
+        router.go('/services');
         break;
       case BottomNavItem.appointments:
         router.go('/appointments');
