@@ -98,8 +98,8 @@ export default function NotificationsPage() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-xl font-bold text-foreground">Notification Management</h1>
-              <p className="text-sm text-muted-foreground">Send email and SMS notifications to citizens</p>
+              <h1 className="text-xl font-bold text-foreground">Announcement Management</h1>
+              <p className="text-sm text-muted-foreground">Send email and SMS announcements to citizens</p>
             </div>
             <div className="flex items-center gap-2">
               <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
@@ -118,7 +118,7 @@ export default function NotificationsPage() {
       <div className="container mx-auto px-4 py-6">
         <Tabs defaultValue="send" className="space-y-6">
           <TabsList className="grid w-full grid-cols-3 max-w-xl">
-            <TabsTrigger value="send">Send Notification</TabsTrigger>
+            <TabsTrigger value="send">Send Announcement</TabsTrigger>
             <TabsTrigger value="templates">Templates</TabsTrigger>
             <TabsTrigger value="history">History</TabsTrigger>
           </TabsList>
@@ -129,13 +129,13 @@ export default function NotificationsPage() {
               <div className="lg:col-span-2 space-y-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Create Notification</CardTitle>
-                    <CardDescription>Send notifications to citizens via email or SMS</CardDescription>
+                    <CardTitle>Create Announcement</CardTitle>
+                    <CardDescription>Send announcements to citizens via email or SMS</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
-                    {/* Notification Type */}
+                    {/* Announcement Type */}
                     <div className="space-y-3">
-                      <Label>Notification Type</Label>
+                      <Label>Announcement Type</Label>
                       <div className="grid grid-cols-3 gap-3">
                         <Button
                           variant={notificationType === "individual" ? "default" : "outline"}
@@ -322,7 +322,7 @@ export default function NotificationsPage() {
                     <div className="mt-6 space-y-3">
                       <Button className="w-full">
                         <Send className="h-4 w-4 mr-2" />
-                        Send Notification
+                        Send Message
                       </Button>
                       <Button variant="outline" className="w-full">
                         Save as Draft
