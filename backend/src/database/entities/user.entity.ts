@@ -8,7 +8,6 @@ import {
 } from 'typeorm';
 import { AuthSession } from './auth-session.entity';
 import { Passkey } from './passkey.entity';
-import { Notification } from 'src/modules/notifications/notification.entity';
 
 @Entity('users')
 export class User {
@@ -53,7 +52,4 @@ export class User {
 
   @OneToMany(() => Passkey, (passkey) => passkey.user)
   passkeys: Passkey[];
-
-  @OneToMany(() => Notification, (notification) => notification.user)
-  notifications: Notification[];
 }

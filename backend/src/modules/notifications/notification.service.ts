@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, LessThanOrEqual } from 'typeorm';
 import { Notification } from './notification.entity';
-import { User } from '../users/entities/user.entity';
 import { MailService } from './mail/mail.service';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { FcmService } from './fcm/fcm.service';
+import { User } from 'src/database/entities';
 
 @Injectable()
 export class NotificationService {

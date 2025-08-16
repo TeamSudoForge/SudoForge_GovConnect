@@ -4,7 +4,9 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { Notification } from 'src/modules/notifications/notification.entity';
 
 @Entity('users')
 export class User {
@@ -37,6 +39,9 @@ export class User {
 
   @Column({ name: 'fcm_token', type: 'varchar', nullable: true })
   fcmToken: string | null;
+
+  @OneToMany(() => Notification, (notification) => notification.user)
+  notifications: Notification[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

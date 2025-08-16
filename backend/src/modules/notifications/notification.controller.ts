@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { NotificationService } from './notification.service';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
-import { User } from 'src/modules/users/entities/user.entity';
+import { User } from 'src/database/entities';
 
 interface RequestWithUser extends Request {
   user: User;
