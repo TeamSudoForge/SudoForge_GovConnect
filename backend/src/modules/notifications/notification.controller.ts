@@ -11,6 +11,7 @@ import { NotificationService } from './notification.service';
 import { AuthService } from '../auth/auth.service';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { User } from 'src/database/entities';
+import { sendExampleNotifications } from 'src/examples/notification-examples';
 
 interface RequestWithUser extends Request {
   user: User;
@@ -68,13 +69,16 @@ export class NotificationController {
     const scheduledAt = body.scheduledAt
       ? new Date(body.scheduledAt)
       : undefined;
-    await this.notificationService.createNotification(
-      user,
-      'Test Notification',
-      'This is a test notification for both email and FCM.',
-      JSON.stringify({ test: 'value' }),
-      scheduledAt,
-    );
+    // await this.notificationService.createNotification(
+    //   user,
+    //   'Test Notification',
+    //   'This is a test notification for both email and FCM.',
+    //   JSON.stringify({ test: 'value' }),
+    //   scheduledAt,
+    // );
+
+    await sendExampleNotifications(this.notificationService, user);
+
     return { success: true, message: 'Test notification triggered' };
   }
 }

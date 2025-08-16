@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>GovConnect - Appointment Confirmation</title>
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      line-height: 1.6;
+      color: #333;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .container { 
+      border: 1px solid #ddd; 
+      border-radius: 5px; 
+      padding: 20px; 
+      background-color: #f9f9f9;
+    }
+    .confirmation-box {
+      font-size: 18px;
+      text-align: center;
+      padding: 15px;
+      margin: 20px 0;
+      background: #28a745;
+      color: white;
+      border-radius: 5px;
+    }
+    .appointment-details {
+      background: #f0f0f0;
+      border-left: 4px solid #007bff;
+      padding: 15px;
+      margin: 15px 0;
+    }
+    .detail-row {
+      display: flex;
+      margin-bottom: 8px;
+    }
+    .detail-label {
+      font-weight: bold;
+      width: 120px;
+    }
+    .qr-code-section {
+      text-align: center;
+      margin: 25px 0;
+    }
+    .qr-placeholder {
+      width: 150px;
+      height: 150px;
+      background: #ddd;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+    .footer {
+      font-size: 12px;
+      color: #777;
+      margin-top: 30px;
+      text-align: center;
+    }
+    .header {
+      text-align: center;
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+    .map-link {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 15px;
+      background: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>GovConnect Appointment Confirmation</h2>
+    </div>
+    
+    <p>Hello {{name}},</p>
+    <p>Your appointment has been successfully scheduled with {{departmentName}}.</p>
+    
+    <div class="confirmation-box">Appointment Confirmed!</div>
+    
+    <div class="appointment-details">
+      <div class="detail-row">
+        <div class="detail-label">Service:</div>
+        <div>{{serviceName}}</div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-label">Date:</div>
+        <div>{{appointmentDate}}</div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-label">Time:</div>
+        <div>{{appointmentTime}}</div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-label">Location:</div>
+        <div>{{location}}</div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-label">Reference No:</div>
+        <div>{{referenceNumber}}</div>
+      </div>
+    </div>
+
+    <p>Please arrive 15 minutes before your scheduled time. You'll receive a reminder email 24 hours before your appointment with a list of required documents to bring.</p>
+
+    <div class="qr-code-section">
+      <p>Show this QR code when you arrive:</p>
+      <div class="qr-placeholder">
+        <!-- QR code image will be embedded here -->
+        {{#if qrCodeUrl}}
+        <img src="{{qrCodeUrl}}" alt="Appointment QR Code" width="150" height="150">
+        {{else}}
+        QR Code Placeholder
+        {{/if}}
+      </div>
+    </div>
+
+    <p>Need to find us?</p>
+    <a href="{{mapUrl}}" class="map-link">View Map</a>
+    
+    <p>If you need to reschedule or cancel this appointment, please log in to your GovConnect account or contact our support team.</p>
+    
+    <div class="footer">
+      <p>This is an automated message, please do not reply to this email.</p>
+      <p>&copy; GovConnect - Your gateway to government services</p>
+    </div>
+  </div>
+</body>
+</html>
