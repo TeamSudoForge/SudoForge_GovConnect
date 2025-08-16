@@ -26,6 +26,7 @@ import {
   FormResponse,
   FormResponseValue,
 } from './modules/forms/entities';
+import { Notification } from './modules/notifications/notification.entity';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import {
           FormField,
           FormResponse,
           FormResponseValue,
+          Notification,
         ],
         synchronize: configService.get('DB_SYNCHRONIZE', 'false') === 'true',
         logging: configService.get('DB_LOGGING', 'false') === 'true',

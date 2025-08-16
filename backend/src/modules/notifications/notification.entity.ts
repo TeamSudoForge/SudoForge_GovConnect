@@ -5,8 +5,7 @@ import {
   CreateDateColumn,
   ManyToOne,
 } from 'typeorm';
-import { User } from '../users/entities/user.entity';
-
+import { User } from 'src/database/entities/user.entity';
 @Entity('notifications')
 export class Notification {
   @PrimaryGeneratedColumn('uuid')
@@ -23,6 +22,12 @@ export class Notification {
 
   @Column({ default: false })
   read: boolean;
+
+  @Column({ type: 'timestamp', nullable: true })
+  scheduledAt?: Date;
+
+  @Column({ default: false })
+  sent: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
