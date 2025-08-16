@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { 
   Building2, 
   ArrowLeft, 
@@ -24,7 +25,6 @@ import {
   Settings
 } from "lucide-react"
 import { ServicesService, Service, UpdateServiceRequest } from "@/lib/services/services.service"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 // Field types available for form building
 const FIELD_TYPES = [
