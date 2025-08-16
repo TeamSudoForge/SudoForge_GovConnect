@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:remixicon/remixicon.dart';
 import '../../core/app_export.dart';
-import '../../core/theme/theme_config.dart';
+import '../../core/utils/department_utils.dart';
 import '../widgets/bottom_navigation_widget.dart';
 
 class ServicesScreen extends StatefulWidget {
@@ -14,21 +14,40 @@ class ServicesScreen extends StatefulWidget {
   State<ServicesScreen> createState() => _ServicesScreenState();
 }
 
-class _ServicesScreenState extends State<ServicesScreen>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+class _ServicesScreenState extends State<ServicesScreen> {
   final TextEditingController _searchController = TextEditingController();
-  bool showAllDepartments = false;
+  List<DepartmentItem> filteredDepartments = [];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _updateFilteredDepartments();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  void _onSearchChanged() {
+    _updateFilteredDepartments();
+  }
+
+  void _updateFilteredDepartments() {
+    setState(() {
+      final departments = DepartmentUtils.allDepartments;
+      
+      if (_searchController.text.isEmpty) {
+        filteredDepartments = departments;
+      } else {
+        final query = _searchController.text.toLowerCase();
+        filteredDepartments = departments.where((department) {
+          return department.name.toLowerCase().contains(query) ||
+                 department.description.toLowerCase().contains(query);
+        }).toList();
+      }
+    });
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
     super.dispose();
   }
@@ -45,10 +64,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         elevation: 0,
         leading: IconButton(
           onPressed: () => context.pop(),
-          icon: Icon(
-            Remix.arrow_left_line,
-            color: theme.colorScheme.onPrimary,
-          ),
+          icon: Icon(Remix.arrow_left_line, color: theme.colorScheme.onPrimary),
         ),
         title: Text(
           'Departments & Services',
@@ -73,11 +89,7 @@ class _ServicesScreenState extends State<ServicesScreen>
             icon: CircleAvatar(
               radius: 16,
               backgroundColor: theme.colorScheme.onPrimary,
-              child: Icon(
-                Remix.user_line,
-                size: 18,
-                color: theme.primaryColor,
-              ),
+              child: Icon(Remix.user_line, size: 18, color: theme.primaryColor),
             ),
           ),
           const SizedBox(width: 8),
@@ -137,43 +149,52 @@ class _ServicesScreenState extends State<ServicesScreen>
               ],
             ),
           ),
-          // Tab Bar
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              children: [
-                _buildTab('Popular', isSelected: !showAllDepartments, onTap: () {
-                  setState(() {
-                    showAllDepartments = false;
-                  });
-                }),
-                const SizedBox(width: 12),
-                _buildTab('All Departments', isSelected: showAllDepartments, onTap: () {
-                  setState(() {
-                    showAllDepartments = true;
-                  });
-                }),
-              ],
-            ),
-          ),
           const SizedBox(height: 16),
           // Departments Grid
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.85, // Increased height to prevent overflow
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                ),
-                itemCount: showAllDepartments ? _allDepartments.length : _popularDepartments.length,
-                itemBuilder: (context, index) {
-                  final department = showAllDepartments ? _allDepartments[index] : _popularDepartments[index];
-                  return _buildDepartmentCard(department, theme, styles);
-                },
-              ),
+              child: filteredDepartments.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Remix.search_line,
+                            size: 48,
+                            color: theme.colorScheme.onSurface.withOpacity(0.3),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'No departments found',
+                            style: styles.body16Medium.copyWith(
+                              color: theme.colorScheme.onSurface.withOpacity(0.6),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Try adjusting your search terms',
+                            style: styles.body14Regular.copyWith(
+                              color: theme.colorScheme.onSurface.withOpacity(0.5),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : GridView.builder(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio:
+                            0.85, // Increased height to prevent overflow
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                      ),
+                      itemCount: filteredDepartments.length,
+                      itemBuilder: (context, index) {
+                        final department = filteredDepartments[index];
+                        return _buildDepartmentCard(department, theme, styles);
+                      },
+                    ),
             ),
           ),
         ],
@@ -184,42 +205,22 @@ class _ServicesScreenState extends State<ServicesScreen>
     );
   }
 
-  Widget _buildTab(String text, {bool isSelected = false, VoidCallback? onTap}) {
-    final theme = Theme.of(context);
-    final styles = TextStyleHelper.instance;
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? theme.primaryColor : Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
-          border: isSelected
-              ? null
-              : Border.all(color: theme.colorScheme.outline.withOpacity(0.3)),
-        ),
-        child: Text(
-          text,
-          style: styles.body14Medium.copyWith(
-            color: isSelected
-                ? theme.colorScheme.onPrimary
-                : theme.colorScheme.onSurface,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDepartmentCard(DepartmentItem department, ThemeData theme, TextStyleHelper styles) {
+  Widget _buildDepartmentCard(
+    DepartmentItem department,
+    ThemeData theme,
+    TextStyleHelper styles,
+  ) {
     return GestureDetector(
       onTap: () {
         // Navigate to department services (form selection)
         print('Tapped on ${department.name}');
-        context.pushNamed('form-selection', queryParameters: {
-          'department': department.name,
-          'departmentId': department.id,
-        });
+        context.pushNamed(
+          'form-selection',
+          queryParameters: {
+            'department': department.name,
+            'departmentId': department.id,
+          },
+        );
       },
       child: Container(
         padding: const EdgeInsets.all(16),
@@ -256,20 +257,23 @@ class _ServicesScreenState extends State<ServicesScreen>
                     color: department.color,
                   ),
                 ),
-                const Spacer(),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: department.color.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    '${department.serviceCount} services',
-                    style: styles.body10Regular.copyWith(
-                      color: department.color,
-                    ),
-                  ),
-                ),
+                // const Spacer(),
+                // Container(
+                //   padding: const EdgeInsets.symmetric(
+                //     horizontal: 8,
+                //     vertical: 4,
+                //   ),
+                //   decoration: BoxDecoration(
+                //     color: department.color.withOpacity(0.1),
+                //     borderRadius: BorderRadius.circular(12),
+                //   ),
+                //   child: Text(
+                //     '${department.serviceCount} services',
+                //     style: styles.body10Regular.copyWith(
+                //       color: department.color,
+                //     ),
+                //   ),
+                // ),
               ],
             ),
             const SizedBox(height: 12),
@@ -295,9 +299,7 @@ class _ServicesScreenState extends State<ServicesScreen>
               children: [
                 Text(
                   'View Services',
-                  style: styles.body12Medium.copyWith(
-                    color: department.color,
-                  ),
+                  style: styles.body12Medium.copyWith(color: department.color),
                 ),
                 const SizedBox(width: 4),
                 Icon(
@@ -313,112 +315,3 @@ class _ServicesScreenState extends State<ServicesScreen>
     );
   }
 }
-
-class DepartmentItem {
-  final String id;
-  final String name;
-  final String description;
-  final IconData icon;
-  final Color color;
-  final int serviceCount;
-
-  const DepartmentItem({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.icon,
-    required this.color,
-    required this.serviceCount,
-  });
-}
-
-// Popular Departments Data
-final List<DepartmentItem> _popularDepartments = [
-  DepartmentItem(
-    id: 'immigration',
-    name: 'Immigration',
-    description: 'Identity documents, passports, and recovery services',
-    icon: Remix.passport_line,
-    color: const Color(0xFF3B82F6), // Blue
-    serviceCount: 5,
-  ),
-  DepartmentItem(
-    id: 'business',
-    name: 'Business Services',
-    description: 'Licensing, permits, and business registration',
-    icon: Remix.briefcase_line,
-    color: const Color(0xFF8B5CF6), // Purple
-    serviceCount: 8,
-  ),
-  DepartmentItem(
-    id: 'health',
-    name: 'Health Services',
-    description: 'Public health, permits, and safety services',
-    icon: Remix.health_book_line,
-    color: const Color(0xFFEF4444), // Red
-    serviceCount: 6,
-  ),
-  DepartmentItem(
-    id: 'planning',
-    name: 'Planning & Development',
-    description: 'Building permits, zoning, and development',
-    icon: Remix.building_line,
-    color: const Color(0xFFF97316), // Orange
-    serviceCount: 4,
-  ),
-];
-
-// All Departments Data
-final List<DepartmentItem> _allDepartments = [
-  // Popular departments
-  ..._popularDepartments,
-  // Additional departments
-  DepartmentItem(
-    id: 'public-works',
-    name: 'Public Works',
-    description: 'Infrastructure, utilities, and maintenance',
-    icon: Remix.tools_line,
-    color: const Color(0xFF06B6D4), // Cyan
-    serviceCount: 7,
-  ),
-  DepartmentItem(
-    id: 'revenue',
-    name: 'Revenue',
-    description: 'Tax collection, assessments, and payments',
-    icon: Remix.money_dollar_circle_line,
-    color: const Color(0xFF10B981), // Green
-    serviceCount: 5,
-  ),
-  DepartmentItem(
-    id: 'education',
-    name: 'Education',
-    description: 'Schools, certifications, and educational services',
-    icon: Remix.graduation_cap_line,
-    color: const Color(0xFFF59E0B), // Amber
-    serviceCount: 3,
-  ),
-  DepartmentItem(
-    id: 'agriculture',
-    name: 'Agriculture',
-    description: 'Farming permits, subsidies, and agricultural support',
-    icon: Remix.plant_line,
-    color: const Color(0xFF84CC16), // Lime
-    serviceCount: 4,
-  ),
-  DepartmentItem(
-    id: 'transport',
-    name: 'Transport',
-    description: 'Vehicle registration, licenses, and permits',
-    icon: Remix.car_line,
-    color: const Color(0xFF8B5CF6), // Purple
-    serviceCount: 6,
-  ),
-  DepartmentItem(
-    id: 'housing',
-    name: 'Housing',
-    description: 'Housing applications, subsidies, and permits',
-    icon: Remix.home_line,
-    color: const Color(0xFFEC4899), // Pink
-    serviceCount: 4,
-  ),
-];

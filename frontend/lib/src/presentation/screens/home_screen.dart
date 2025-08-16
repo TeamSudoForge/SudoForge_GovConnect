@@ -7,6 +7,7 @@ import '../../core/theme/theme_config.dart';
 import '../../core/services/appointment_service.dart';
 import '../../core/services/onboarding_service.dart';
 import '../../core/models/appointment_models.dart';
+import '../../core/utils/department_utils.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/bottom_navigation_widget.dart';
 import 'login_screen.dart';
@@ -448,7 +449,9 @@ class HomeScreen extends StatelessWidget {
             await OnboardingService.instance.resetOnboarding();
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Welcome screens reset. Restart app to see them.'),
+                content: Text(
+                  'Welcome screens reset. Restart app to see them.',
+                ),
               ),
             );
           },
@@ -626,11 +629,13 @@ class HomeScreen extends StatelessWidget {
     TextStyleHelper styles,
     ThemeData theme,
   ) {
-    // Get icon and color based on appointment type
-    final iconCode = AppointmentService.getAppointmentIcon(appointment.title);
-    final colorCode = AppointmentService.getAppointmentColor(appointment.title);
-    final appointmentColor = Color(colorCode);
-    final appointmentIcon = IconData(iconCode, fontFamily: 'RemixIcon');
+    // Get department info based on departmentId
+    final departmentIcon = DepartmentUtils.getDepartmentIcon(
+      appointment.departmentId,
+    );
+    final departmentColor = DepartmentUtils.getDepartmentColor(
+      appointment.departmentId,
+    );
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -646,10 +651,10 @@ class HomeScreen extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: appointmentColor.withOpacity(0.2),
+              color: departmentColor.withOpacity(0.2),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(appointmentIcon, color: appointmentColor, size: 24),
+            child: Icon(departmentIcon, color: departmentColor, size: 24),
           ),
           const SizedBox(width: 16),
           Expanded(

@@ -5,6 +5,7 @@ class AppointmentListItem {
   final String date;
   final String time;
   final AppointmentStatus status;
+  final String? departmentId; // Add this field to link to department
 
   AppointmentListItem({
     required this.id,
@@ -13,6 +14,7 @@ class AppointmentListItem {
     required this.date,
     required this.time,
     required this.status,
+    this.departmentId, // Add this parameter
   });
 }
 
@@ -88,6 +90,7 @@ final List<AppointmentListItem> sampleAppointmentsList = [
     date: '05\nSept',
     time: '10:30 AM - 11:00 AM',
     status: AppointmentStatus.upcoming,
+    departmentId: 'immigration', // Link to immigration department
   ),
   AppointmentListItem(
     id: '2',
@@ -96,6 +99,7 @@ final List<AppointmentListItem> sampleAppointmentsList = [
     date: '15\nSept',
     time: '9:30 AM - 10:00 AM',
     status: AppointmentStatus.upcoming,
+    departmentId: 'public-works', // Link to public works department
   ),
   AppointmentListItem(
     id: '3',
@@ -104,6 +108,7 @@ final List<AppointmentListItem> sampleAppointmentsList = [
     date: '15\nSept',
     time: '10:30 AM - 11:00 AM',
     status: AppointmentStatus.upcoming,
+    departmentId: 'transport', // Link to transport department
   ),
   AppointmentListItem(
     id: '4',
@@ -112,6 +117,7 @@ final List<AppointmentListItem> sampleAppointmentsList = [
     date: '15\nJuly',
     time: '10:30 AM - 11:00 AM',
     status: AppointmentStatus.past,
+    departmentId: 'transport', // Link to transport department
   ),
   AppointmentListItem(
     id: '5',
@@ -120,6 +126,7 @@ final List<AppointmentListItem> sampleAppointmentsList = [
     date: '1\nJuly',
     time: '10:30 AM - 11:00 AM',
     status: AppointmentStatus.past,
+    departmentId: 'immigration', // Link to immigration department
   ),
 ];
 
