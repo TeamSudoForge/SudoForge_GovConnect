@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, TableColumn } from 'typeorm';
 
-export class AddScheduledFieldsToNotifications1692192000000
+export class AddScheduledFieldsToNotifications1755500000002
   implements MigrationInterface
 {
   public async up(queryRunner: QueryRunner): Promise<void> {
