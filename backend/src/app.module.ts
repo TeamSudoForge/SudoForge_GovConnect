@@ -40,6 +40,9 @@ import {
   FormSubmission,
 } from './database/entities';
 import { Notification } from './database/entities/notification.entity';
+import { RequiredDocument } from './database/entities/required-document.entity';
+import { Appointment } from './database/entities/appointment.entity';
+import { Timeslot } from './database/entities/timeslot.entity';
 
 @Module({
   imports: [
@@ -78,6 +81,9 @@ import { Notification } from './database/entities/notification.entity';
           FormResponse,
           FormResponseValue,
           Notification,
+          RequiredDocument,
+          Appointment,
+          Timeslot,
           // Dynamic Forms entities
           Form,
           FormSection,
