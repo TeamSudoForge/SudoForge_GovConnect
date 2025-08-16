@@ -19,6 +19,7 @@ class ServicesScreen extends StatefulWidget {
 class _ServicesScreenState extends State<ServicesScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<DepartmentItem> filteredDepartments = [];
+  bool _isSearchVisible = false;
 
   @override
   void initState() {
@@ -77,6 +78,20 @@ class _ServicesScreenState extends State<ServicesScreen> {
         actions: [
           IconButton(
             onPressed: () {
+              setState(() {
+                _isSearchVisible = !_isSearchVisible;
+                if (!_isSearchVisible) {
+                  _searchController.clear();
+                }
+              });
+            },
+            icon: Icon(
+              _isSearchVisible ? Remix.close_line : Remix.search_line,
+              color: theme.colorScheme.onPrimary,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
               // Navigate to notifications
             },
             icon: Icon(
@@ -120,38 +135,41 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                // Search Bar
-                Container(
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surface,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: theme.colorScheme.outline.withOpacity(0.2),
-                    ),
-                  ),
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: 'Search for a department',
-                      hintStyle: styles.body14Regular.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.5),
-                      ),
-                      prefixIcon: Icon(
-                        Remix.search_line,
-                        color: theme.colorScheme.onSurface.withOpacity(0.5),
-                      ),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
+                // Search Bar - conditionally visible
+                if (_isSearchVisible) ...[
+                  Container(
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surface,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: theme.colorScheme.outline.withOpacity(0.2),
                       ),
                     ),
+                    child: TextField(
+                      controller: _searchController,
+                      autofocus: true,
+                      decoration: InputDecoration(
+                        hintText: 'Search for a department',
+                        hintStyle: styles.body14Regular.copyWith(
+                          color: theme.colorScheme.onSurface.withOpacity(0.5),
+                        ),
+                        prefixIcon: Icon(
+                          Remix.search_line,
+                          color: theme.colorScheme.onSurface.withOpacity(0.5),
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 16),
+                ],
               ],
             ),
           ),
-          const SizedBox(height: 16),
           // Departments Grid
           Expanded(
             child: Padding(
