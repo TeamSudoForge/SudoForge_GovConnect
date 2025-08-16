@@ -8,6 +8,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { NotificationService } from './notification.service';
+import { AuthService } from '../auth/auth.service';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { User } from 'src/database/entities';
 
@@ -17,7 +18,10 @@ interface RequestWithUser extends Request {
 
 @Controller('notifications')
 export class NotificationController {
-  constructor(private readonly notificationService: NotificationService) {}
+  constructor(
+    private readonly notificationService: NotificationService,
+    private readonly authService: AuthService,
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Get()
@@ -54,15 +58,12 @@ export class NotificationController {
     @Request() req: RequestWithUser,
     @Body() body: { email?: string; fcmToken?: string; scheduledAt?: string },
   ) {
-    // Use authenticated user if available, else fallback to provided email/fcmToken
     let user: User | undefined = req.user;
-    if (!user && (body.email || body.fcmToken)) {
-      user = new User();
-      user.email = body.email || 'test@example.com';
-      user.fcmToken = body.fcmToken ?? null;
+    if (body.email) {
+      user = await this.authService.findByEmail(body.email);
     }
     if (!user) {
-      return { success: false, message: 'No user or test data provided' };
+      return { success: false, message: 'User not found' };
     }
     const scheduledAt = body.scheduledAt
       ? new Date(body.scheduledAt)

@@ -5,9 +5,10 @@ import { NotificationService } from './notification.service';
 import { NotificationController } from './notification.controller';
 import { MailModule } from './mail/mail.module';
 import { FcmService } from './fcm/fcm.service';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Notification]), MailModule],
+  imports: [TypeOrmModule.forFeature([Notification]), MailModule, AuthModule],
   providers: [NotificationService, FcmService],
   controllers: [NotificationController],
   exports: [NotificationService],
