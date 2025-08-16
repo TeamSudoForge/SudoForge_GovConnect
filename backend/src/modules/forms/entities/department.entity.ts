@@ -25,6 +25,9 @@ export class Department {
   @Column({ nullable: true })
   contact_phone: string;
 
+  @Column({ nullable: true })
+  address: string;
+
   // Authentication fields for department login
   @Column({ unique: true })
   email: string;
