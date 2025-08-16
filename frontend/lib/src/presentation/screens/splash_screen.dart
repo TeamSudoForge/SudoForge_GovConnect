@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../core/app_export.dart';
 import '../../core/routes/app_router.dart';
+import '../../core/services/onboarding_service.dart';
 import 'dart:async';
 
 class SplashScreen extends StatefulWidget {
@@ -16,30 +17,29 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     // Simulate loading time and check authentication
+    print('[SplashScreen] Starting 2 second timer');
     Timer(Duration(seconds: 2), () {
+      print('[SplashScreen] Timer complete, navigating...');
       _navigateBasedOnAuth();
     });
   }
 
-  void _navigateBasedOnAuth() {
+  void _navigateBasedOnAuth() async {
     // Mark that splash has been shown for this session
     AppRouter.markSplashAsShown();
-
-    final authService = Provider.of<AuthService>(context, listen: false);
-    final authStatus = authService.state.status;
-
-    switch (authStatus) {
-      case AuthStatus.authenticated:
-        context.go('/home');
-        break;
-      case AuthStatus.requires2FA:
-        // You might want to pass email from stored state
-        context.go('/two-factor-verification');
-        break;
-      case AuthStatus.unauthenticated:
-      default:
-        context.go('/login');
-        break;
+    
+    // Check if user has seen welcome screens
+    final hasSeenWelcome = OnboardingService.instance.hasSeenWelcomeScreens;
+    print('[SplashScreen] Has seen welcome screens: $hasSeenWelcome');
+    
+    if (mounted) {
+      if (!hasSeenWelcome) {
+        // Navigate directly to welcome screens
+        context.go('/welcome');
+      } else {
+        // Let the router handle auth-based navigation
+        context.go('/');
+      }
     }
   }
 
@@ -60,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF0D6EFD),
+                color: Color.fromARGB(255, 7, 43, 97),
               ),
             ),
             // SizedBox(height: 8),

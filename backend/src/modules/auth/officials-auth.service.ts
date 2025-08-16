@@ -28,7 +28,7 @@ export class OfficialsAuthService {
   ) {}
 
   async register(registerDto: OfficialRegisterDto): Promise<OfficialAuthResponseDto> {
-    const { name, email, password, designation, department, contact_phone } = registerDto;
+    const { name, email, password, designation, department, division, contact_phone } = registerDto;
 
     // Check if official already exists
     const existingOfficial = await this.officialsRepository.findOne({
@@ -46,6 +46,7 @@ export class OfficialsAuthService {
       password_hash: password, // Will be hashed by entity @BeforeInsert hook
       designation,
       department,
+      division,
       contact_phone,
     });
 

@@ -11,17 +11,63 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Building2, ArrowLeft } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { DepartmentAuthService } from "@/lib/services/department-auth.service"
+import { OfficialsAuthService } from "@/lib/services/officials-auth.service"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+// Predefined divisions for Grama Niladhari
+const DIVISIONS = [
+  "Colombo North",
+  "Colombo South",
+  "Colombo East",
+  "Colombo West",
+  "Dehiwala",
+  "Mount Lavinia",
+  "Moratuwa",
+  "Kotte",
+  "Kaduwela",
+  "Homagama",
+  "Maharagama",
+  "Kesbewa",
+  "Boralesgamuwa",
+  "Nugegoda",
+  "Piliyandala",
+  "Ratmalana",
+  "Pannipitiya",
+  "Kottawa",
+  "Malabe",
+  "Battaramulla",
+]
+
+// Predefined departments
+const DEPARTMENTS = [
+  "District Secretariat",
+  "Divisional Secretariat",
+  "Grama Niladhari Division",
+  "Municipal Council",
+  "Urban Council",
+  "Pradeshiya Sabha",
+  "Ministry of Home Affairs",
+  "Ministry of Public Administration",
+  "Land Registry",
+  "Social Services Department",
+]
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
-    name: "",
+    nameWithInitials: "",
     email: "",
     password: "",
     confirmPassword: "",
-    contact_email: "",
+    role: "",
+    department: "",
+    division: "",
     contact_phone: "",
-    description: "",
   })
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
@@ -39,13 +85,14 @@ export default function RegisterPage() {
     }
 
     try {
-      const authService = DepartmentAuthService.getInstance()
+      const authService = OfficialsAuthService.getInstance()
       await authService.register({
-        name: formData.name,
+        name: formData.nameWithInitials,
         email: formData.email,
         password: formData.password,
-        description: formData.description || undefined,
-        contact_email: formData.contact_email || undefined,
+        designation: formData.role || undefined,
+        department: formData.department || undefined,
+        division: formData.division || undefined,
         contact_phone: formData.contact_phone || undefined,
       })
       
@@ -65,6 +112,13 @@ export default function RegisterPage() {
     }))
   }
 
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
   return (
     <div className="min-h-screen bg-background py-8 px-4">
       <div className="container mx-auto max-w-2xl">
@@ -75,9 +129,9 @@ export default function RegisterPage() {
 
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl text-center">Register Department</CardTitle>
+            <CardTitle className="text-2xl text-center">Register Official</CardTitle>
             <CardDescription className="text-center">
-              Register your government department to access the portal
+              Register as a government official to access the portal
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -89,25 +143,26 @@ export default function RegisterPage() {
               )}
               
               <div className="space-y-2">
-                <Label htmlFor="name">Department Name</Label>
+                <Label htmlFor="nameWithInitials">Name with Initials</Label>
                 <Input
-                  id="name"
-                  name="name"
-                  placeholder="Department of Health"
-                  value={formData.name}
+                  id="nameWithInitials"
+                  name="nameWithInitials"
+                  placeholder="J. K. Perera"
+                  value={formData.nameWithInitials}
                   onChange={handleChange}
                   required
                 />
+                <p className="text-xs text-muted-foreground">Enter your name with initials (e.g., J. K. Perera)</p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email">Department Email</Label>
+                  <Label htmlFor="email">Official Email</Label>
                   <Input
                     id="email"
                     name="email"
                     type="email"
-                    placeholder="department@gov.example"
+                    placeholder="john.doe@gov.example"
                     value={formData.email}
                     onChange={handleChange}
                     required
@@ -126,28 +181,49 @@ export default function RegisterPage() {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="contact_email">Contact Email (Optional)</Label>
-                <Input
-                  id="contact_email"
-                  name="contact_email"
-                  type="email"
-                  placeholder="contact@department.gov"
-                  value={formData.contact_email}
-                  onChange={handleChange}
-                />
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="role">Role</Label>
+                  <Select value={formData.role} onValueChange={(value) => handleSelectChange("role", value)}>
+                    <SelectTrigger id="role">
+                      <SelectValue placeholder="Select your role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="grama_niladhari">Grama Niladhari</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="department">Department</Label>
+                  <Select value={formData.department} onValueChange={(value) => handleSelectChange("department", value)}>
+                    <SelectTrigger id="department">
+                      <SelectValue placeholder="Select your department" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {DEPARTMENTS.map((dept) => (
+                        <SelectItem key={dept} value={dept.toLowerCase().replace(/\s+/g, '_')}>
+                          {dept}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">Department Description</Label>
-                <Textarea
-                  id="description"
-                  name="description"
-                  placeholder="Brief description of your department's services and responsibilities"
-                  value={formData.description}
-                  onChange={handleChange}
-                  rows={3}
-                />
+                <Label htmlFor="division">Division</Label>
+                <Select value={formData.division} onValueChange={(value) => handleSelectChange("division", value)}>
+                  <SelectTrigger id="division">
+                    <SelectValue placeholder="Select your division" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {DIVISIONS.map((division) => (
+                      <SelectItem key={division} value={division.toLowerCase().replace(/\s+/g, '_')}>
+                        {division}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
@@ -176,7 +252,7 @@ export default function RegisterPage() {
               </div>
 
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Registering..." : "Register Department"}
+                {isLoading ? "Registering..." : "Register Official"}
               </Button>
             </form>
 

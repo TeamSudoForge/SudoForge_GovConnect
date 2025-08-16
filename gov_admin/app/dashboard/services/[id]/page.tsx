@@ -59,7 +59,7 @@ export default function ServiceDetailPage() {
       setFormData({
         title: data.title,
         description: data.description,
-        is_active: data.isActive,
+        is_active: data.is_active,
       })
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load service")
@@ -87,7 +87,7 @@ export default function ServiceDetailPage() {
       const updateData: UpdateServiceRequest = {
         title: formData.title,
         description: formData.description,
-        isActive: formData.is_active,
+        is_active: formData.is_active,
       }
 
       const updatedService = await servicesService.updateService(serviceId, updateData)
@@ -105,8 +105,8 @@ export default function ServiceDetailPage() {
     try {
       const updatedService = await servicesService.toggleServiceStatus(serviceId)
       setService(updatedService)
-      setFormData(prev => ({ ...prev, isActive: updatedService.isActive }))
-      setSuccessMessage(`Service ${updatedService.isActive ? 'activated' : 'deactivated'} successfully!`)
+      setFormData(prev => ({ ...prev, is_active: updatedService.is_active }))
+      setSuccessMessage(`Service ${updatedService.is_active ? 'activated' : 'deactivated'} successfully!`)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to toggle service status")
     }
@@ -197,7 +197,7 @@ export default function ServiceDetailPage() {
                     variant="outline"
                     onClick={handleToggleStatus}
                   >
-                    {service?.isActive ? "Deactivate" : "Activate"}
+                    {service?.is_active ? "Deactivate" : "Activate"}
                   </Button>
                   <Button onClick={() => setIsEditing(true)}>
                     <Edit className="h-4 w-4 mr-2" />
@@ -217,7 +217,7 @@ export default function ServiceDetailPage() {
                       setFormData({
                         title: service.title,
                         description: service.description,
-                        is_active: service.isActive,
+                        is_active: service.is_active,
                       })
                     }
                   }}
@@ -257,8 +257,8 @@ export default function ServiceDetailPage() {
                       <Cog className="h-5 w-5 mr-2" />
                       Service Information
                     </div>
-                    <Badge variant={service?.isActive ? "default" : "secondary"}>
-                      {service?.isActive ? (
+                    <Badge variant={service?.is_active ? "default" : "secondary"}>
+                      {service?.is_active ? (
                         <>
                           <CheckCircle className="h-3 w-3 mr-1" />
                           Active
@@ -334,7 +334,7 @@ export default function ServiceDetailPage() {
                       <div>
                         <Label className="text-sm font-medium text-muted-foreground">Status</Label>
                         <p className="text-base">
-                          {service?.isActive ? "Active - Available to citizens" : "Inactive - Not available to citizens"}
+                          {service?.is_active ? "Active - Available to citizens" : "Inactive - Not available to citizens"}
                         </p>
                       </div>
                     </div>
@@ -388,13 +388,13 @@ export default function ServiceDetailPage() {
                 <CardContent className="space-y-4">
                   <div>
                     <Label className="text-sm font-medium text-muted-foreground">Service ID</Label>
-                    <p className="text-base">{service?.id}</p>
+                    <p className="text-base">{service?.form_id}</p>
                   </div>
                   
-                  {/* <div>
+                  <div>
                     <Label className="text-sm font-medium text-muted-foreground">Department</Label>
-                    <p className="text-base">{service?.department?.name || `Department ${service?.departmentId}`}</p>
-                  </div> */}
+                    <p className="text-base">{service?.department?.name || `Department ${service?.department_id}`}</p>
+                  </div>
 
                   <div>
                     <Label className="text-sm font-medium text-muted-foreground">Created</Label>

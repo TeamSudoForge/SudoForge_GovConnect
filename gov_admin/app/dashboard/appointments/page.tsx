@@ -124,9 +124,9 @@ export default function AppointmentsPage() {
     }
   }
 
-  const todayAppointments = appointments.filter((apt) => apt.date === "2024-01-20").length
-  const pendingAppointments = appointments.filter((apt) => apt.status === "pending").length
-  const confirmedAppointments = appointments.filter((apt) => apt.status === "confirmed").length
+  const todayAppointments = 8
+  const pendingAppointments = 3
+  const confirmedAppointments = 12
 
   return (
     <div className="min-h-screen bg-background">
@@ -181,7 +181,7 @@ export default function AppointmentsPage() {
           </Card>
           <Card>
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-primary">85%</div>
+              <div className="text-2xl font-bold text-primary">92%</div>
               <p className="text-sm text-muted-foreground">Attendance Rate</p>
             </CardContent>
           </Card>
