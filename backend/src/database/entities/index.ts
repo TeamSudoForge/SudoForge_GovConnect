@@ -6,3 +6,8 @@ export { ChatMessage } from '../../modules/chatbot/entities/chat-message.entity'
 export { ChatSession } from '../../modules/chatbot/entities/chat-session.entity';
 export { Tag } from '../../modules/chatbot/entities/tag.entity';
 export { FaqQuestion } from '../../modules/chatbot/entities/faq-question.entity';
+export { EmailVerificationCode } from '../../modules/auth/email-verification/entities/email-verification-code.entity';
+export { Form } from './form.entity';
+export { FormSection } from './form-section.entity';
+export { FormField, FieldType } from './form-field.entity';
+export { FormSubmission, SubmissionStatus } from './form-submission.entity';

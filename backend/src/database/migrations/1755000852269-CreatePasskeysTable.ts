@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, Table, TableForeignKey, TableColumn } from 'typeorm';
 
-export class CreatePasskeysTable1692841540002 implements MigrationInterface {
+export class CreatePasskeysTable1755000852269 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     // Check if the table exists first
     const tableExists = await queryRunner.hasTable('passkeys');

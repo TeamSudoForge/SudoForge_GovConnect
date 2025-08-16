@@ -49,7 +49,7 @@ export class PasskeyAuthenticationDto {
 }
 
 export interface AuthResponseDto {
-  user: {
+  user?: {
     id: string;
     email: string;
     username: string;
@@ -57,8 +57,12 @@ export interface AuthResponseDto {
     lastName: string;
     role: string;
   };
-  accessToken: string;
-  refreshToken: string;
+  accessToken?: string;
+  refreshToken?: string;
+  message?: string;
+  requires2FA?: boolean;
+  requiresEmailVerification?: boolean;
+  email?: string;
 }
 
 export interface PasskeyOptionsDto {

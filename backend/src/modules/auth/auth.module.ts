@@ -18,10 +18,13 @@ import { TwoFactorCode } from './two-factor/entities/two-factor-code.entity';
 import { MailService } from '../notifications/mail/mail.service';
 import { JwtStrategy } from '../../common/strategies/jwt.strategy';
 import { TwoFactorModule } from './two-factor/two-factor.module';
+import { EmailVerificationModule } from './email-verification/email-verification.module';
+import { EmailVerificationCode } from './email-verification/entities/email-verification-code.entity';
+import { EmailVerificationService } from './email-verification/email-verification.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, AuthSession, Passkey, TwoFactorCode]),
+    TypeOrmModule.forFeature([User, AuthSession, Passkey, TwoFactorCode, EmailVerificationCode]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -36,6 +39,7 @@ import { TwoFactorModule } from './two-factor/two-factor.module';
     UsersModule,
     ConfigModule,
     TwoFactorModule,
+    EmailVerificationModule,
   ],
   controllers: [AuthController],
   providers: [
@@ -44,16 +48,19 @@ import { TwoFactorModule } from './two-factor/two-factor.module';
     AuthSessionRepository, 
     PasskeyRepository, 
     UserRepository, 
-    TwoFactorService, 
+    TwoFactorService,
+    EmailVerificationService,
     MailService
   ],
   exports: [
     AuthService, 
     JwtStrategy, 
+    PassportModule,
     AuthSessionRepository, 
     PasskeyRepository, 
     UserRepository, 
-    TwoFactorService
+    TwoFactorService,
+    EmailVerificationService
   ],
 })
 export class AuthModule {}

@@ -6,8 +6,10 @@ import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
+import { FormsModule } from './modules/forms/forms.module';
 import { HealthModule } from './health/health.module';
 import { ChatbotModule } from './modules/chatbot/chatbot.module';
+import { RelyingPartyModule } from './relying-party/relying-party.module';
 import configuration from './config/configuration';
 import { User } from './database/entities/user.entity';
 import { AuthSession } from './database/entities/auth-session.entity';
@@ -17,6 +19,23 @@ import { ChatMessage } from './modules/chatbot/entities/chat-message.entity';
 import { ChatSession } from './modules/chatbot/entities/chat-session.entity';
 import { Tag } from './modules/chatbot/entities/tag.entity';
 import { FaqQuestion } from './modules/chatbot/entities/faq-question.entity';
+import { EmailVerificationCode } from './database/entities';
+import { 
+  FieldType, 
+  Field, 
+  FieldAttribute, 
+  Department, 
+  Service, 
+  FormField as OldFormField, 
+  FormResponse, 
+  FormResponseValue 
+} from './modules/forms/entities';
+import {
+  Form,
+  FormSection,
+  FormField,
+  FormSubmission
+} from './database/entities';
 
 @Module({
   imports: [
@@ -43,6 +62,20 @@ import { FaqQuestion } from './modules/chatbot/entities/faq-question.entity';
           ChatSession,
           Tag,
           FaqQuestion,
+          EmailVerificationCode,
+          FieldType,
+          Field,
+          FieldAttribute,
+          Department,
+          Service,
+          OldFormField,
+          FormResponse,
+          FormResponseValue,
+          // Dynamic Forms entities
+          Form,
+          FormSection,
+          FormField,
+          FormSubmission
         ],
         synchronize: false, // Disabled to prevent schema conflicts
         logging: configService.get('DB_LOGGING', 'false') === 'true',
@@ -51,8 +84,10 @@ import { FaqQuestion } from './modules/chatbot/entities/faq-question.entity';
     DatabaseModule,
     AuthModule,
     UsersModule,
+    FormsModule,
     HealthModule,
     ChatbotModule,
+    RelyingPartyModule,
   ],
   controllers: [AppController],
   providers: [AppService],
