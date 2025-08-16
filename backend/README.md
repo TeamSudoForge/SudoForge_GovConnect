@@ -3,17 +3,20 @@
 NestJS-based authentication backend with comprehensive user management and security features.
 
 ## Prerequisites
+
 - Docker and Docker Compose installed
 - Node.js (for npm scripts)
 
 ## Quick Start
 
 ### Start Development Environment
+
 ```bash
 npm run docker:dev
 ```
 
 This starts all essential services:
+
 - Backend API (http://localhost:3000)
 - PostgreSQL Database
 - MinIO File Storage (http://localhost:9001)
@@ -21,16 +24,19 @@ This starts all essential services:
 - Redis Cache
 
 ### Check Services
+
 ```bash
 npm run docker:status
 ```
 
 ### View Logs
+
 ```bash
 npm run docker:dev:logs
 ```
 
 ### Stop Services
+
 ```bash
 npm run docker:dev:stop
 ```
@@ -38,11 +44,13 @@ npm run docker:dev:stop
 ## Test Authentication
 
 ### Health Check
+
 ```bash
 curl http://localhost:3000/health
 ```
 
 ### Register User
+
 ```bash
 curl -X POST http://localhost:3000/auth/register \
   -H 'Content-Type: application/json' \
@@ -50,6 +58,7 @@ curl -X POST http://localhost:3000/auth/register \
 ```
 
 ### Login
+
 ```bash
 curl -X POST http://localhost:3000/auth/login \
   -H 'Content-Type: application/json' \
@@ -61,6 +70,7 @@ curl -X POST http://localhost:3000/auth/login \
 When a user with enabled 2FA logs in, the system automatically sends a verification code to the user's email address. The login process will then require this verification code to complete authentication.
 
 #### Enable 2FA for a User
+
 ```bash
 curl -X POST http://localhost:3000/auth/enable-2fa \
   -H 'Authorization: Bearer YOUR_ACCESS_TOKEN' \
@@ -68,6 +78,7 @@ curl -X POST http://localhost:3000/auth/enable-2fa \
 ```
 
 #### Complete Login with 2FA
+
 ```bash
 curl -X POST http://localhost:3000/auth/verify-2fa \
   -H 'Content-Type: application/json' \
@@ -75,11 +86,13 @@ curl -X POST http://localhost:3000/auth/verify-2fa \
 ```
 
 ## Documentation
+
 - **Authentication API**: `AUTH_README.md`
 - **Docker Setup**: `DOCKER_SIMPLIFIED.md`
 - **Test Interface**: `test-frontend.html`
 
 ## Features
+
 - Email/Password Authentication
 - JWT Token Management
 - WebAuthn Passkey Support
@@ -92,6 +105,7 @@ curl -X POST http://localhost:3000/auth/verify-2fa \
 - Database Management (PostgreSQL)
 
 ## Ready to Code!
+
 Your authentication backend is now running with all essential services. Start building your features!
 
 ## Project setup

@@ -38,7 +38,7 @@ export default (): AppConfig => ({
     username: process.env.DB_USERNAME || 'postgres',
     password: process.env.DB_PASSWORD || 'password',
     database: process.env.DB_NAME || 'govconnect',
-    synchronize: process.env.NODE_ENV !== 'production',
+    synchronize: false, // Temporarily disabled to avoid schema conflicts
     logging: process.env.NODE_ENV === 'development',
   },
   jwt: {

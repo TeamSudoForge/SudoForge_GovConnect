@@ -15,12 +15,12 @@ import { PasskeyRepository } from './repositories/passkey.repository';
 import { UserRepository } from './repositories/user.repository';
 import { TwoFactorService } from './two-factor/two-factor.service';
 import { TwoFactorCode } from './two-factor/entities/two-factor-code.entity';
+import { MailService } from '../notifications/mail/mail.service';
+import { JwtStrategy } from '../../common/strategies/jwt.strategy';
 import { TwoFactorModule } from './two-factor/two-factor.module';
 import { EmailVerificationModule } from './email-verification/email-verification.module';
 import { EmailVerificationCode } from './email-verification/entities/email-verification-code.entity';
-import { MailService } from '../notifications/mail/mail.service';
 import { EmailVerificationService } from './email-verification/email-verification.service';
-import { JwtStrategy } from 'src/common/strategies/jwt.strategy';
 
 @Module({
   imports: [
