@@ -22,6 +22,7 @@ class ServiceLocator {
   late final SettingsService _settingsService;
   late final NotificationService _notificationService;
   late final AppointmentService _appointmentService;
+  late final DepartmentsService _departmentsService;
 
   void init() {
     _apiService = ApiService();
@@ -34,6 +35,7 @@ class ServiceLocator {
     _notificationService = NotificationService();
     _chatService = ChatService(_apiService, _authService);
     _appointmentService = AppointmentService();
+    _departmentsService = DepartmentsService();
   }
 
   // Getters
@@ -44,6 +46,7 @@ class ServiceLocator {
   SettingsService get settingsService => _settingsService;
   NotificationService get notificationService => _notificationService;
   AppointmentService get appointmentService => _appointmentService;
+  DepartmentsService get departmentsService => _departmentsService;
 }
 
 // Provider setup for the app
@@ -65,6 +68,9 @@ final providers = [
   ChangeNotifierProvider<AppointmentService>.value(
     value: ServiceLocator().appointmentService,
   ),
+  ChangeNotifierProvider<DepartmentsService>.value(
+    value: ServiceLocator().departmentsService,
+  ),
 ];
 
 // Initialize services
@@ -72,6 +78,7 @@ Future<void> initializeServices() async {
   ServiceLocator().init();
   await ServiceLocator().settingsService.initialize();
   await ServiceLocator().authService.initialize();
+  await ServiceLocator().departmentsService.initialize();
   await OnboardingService.instance.initialize();
 
   // Inject AuthService into NotificationService

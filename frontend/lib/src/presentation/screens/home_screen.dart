@@ -10,6 +10,7 @@ import '../../core/models/appointment_models.dart';
 import '../../core/utils/department_utils.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/bottom_navigation_widget.dart';
+import '../widgets/pinned_department_card.dart';
 import 'login_screen.dart';
 import 'qrflow/qr_scan_screen.dart';
 import 'chatbot_screen.dart';
@@ -59,34 +60,54 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Consumer3<AuthService, SettingsService, AppointmentService>(
-        builder:
-            (context, authService, settingsService, appointmentService, child) {
-              final user = authService.currentUser;
+      body:
+          Consumer4<
+            AuthService,
+            SettingsService,
+            AppointmentService,
+            DepartmentsService
+          >(
+            builder:
+                (
+                  context,
+                  authService,
+                  settingsService,
+                  appointmentService,
+                  departmentsService,
+                  child,
+                ) {
+                  final user = authService.currentUser;
 
-              return SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildWelcomeSection(user, styles, theme),
-                    const SizedBox(height: 32),
-                    // _buildQuickActions(context, styles, theme),
-                    // const SizedBox(height: 32),
-                    _buildUpcomingAppointments(
-                      context,
-                      appointmentService,
-                      styles,
-                      theme,
+                  return SingleChildScrollView(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildWelcomeSection(user, styles, theme),
+                        const SizedBox(height: 32),
+                        // _buildQuickActions(context, styles, theme),
+                        // const SizedBox(height: 32),
+                        _buildUpcomingAppointments(
+                          context,
+                          appointmentService,
+                          styles,
+                          theme,
+                        ),
+                        const SizedBox(height: 32),
+                        _buildPinnedDepartments(
+                          context,
+                          departmentsService,
+                          styles,
+                          theme,
+                        ),
+                        const SizedBox(height: 32),
+                        _buildUserInfo(user, styles, theme),
+                        const SizedBox(height: 24),
+                      ],
                     ),
-                    const SizedBox(height: 32),
-                    _buildUserInfo(user, styles, theme),
-                    const SizedBox(height: 24),
-                  ],
-                ),
-              );
-            },
-      ),
+                  );
+                },
+          ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
@@ -500,6 +521,100 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildPinnedDepartments(
+    BuildContext context,
+    DepartmentsService departmentsService,
+    TextStyleHelper styles,
+    ThemeData theme,
+  ) {
+    final homeScreenDepartments = departmentsService.getHomeScreenDepartments(
+      limit: 2,
+    );
+    final hasPinnedDepartments =
+        departmentsService.pinnedDepartments.isNotEmpty;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: theme.shadowColor.withAlpha(13),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Pinned Departments',
+                style: styles.title18Medium.copyWith(
+                  color: theme.colorScheme.secondary,
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  context.pushNamed('services');
+                },
+                child: Text(
+                  'View all',
+                  style: styles.body14Medium.copyWith(
+                    color: theme.primaryColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          if (!hasPinnedDepartments)
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: Column(
+                  children: [
+                    Icon(
+                      Remix.pushpin_line,
+                      color: theme.colorScheme.onSurface.withOpacity(0.5),
+                      size: 32,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'No departments pinned',
+                      style: styles.body14Regular.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.7),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Pin departments from Services to see them here',
+                      style: styles.body12Regular.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.5),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            )
+          else
+            ...homeScreenDepartments.map((department) {
+              return PinnedDepartmentCard(
+                department: department,
+                showPinButton: true,
+              );
+            }).toList(),
+        ],
       ),
     );
   }
