@@ -112,7 +112,8 @@ class AppRouter {
         GoRoute(
           path: '/home',
           name: 'home',
-          builder: (context, state) => const HomeScreen(),          routes: [
+          builder: (context, state) => const HomeScreen(),
+          routes: [
             // Nested routes under home
             GoRoute(
               path: 'notifications',

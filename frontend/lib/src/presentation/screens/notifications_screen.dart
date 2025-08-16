@@ -29,8 +29,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   Widget build(BuildContext context) {
     final textStyles = TextStyleHelper.instance;
     // Create an instance of NotificationProvider if one doesn't exist in the widget tree
-    final notificationProvider = Provider.of<NotificationProvider>(context, listen: false);
-    
+    final notificationProvider = Provider.of<NotificationProvider>(
+      context,
+      listen: false,
+    );
+
     return Scaffold(
       appBar: CommonAppBar(
         title: 'Notifications',
@@ -44,102 +47,110 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         value: notificationProvider,
         child: Consumer<NotificationProvider>(
           builder: (context, provider, _) {
-          if (provider.loading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (provider.error != null) {
-            return Center(
-              child: Text(
-                provider.error!,
-                style: textStyles.body14Regular.copyWith(color: Colors.red),
-              ),
-            );
-          }
-          final filtered = showUnread
-              ? provider.notifications.where((n) => !n.read).toList()
-              : provider.notifications;
-          if (filtered.isEmpty) {
-            return Center(
-              child: Text('No notifications', style: textStyles.body14Regular),
-            );
-          }
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
+            if (provider.loading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (provider.error != null) {
+              return Center(
+                child: Text(
+                  provider.error!,
+                  style: textStyles.body14Regular.copyWith(color: Colors.red),
                 ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: _FilterButton(
-                        label: 'All',
-                        selected: !showUnread,
-                        onTap: () => setState(() => showUnread = false),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: _FilterButton(
-                        label: 'Unread',
-                        selected: showUnread,
-                        onTap: () => setState(() => showUnread = true),
-                      ),
-                    ),
-                  ],
+              );
+            }
+            final filtered = showUnread
+                ? provider.notifications.where((n) => !n.read).toList()
+                : provider.notifications;
+            if (filtered.isEmpty) {
+              return Center(
+                child: Text(
+                  'No notifications',
+                  style: textStyles.body14Regular,
                 ),
-              ),
-              Expanded(
-                child: ListView.separated(
+              );
+            }
+            return Column(
+              children: [
+                Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
-                    vertical: 8,
+                    vertical: 12,
                   ),
-                  itemCount: filtered.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
-                  itemBuilder: (context, i) {
-                    final n = filtered[i];
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.03),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: n.read
-                              ? Theme.of(context).colorScheme.surface
-                              : Theme.of(context).primaryColor.withOpacity(0.2),
-                          child: Icon(
-                            Icons.notifications,
-                            color: Theme.of(context).primaryColor,
-                            size: 28,
-                          ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _FilterButton(
+                          label: 'All',
+                          selected: !showUnread,
+                          onTap: () => setState(() => showUnread = false),
                         ),
-                        title: Text(n.title, style: textStyles.title16Medium),
-                        subtitle: Text(n.body, style: textStyles.body14Regular),
-                        trailing: Text(
-                          _formatDate(n.createdAt),
-                          style: textStyles.body12Regular.copyWith(
-                            color: Colors.grey,
-                          ),
-                        ),
-                        isThreeLine: true,
                       ),
-                    );
-                  },
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _FilterButton(
+                          label: 'Unread',
+                          selected: showUnread,
+                          onTap: () => setState(() => showUnread = true),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          );
-        },
+                Expanded(
+                  child: ListView.separated(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    itemCount: filtered.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    itemBuilder: (context, i) {
+                      final n = filtered[i];
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.03),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: n.read
+                                ? Theme.of(context).colorScheme.surface
+                                : Theme.of(
+                                    context,
+                                  ).primaryColor.withOpacity(0.2),
+                            child: Icon(
+                              Icons.notifications,
+                              color: Theme.of(context).primaryColor,
+                              size: 28,
+                            ),
+                          ),
+                          title: Text(n.title, style: textStyles.title16Medium),
+                          subtitle: Text(
+                            n.body,
+                            style: textStyles.body14Regular,
+                          ),
+                          trailing: Text(
+                            _formatDate(n.createdAt),
+                            style: textStyles.body12Regular.copyWith(
+                              color: Colors.grey,
+                            ),
+                          ),
+                          isThreeLine: true,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
