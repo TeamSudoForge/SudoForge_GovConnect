@@ -23,44 +23,43 @@ import {
 
 // Mock data for analytics
 const dailyData = [
-  { date: "Mon", appointments: 12, completed: 10, cancelled: 2 },
-  { date: "Tue", appointments: 15, completed: 13, cancelled: 2 },
-  { date: "Wed", appointments: 8, completed: 7, cancelled: 1 },
-  { date: "Thu", appointments: 18, completed: 16, cancelled: 2 },
-  { date: "Fri", appointments: 22, completed: 20, cancelled: 2 },
-  { date: "Sat", appointments: 6, completed: 5, cancelled: 1 },
-  { date: "Sun", appointments: 4, completed: 4, cancelled: 0 },
+  { date: "Mon", appointments: 7, completed: 6, cancelled: 1 },
+  { date: "Tue", appointments: 9, completed: 8, cancelled: 1 },
+  { date: "Wed", appointments: 5, completed: 5, cancelled: 0 },
+  { date: "Thu", appointments: 11, completed: 10, cancelled: 1 },
+  { date: "Fri", appointments: 13, completed: 12, cancelled: 1 },
+  { date: "Sat", appointments: 4, completed: 4, cancelled: 0 },
+  { date: "Sun", appointments: 2, completed: 2, cancelled: 0 },
 ]
 
 const monthlyData = [
-  { month: "Jan", appointments: 245, services: 189, departments: 8 },
-  { month: "Feb", appointments: 289, services: 234, departments: 9 },
-  { month: "Mar", appointments: 312, services: 267, departments: 10 },
-  { month: "Apr", appointments: 278, services: 223, departments: 10 },
-  { month: "May", appointments: 334, services: 289, departments: 11 },
-  { month: "Jun", appointments: 298, services: 245, departments: 11 },
-  { month: "Jul", appointments: 356, services: 312, departments: 12 },
-  { month: "Aug", appointments: 389, services: 334, departments: 12 },
-  { month: "Sep", appointments: 367, services: 298, departments: 13 },
-  { month: "Oct", appointments: 423, services: 378, departments: 13 },
-  { month: "Nov", appointments: 445, services: 398, departments: 14 },
-  { month: "Dec", appointments: 398, services: 356, departments: 14 },
+  { month: "Jan", appointments: 145, certificates: 98, applications: 156 },
+  { month: "Feb", appointments: 162, certificates: 112, applications: 178 },
+  { month: "Mar", appointments: 134, certificates: 89, applications: 145 },
+  { month: "Apr", appointments: 156, certificates: 105, applications: 167 },
+  { month: "May", appointments: 189, certificates: 134, applications: 201 },
+  { month: "Jun", appointments: 167, certificates: 118, applications: 178 },
+  { month: "Jul", appointments: 178, certificates: 125, applications: 189 },
+  { month: "Aug", appointments: 203, certificates: 145, applications: 234 },
+  { month: "Sep", appointments: 189, certificates: 134, applications: 212 },
+  { month: "Oct", appointments: 198, certificates: 142, applications: 223 },
+  { month: "Nov", appointments: 212, certificates: 156, applications: 245 },
+  { month: "Dec", appointments: 187, certificates: 134, applications: 198 },
 ]
 
-const serviceDistribution = [
-  { name: "Health Services", value: 35, color: "#0088FE" },
-  { name: "Transportation", value: 25, color: "#00C49F" },
-  { name: "Business Licenses", value: 20, color: "#FFBB28" },
-  { name: "Tax Services", value: 12, color: "#FF8042" },
-  { name: "Social Services", value: 8, color: "#8884D8" },
+const certificateDistribution = [
+  { name: "Character Certificates", value: 45, color: "#0088FE" },
+  { name: "Income Certificates", value: 25, color: "#00C49F" },
+  { name: "Residence Certificates", value: 20, color: "#FFBB28" },
+  { name: "Birth Certificate Verifications", value: 7, color: "#FF8042" },
+  { name: "Other Documents", value: 3, color: "#8884D8" },
 ]
 
-const departmentPerformance = [
-  { department: "Health", appointments: 156, satisfaction: 4.8, avgTime: 25 },
-  { department: "Transportation", apartments: 134, satisfaction: 4.6, avgTime: 18 },
-  { department: "Commerce", appointments: 98, satisfaction: 4.7, avgTime: 35 },
-  { department: "Revenue", appointments: 87, satisfaction: 4.5, avgTime: 22 },
-  { department: "Social Services", appointments: 76, satisfaction: 4.9, avgTime: 28 },
+const weeklyPerformance = [
+  { week: "Week 1", certificates: 28, appointments: 32, satisfaction: 4.7, avgTime: 18 },
+  { week: "Week 2", certificates: 35, appointments: 38, satisfaction: 4.8, avgTime: 16 },
+  { week: "Week 3", certificates: 22, appointments: 29, satisfaction: 4.6, avgTime: 20 },
+  { week: "Week 4", certificates: 31, appointments: 35, satisfaction: 4.9, avgTime: 15 },
 ]
 
 export default function AnalyticsPage() {
@@ -99,8 +98,8 @@ export default function AnalyticsPage() {
             <div className="flex items-center space-x-2">
               <BarChart3 className="h-8 w-8 text-primary" />
               <div>
-                <h1 className="text-xl font-bold text-foreground">Analytics Dashboard</h1>
-                <p className="text-sm text-muted-foreground">Track appointments and service performance</p>
+                <h1 className="text-xl font-bold text-foreground">GN Division Analytics</h1>
+                <p className="text-sm text-muted-foreground">Track certificates, appointments and citizen services</p>
               </div>
             </div>
           </div>
@@ -125,14 +124,14 @@ export default function AnalyticsPage() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Appointments</CardTitle>
+              <CardTitle className="text-sm font-medium">Total Certificates Issued</CardTitle>
               <Calendar className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">4,234</div>
+              <div className="text-2xl font-bold">134</div>
               <div className="flex items-center text-xs text-muted-foreground">
                 <TrendingUp className="h-3 w-3 mr-1 text-green-500" />
-                +12.5% from last month
+                +8.1% from last month
               </div>
             </CardContent>
           </Card>
@@ -143,24 +142,24 @@ export default function AnalyticsPage() {
               <Clock className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">87.3%</div>
+              <div className="text-2xl font-bold">94.2%</div>
               <div className="flex items-center text-xs text-muted-foreground">
                 <TrendingUp className="h-3 w-3 mr-1 text-green-500" />
-                +2.1% from last month
+                +2.3% from last month
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Services</CardTitle>
+              <CardTitle className="text-sm font-medium">Pending Applications</CardTitle>
               <FileText className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">47</div>
+              <div className="text-2xl font-bold">12</div>
               <div className="flex items-center text-xs text-muted-foreground">
-                <TrendingUp className="h-3 w-3 mr-1 text-green-500" />
-                +3 new this month
+                <TrendingDown className="h-3 w-3 mr-1 text-green-500" />
+                -3 from yesterday
               </div>
             </CardContent>
           </Card>
@@ -171,10 +170,10 @@ export default function AnalyticsPage() {
               <Clock className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">24 min</div>
+              <div className="text-2xl font-bold">18 min</div>
               <div className="flex items-center text-xs text-muted-foreground">
                 <TrendingDown className="h-3 w-3 mr-1 text-green-500" />
-                -3.2 min from last month
+                -2.5 min from last month
               </div>
             </CardContent>
           </Card>
@@ -216,25 +215,25 @@ export default function AnalyticsPage() {
             </CardContent>
           </Card>
 
-          {/* Service Distribution */}
+          {/* Certificate Distribution */}
           <Card>
             <CardHeader>
-              <CardTitle>Service Distribution</CardTitle>
-              <CardDescription>Breakdown of appointments by service category</CardDescription>
+              <CardTitle>Certificate Distribution</CardTitle>
+              <CardDescription>Breakdown of certificates issued this month</CardDescription>
             </CardHeader>
             <CardContent>
               <ChartContainer config={chartConfig}>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
                     <Pie
-                      data={serviceDistribution}
+                      data={certificateDistribution}
                       cx="50%"
                       cy="50%"
                       outerRadius={80}
                       dataKey="value"
                       label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
                     >
-                      {serviceDistribution.map((entry, index) => (
+                      {certificateDistribution.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
@@ -246,38 +245,39 @@ export default function AnalyticsPage() {
           </Card>
         </div>
 
-        {/* Department Performance */}
+        {/* Weekly Performance */}
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle>Department Performance</CardTitle>
-            <CardDescription>Key metrics by department</CardDescription>
+            <CardTitle>Weekly Performance</CardTitle>
+            <CardDescription>GN Division performance over the past month</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-3 px-4 font-medium">Department</th>
+                    <th className="text-left py-3 px-4 font-medium">Week</th>
+                    <th className="text-left py-3 px-4 font-medium">Certificates Issued</th>
                     <th className="text-left py-3 px-4 font-medium">Appointments</th>
                     <th className="text-left py-3 px-4 font-medium">Satisfaction</th>
                     <th className="text-left py-3 px-4 font-medium">Avg. Time (min)</th>
-                    <th className="text-left py-3 px-4 font-medium">Performance</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {departmentPerformance.map((dept, index) => (
+                  {weeklyPerformance.map((week, index) => (
                     <tr key={index} className="border-b">
-                      <td className="py-3 px-4 font-medium">{dept.department}</td>
-                      <td className="py-3 px-4">{dept.appointments}</td>
+                      <td className="py-3 px-4 font-medium">{week.week}</td>
+                      <td className="py-3 px-4">{week.certificates}</td>
+                      <td className="py-3 px-4">{week.appointments}</td>
                       <td className="py-3 px-4">
                         <div className="flex items-center">
-                          <span className="mr-2">{dept.satisfaction}</span>
+                          <span className="mr-2">{week.satisfaction}</span>
                           <div className="flex">
                             {[...Array(5)].map((_, i) => (
                               <span
                                 key={i}
                                 className={`text-xs ${
-                                  i < Math.floor(dept.satisfaction) ? "text-yellow-400" : "text-gray-300"
+                                  i < Math.floor(week.satisfaction) ? "text-yellow-400" : "text-gray-300"
                                 }`}
                               >
                                 ★
@@ -286,15 +286,7 @@ export default function AnalyticsPage() {
                           </div>
                         </div>
                       </td>
-                      <td className="py-3 px-4">{dept.avgTime}</td>
-                      <td className="py-3 px-4">
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div
-                            className="bg-primary h-2 rounded-full"
-                            style={{ width: `${(dept.satisfaction / 5) * 100}%` }}
-                          ></div>
-                        </div>
-                      </td>
+                      <td className="py-3 px-4">{week.avgTime}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -362,29 +354,29 @@ export default function AnalyticsPage() {
                 <div className="flex items-start space-x-3">
                   <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
                   <div>
-                    <p className="text-sm font-medium">Online appointments increased</p>
-                    <p className="text-xs text-muted-foreground">65% of appointments now booked online (+15%)</p>
+                    <p className="text-sm font-medium">Digital submissions increased</p>
+                    <p className="text-xs text-muted-foreground">78% of applications now submitted online (+23%)</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
                   <div>
-                    <p className="text-sm font-medium">New service categories added</p>
-                    <p className="text-xs text-muted-foreground">Environmental services now available</p>
+                    <p className="text-sm font-medium">Character certificates most requested</p>
+                    <p className="text-xs text-muted-foreground">45% of all certificate requests</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2"></div>
                   <div>
-                    <p className="text-sm font-medium">Wait times reduced</p>
-                    <p className="text-xs text-muted-foreground">Average wait time down by 13% this month</p>
+                    <p className="text-sm font-medium">Processing time improved</p>
+                    <p className="text-xs text-muted-foreground">Average processing time down to 24 hours</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <div className="w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
                   <div>
-                    <p className="text-sm font-medium">Customer satisfaction up</p>
-                    <p className="text-xs text-muted-foreground">Overall rating improved to 4.7/5 stars</p>
+                    <p className="text-sm font-medium">Citizen satisfaction high</p>
+                    <p className="text-xs text-muted-foreground">4.8/5 average rating for GN services</p>
                   </div>
                 </div>
               </div>
