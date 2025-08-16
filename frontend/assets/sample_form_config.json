@@ -107,10 +107,10 @@
           "validationRules": null,
           "options": {
             "options": [
-              {"value": "lost", "label": "Lost"},
-              {"value": "stolen", "label": "Stolen"},
-              {"value": "damaged", "label": "Damaged"},
-              {"value": "expired", "label": "Expired"}
+              { "value": "lost", "label": "Lost" },
+              { "value": "stolen", "label": "Stolen" },
+              { "value": "damaged", "label": "Damaged" },
+              { "value": "expired", "label": "Expired" }
             ]
           },
           "metadata": null,
@@ -276,7 +276,7 @@
   ],
   "ui": {
     "overview": {
-      "title": "Recover or renew your loss ID",
+      "title": "Recover or renew your lostID",
       "description": "We'll guide you through every step, document, and appointment. No more confusion or wasted time.",
       "infoCards": [
         "For your convenience, the following fields have been automatically filled using the verified personal data linked to your profile.",

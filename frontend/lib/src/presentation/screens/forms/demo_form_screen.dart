@@ -11,14 +11,16 @@ class DemoFormScreen extends StatefulWidget {
   final String? formId;
   final Map<String, dynamic>? jsonFormData;
   static const String routeName = '/demo-form';
-  
-  const DemoFormScreen({Key? key, this.formId, this.jsonFormData}) : super(key: key);
-  
+
+  const DemoFormScreen({Key? key, this.formId, this.jsonFormData})
+    : super(key: key);
+
   @override
   _DemoFormScreenState createState() => _DemoFormScreenState();
 }
 
-class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStateMixin {
+class _DemoFormScreenState extends State<DemoFormScreen>
+    with TickerProviderStateMixin {
   int currentStep = 1;
   final int totalSteps = 3;
   int currentFormPage = 1; // For handling multiple pages within step 2
@@ -27,14 +29,14 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
   late List<DynamicFormFieldModel> _dependencyFields;
   late DynamicFormModel _completeFormModel;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  
+
   // API Service
   late FormApiService _formApiService;
-  
+
   // Loading state
   bool _isLoading = true;
   String? _errorMessage;
-  
+
   // Animation controllers for submission
   late AnimationController _scaleController;
   late AnimationController _checkController;
@@ -61,27 +63,19 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    
+
     _checkController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
-    _scaleAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _scaleController,
-      curve: Curves.elasticOut,
-    ));
-    
-    _checkAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _checkController,
-      curve: Curves.easeInOut,
-    ));
+
+    _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
+    );
+
+    _checkAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _checkController, curve: Curves.easeInOut),
+    );
   }
 
   @override
@@ -107,7 +101,8 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
       } else {
         // Determine which form ID to use
         String formIdToLoad;
-        if (widget.formId != null && _availableFormIds.contains(widget.formId)) {
+        if (widget.formId != null &&
+            _availableFormIds.contains(widget.formId)) {
           formIdToLoad = widget.formId!;
         } else {
           // Default to the first hardcoded form ID
@@ -119,7 +114,7 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
         // Test connection first
         final isConnected = await _formApiService.testConnection();
         print('🌐 API connection test: ${isConnected ? 'SUCCESS' : 'FAILED'}');
-        
+
         if (!isConnected) {
           throw Exception('Cannot connect to backend API');
         }
@@ -131,26 +126,28 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
         // final token = await authService.getToken();
         // print('🔐 Authentication status: $isAuthenticated');
         // print('🎟️ Token available: ${token != null}');
-        
+
         // if (!isAuthenticated || token == null) {
         //   throw Exception('User not authenticated - please log in first');
         // }
 
         // Fetch form data from API
         jsonData = await _formApiService.getFormConfig(formIdToLoad);
-        
+
         if (jsonData == null) {
-          throw Exception('Failed to load form configuration - API returned null');
+          throw Exception(
+            'Failed to load form configuration - API returned null',
+          );
         }
-        
+
         // Transform backend format to frontend format
         jsonData = _transformBackendResponse(jsonData);
-        
+
         print('✅ Successfully loaded and transformed form data from API');
       }
 
       _initializeCompleteFormModel(jsonData);
-      
+
       setState(() {
         _isLoading = false;
       });
@@ -160,7 +157,7 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
         _isLoading = false;
         _errorMessage = 'Error loading form: ${e.toString()}';
       });
-      
+
       // Fallback to sample data if API fails
       print('🔄 Falling back to sample data');
       _initializeCompleteFormModel(_getSampleJsonData());
@@ -170,7 +167,7 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
   void _initializeCompleteFormModel([Map<String, dynamic>? jsonData]) {
     // Use provided JSON data or fallback to sample data
     final data = jsonData ?? widget.jsonFormData ?? _getSampleJsonData();
-    
+
     // Parse the JSON into DynamicFormModel
     _completeFormModel = DynamicFormModel.fromJson(data);
 
@@ -179,16 +176,20 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
       (section) => section.pageNumber == 1,
       orElse: () => _completeFormModel.sections.first,
     );
-    _dependencyFields = overviewSection.fields.where(
-      (field) => field.fieldType == DynamicFieldType.dependencyForm
-    ).toList();
+    _dependencyFields = overviewSection.fields
+        .where((field) => field.fieldType == DynamicFieldType.dependencyForm)
+        .toList();
 
     // Calculate total form pages (excluding overview and submit pages)
-    final formPageNumbers = _completeFormModel.sections
-        .where((section) => section.pageNumber != 1 && section.pageNumber != 3)
-        .map((section) => section.pageNumber)
-        .toSet()
-        .toList()..sort();
+    final formPageNumbers =
+        _completeFormModel.sections
+            .where(
+              (section) => section.pageNumber != 1 && section.pageNumber != 3,
+            )
+            .map((section) => section.pageNumber)
+            .toSet()
+            .toList()
+          ..sort();
     totalFormPages = formPageNumbers.length;
 
     // Initialize form data with default values from JSON
@@ -199,7 +200,7 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
     // Safely handle defaultValues casting
     final defaultValuesRaw = jsonData['defaultValues'];
     Map<String, dynamic> defaultValues = {};
-    
+
     if (defaultValuesRaw != null) {
       if (defaultValuesRaw is Map<String, dynamic>) {
         defaultValues = defaultValuesRaw;
@@ -208,23 +209,27 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
         defaultValues = Map<String, dynamic>.from(defaultValuesRaw);
       }
     }
-    
+
     _formData = Map<String, dynamic>.from(defaultValues);
   }
 
-  Map<String, dynamic> _transformBackendResponse(Map<String, dynamic> backendData) {
+  Map<String, dynamic> _transformBackendResponse(
+    Map<String, dynamic> backendData,
+  ) {
     print('🔄 Transforming backend response to frontend format');
-    
+
     // Create a deep copy to avoid modifying the original data
-    final transformedData = json.decode(json.encode(backendData)) as Map<String, dynamic>;
-    
+    final transformedData =
+        json.decode(json.encode(backendData)) as Map<String, dynamic>;
+
     // Add defaultValues if missing
     if (!transformedData.containsKey('defaultValues')) {
       transformedData['defaultValues'] = <String, dynamic>{};
     }
-    
+
     // Transform sections and fields
-    if (transformedData.containsKey('sections') && transformedData['sections'] is List) {
+    if (transformedData.containsKey('sections') &&
+        transformedData['sections'] is List) {
       final sections = transformedData['sections'] as List;
       for (var sectionData in sections) {
         if (sectionData is Map && sectionData['fields'] is List) {
@@ -232,13 +237,15 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
           for (var fieldData in fields) {
             if (fieldData is Map && fieldData['fieldType'] is String) {
               // Transform field types
-              fieldData['fieldType'] = _transformFieldType(fieldData['fieldType'] as String);
+              fieldData['fieldType'] = _transformFieldType(
+                fieldData['fieldType'] as String,
+              );
             }
           }
         }
       }
     }
-    
+
     print('✅ Backend response transformed successfully');
     return transformedData;
   }
@@ -256,38 +263,40 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
       'checkbox': 'checkbox',
       'textarea': 'textarea',
       'number': 'number',
-      'dependency_form': 'dependencyForm'
+      'dependency_form': 'dependencyForm',
     };
-    
+
     return fieldTypeMap[backendFieldType] ?? backendFieldType;
   }
 
   // Sample JSON data structure for testing
   Map<String, dynamic> _getSampleJsonData() {
     final now = DateTime.now().toIso8601String();
-    
+
     return {
       "id": "fa79a916-e02d-4e41-888f-ccbd7af664b4",
       "title": "ID Recovery Application",
-      "description": "Apply for official identity document recovery services through our secure digital platform",
+      "description":
+          "Apply for official identity document recovery services through our secure digital platform",
       "isActive": true,
       "version": 1,
       "metadata": {
         "department": "Immigration Department",
-        "announcementUrl": "https://example.com/announcement"
+        "announcementUrl": "https://example.com/announcement",
       },
       "createdAt": now,
       "updatedAt": now,
       "defaultValues": {
         "personal_profile_completed": false,
         "address_verification_completed": false,
-        "emergency_contact_completed": true
+        "emergency_contact_completed": true,
       },
       "sections": [
         {
           "id": "overview-section",
           "title": "Auto-filled Data Requirements",
-          "description": "Complete the following forms to auto-populate your application data",
+          "description":
+              "Complete the following forms to auto-populate your application data",
           "pageNumber": 1,
           "orderIndex": 1,
           "formId": "fa79a916-e02d-4e41-888f-ccbd7af664b4",
@@ -301,17 +310,15 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
               "fieldType": "dependencyForm",
               "isRequired": true,
               "placeholder": null,
-              "helpText": "Complete your basic personal information including name, date of birth, and contact details. This information will be used to verify your identity.",
+              "helpText":
+                  "Complete your basic personal information including name, date of birth, and contact details. This information will be used to verify your identity.",
               "orderIndex": 1,
               "validationRules": null,
               "options": null,
-              "metadata": {
-                "formUrl": "/profile-setup",
-                "isFilled": false
-              },
+              "metadata": {"formUrl": "/profile-setup", "isFilled": false},
               "sectionId": "overview-section",
               "createdAt": now,
-              "updatedAt": now
+              "updatedAt": now,
             },
             {
               "id": "address-form-dep",
@@ -320,17 +327,18 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
               "fieldType": "dependencyForm",
               "isRequired": true,
               "placeholder": null,
-              "helpText": "Provide and verify your current residential address. This helps us ensure accurate document delivery.",
+              "helpText":
+                  "Provide and verify your current residential address. This helps us ensure accurate document delivery.",
               "orderIndex": 2,
               "validationRules": null,
               "options": null,
               "metadata": {
                 "formUrl": "/address-verification",
-                "isFilled": false
+                "isFilled": false,
               },
               "sectionId": "overview-section",
               "createdAt": now,
-              "updatedAt": now
+              "updatedAt": now,
             },
             {
               "id": "emergency-contact-dep",
@@ -339,19 +347,17 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
               "fieldType": "dependencyForm",
               "isRequired": false,
               "placeholder": null,
-              "helpText": "Provide emergency contact details for security purposes and in case we need to verify your identity.",
+              "helpText":
+                  "Provide emergency contact details for security purposes and in case we need to verify your identity.",
               "orderIndex": 3,
               "validationRules": null,
               "options": null,
-              "metadata": {
-                "formUrl": "/emergency-contact",
-                "isFilled": true
-              },
+              "metadata": {"formUrl": "/emergency-contact", "isFilled": true},
               "sectionId": "overview-section",
               "createdAt": now,
-              "updatedAt": now
-            }
-          ]
+              "updatedAt": now,
+            },
+          ],
         },
         {
           "id": "2fd6cc13-4b2b-4b51-b7df-81f89fe6af69",
@@ -378,13 +384,13 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
                   {"value": "lost", "label": "Lost"},
                   {"value": "stolen", "label": "Stolen"},
                   {"value": "damaged", "label": "Damaged"},
-                  {"value": "expired", "label": "Expired"}
-                ]
+                  {"value": "expired", "label": "Expired"},
+                ],
               },
               "metadata": null,
               "sectionId": "2fd6cc13-4b2b-4b51-b7df-81f89fe6af69",
               "createdAt": now,
-              "updatedAt": now
+              "updatedAt": now,
             },
             {
               "id": "incident-date",
@@ -393,16 +399,17 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
               "fieldType": "date",
               "isRequired": false,
               "placeholder": null,
-              "helpText": "When did you realize your ID was lost/stolen/damaged?",
+              "helpText":
+                  "When did you realize your ID was lost/stolen/damaged?",
               "orderIndex": 2,
               "validationRules": null,
               "options": null,
               "metadata": null,
               "sectionId": "2fd6cc13-4b2b-4b51-b7df-81f89fe6af69",
               "createdAt": now,
-              "updatedAt": now
-            }
-          ]
+              "updatedAt": now,
+            },
+          ],
         },
         {
           "id": "additional-info-section",
@@ -421,16 +428,15 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
               "fieldType": "textarea",
               "isRequired": false,
               "placeholder": "Provide any additional information...",
-              "helpText": "Any other relevant information about your ID recovery request",
+              "helpText":
+                  "Any other relevant information about your ID recovery request",
               "orderIndex": 1,
               "validationRules": null,
               "options": null,
-              "metadata": {
-                "maxLines": 4
-              },
+              "metadata": {"maxLines": 4},
               "sectionId": "additional-info-section",
               "createdAt": now,
-              "updatedAt": now
+              "updatedAt": now,
             },
             {
               "id": "emergency-contact-name",
@@ -446,7 +452,7 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
               "metadata": null,
               "sectionId": "additional-info-section",
               "createdAt": now,
-              "updatedAt": now
+              "updatedAt": now,
             },
             {
               "id": "emergency-contact-phone",
@@ -462,14 +468,15 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
               "metadata": null,
               "sectionId": "additional-info-section",
               "createdAt": now,
-              "updatedAt": now
-            }
-          ]
+              "updatedAt": now,
+            },
+          ],
         },
         {
           "id": "989a6047-d355-4b21-a59f-2d6e942dc082",
           "title": "Supporting Documents",
-          "description": "Upload required supporting documents for verification",
+          "description":
+              "Upload required supporting documents for verification",
           "pageNumber": 3,
           "orderIndex": 4,
           "formId": "fa79a916-e02d-4e41-888f-ccbd7af664b4",
@@ -483,19 +490,18 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
               "fieldType": "documentUpload",
               "isRequired": true,
               "placeholder": null,
-              "helpText": "Upload a clear, legible copy of your birth certificate",
+              "helpText":
+                  "Upload a clear, legible copy of your birth certificate",
               "orderIndex": 1,
               "validationRules": {
                 "allowedExtensions": ["pdf", "jpg", "png"],
-                "maxFileSizeMB": 5
+                "maxFileSizeMB": 5,
               },
               "options": null,
-              "metadata": {
-                "maxFiles": 1
-              },
+              "metadata": {"maxFiles": 1},
               "sectionId": "989a6047-d355-4b21-a59f-2d6e942dc082",
               "createdAt": now,
-              "updatedAt": now
+              "updatedAt": now,
             },
             {
               "id": "69bf2b4a-2cfc-4074-a36d-71b53d4047e1",
@@ -504,19 +510,18 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
               "fieldType": "documentUpload",
               "isRequired": true,
               "placeholder": null,
-              "helpText": "Utility bill, bank statement, or lease agreement (not older than 3 months)",
+              "helpText":
+                  "Utility bill, bank statement, or lease agreement (not older than 3 months)",
               "orderIndex": 2,
               "validationRules": {
                 "allowedExtensions": ["pdf", "jpg", "png"],
-                "maxFileSizeMB": 5
+                "maxFileSizeMB": 5,
               },
               "options": null,
-              "metadata": {
-                "maxFiles": 2
-              },
+              "metadata": {"maxFiles": 2},
               "sectionId": "989a6047-d355-4b21-a59f-2d6e942dc082",
               "createdAt": now,
-              "updatedAt": now
+              "updatedAt": now,
             },
             {
               "id": "police-report-upload",
@@ -525,51 +530,54 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
               "fieldType": "documentUpload",
               "isRequired": false,
               "placeholder": null,
-              "helpText": "Required if ID was stolen. Upload police report or incident number",
+              "helpText":
+                  "Required if ID was stolen. Upload police report or incident number",
               "orderIndex": 3,
               "validationRules": {
                 "allowedExtensions": ["pdf", "jpg", "png"],
-                "maxFileSizeMB": 5
+                "maxFileSizeMB": 5,
               },
               "options": null,
-              "metadata": {
-                "maxFiles": 1
-              },
+              "metadata": {"maxFiles": 1},
               "sectionId": "989a6047-d355-4b21-a59f-2d6e942dc082",
               "createdAt": now,
-              "updatedAt": now
-            }
-          ]
-        }
+              "updatedAt": now,
+            },
+          ],
+        },
       ],
       "ui": {
         "overview": {
-          "title": "Recover or renew your loss ID",
-          "description": "We'll guide you through every step, document, and appointment. No more confusion or wasted time.",
+          "title": "Recover or renew your lostID",
+          "description":
+              "We'll guide you through every step, document, and appointment. No more confusion or wasted time.",
           "infoCards": [
             "For your convenience, the following fields have been automatically filled using the verified personal data linked to your profile.",
-            "This data has been collected in accordance with applicable regulations and is securely stored. Please review and update if necessary before submission."
+            "This data has been collected in accordance with applicable regulations and is securely stored. Please review and update if necessary before submission.",
           ],
           "processSteps": [
             {
               "stepNumber": 1,
               "title": "Auto Filed Data",
-              "description": "Check all the required auto filed data are available and correct."
+              "description":
+                  "Check all the required auto filed data are available and correct.",
             },
             {
               "stepNumber": 2,
               "title": "ID Recovery Form",
-              "description": "Fill the form for ID recovery application with required details."
+              "description":
+                  "Fill the form for ID recovery application with required details.",
             },
             {
               "stepNumber": 3,
               "title": "Submit",
-              "description": "Submit the form and wait until we process the request."
-            }
-          ]
+              "description":
+                  "Submit the form and wait until we process the request.",
+            },
+          ],
         },
-        "stepLabels": ["Overview", "Form", "Submit"]
-      }
+        "stepLabels": ["Overview", "Form", "Submit"],
+      },
     };
   }
 
@@ -599,7 +607,7 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
         _showMissingFormsDialog(missingForms.replaceAll(RegExp(r', $'), ''));
         return;
       }
-      
+
       // Move to step 2 (first form page)
       setState(() {
         currentStep = 2;
@@ -655,7 +663,7 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
     // Start animation
     await Future.delayed(const Duration(milliseconds: 300));
     _scaleController.forward();
-    
+
     await Future.delayed(const Duration(milliseconds: 200));
     _checkController.forward();
 
@@ -772,9 +780,9 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Step Indicator
                   Row(
                     children: [
@@ -784,9 +792,9 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
                       ],
                     ],
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Step Labels
                   Row(
                     children: [
@@ -798,7 +806,9 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 14,
-                              fontWeight: currentStep == (i + 1) ? FontWeight.w600 : FontWeight.w400,
+                              fontWeight: currentStep == (i + 1)
+                                  ? FontWeight.w600
+                                  : FontWeight.w400,
                             ),
                           ),
                         ),
@@ -808,7 +818,7 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
                 ],
               ),
             ),
-            
+
             // White Content Section
             Expanded(
               child: Container(
@@ -820,7 +830,7 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
                 ),
               ),
             ),
-            
+
             // Bottom Navigation Section
             Container(
               padding: const EdgeInsets.all(16),
@@ -854,7 +864,7 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
                         ),
                       ),
                     ),
-                  
+
                   // Home/Back to Home Button for first step
                   if (currentStep == 1)
                     Expanded(
@@ -877,9 +887,9 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
                         ),
                       ),
                     ),
-                  
+
                   const SizedBox(width: 16),
-                  
+
                   // Continue Button
                   Expanded(
                     flex: 2,
@@ -930,13 +940,16 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
     final jsonData = widget.jsonFormData ?? _getSampleJsonData();
     final uiConfig = jsonData['ui']?['overview'] ?? {};
     final metadata = _completeFormModel.metadata ?? {};
-    
+
     final title = uiConfig['title'] ?? _completeFormModel.title;
-    final description = uiConfig['description'] ?? _completeFormModel.description;
+    final description =
+        uiConfig['description'] ?? _completeFormModel.description;
     final infoCards = List<String>.from(uiConfig['infoCards'] ?? []);
-    final processSteps = List<Map<String, dynamic>>.from(uiConfig['processSteps'] ?? []);
+    final processSteps = List<Map<String, dynamic>>.from(
+      uiConfig['processSteps'] ?? [],
+    );
     final department = metadata['department'] ?? 'Government Department';
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -952,9 +965,9 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
             textAlign: TextAlign.center,
           ),
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Description (from JSON)
         Center(
           child: Text(
@@ -967,9 +980,9 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
             textAlign: TextAlign.center,
           ),
         ),
-        
+
         const SizedBox(height: 24),
-        
+
         // Service Registration Info (from JSON)
         Container(
           padding: const EdgeInsets.all(16),
@@ -994,7 +1007,8 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
                     ),
                     children: [
                       TextSpan(
-                        text: 'This Service is registered under $department. See the ',
+                        text:
+                            'This Service is registered under $department. See the ',
                       ),
                       const TextSpan(
                         text: 'Official Announcement',
@@ -1011,22 +1025,24 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
             ],
           ),
         ),
-        
+
         const SizedBox(height: 32),
-        
+
         // Auto-Filled Personal Information Section
         _buildSectionHeader('Auto-Filled Personal Information'),
-        
+
         const SizedBox(height: 16),
-        
+
         // Info cards from JSON
-        ...infoCards.map((cardText) => Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          child: _buildInfoCard(cardText),
-        )),
-        
+        ...infoCards.map(
+          (cardText) => Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            child: _buildInfoCard(cardText),
+          ),
+        ),
+
         const SizedBox(height: 32),
-        
+
         // Auto Filed Data Section
         const Text(
           'Auto Filed Data',
@@ -1036,25 +1052,27 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
             color: Color(0xFF333333),
           ),
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Dependency Forms (from JSON)
-        ..._dependencyFields.map((field) => Container(
-          margin: const EdgeInsets.only(bottom: 16),
-          child: DependencyFormField(
-            label: field.label,
-            fieldName: field.fieldName,
-            helpText: field.helpText,
-            isRequired: field.isRequired,
-            metadata: field.metadata,
-            value: _formData[field.fieldName] as bool?,
-            onChanged: _handleFieldChange,
+        ..._dependencyFields.map(
+          (field) => Container(
+            margin: const EdgeInsets.only(bottom: 16),
+            child: DependencyFormField(
+              label: field.label,
+              fieldName: field.fieldName,
+              helpText: field.helpText,
+              isRequired: field.isRequired,
+              metadata: field.metadata,
+              value: _formData[field.fieldName] as bool?,
+              onChanged: _handleFieldChange,
+            ),
           ),
-        )),
-        
+        ),
+
         const SizedBox(height: 32),
-        
+
         // Process Flow Section
         const Text(
           'Process Flow',
@@ -1064,9 +1082,9 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
             color: Color(0xFF333333),
           ),
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Process Flow Steps (from JSON)
         ...processSteps.asMap().entries.map((entry) {
           final index = entry.key;
@@ -1086,13 +1104,13 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
   Widget _buildFormContent() {
     // Determine which page to show (page 2 for form page 1, page 4 for form page 2)
     final pageNumber = currentFormPage == 1 ? 2 : 4;
-    
+
     // Get the current section for dynamic titles
     final currentSection = _completeFormModel.sections.firstWhere(
       (section) => section.pageNumber == pageNumber,
       orElse: () => _completeFormModel.sections.first,
     );
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1108,13 +1126,14 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
             textAlign: TextAlign.center,
           ),
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Description (from JSON)
         Center(
           child: Text(
-            currentSection.description ?? 'Please fill in the required information.',
+            currentSection.description ??
+                'Please fill in the required information.',
             style: const TextStyle(
               fontSize: 16,
               color: Color(0xFF666666),
@@ -1123,23 +1142,20 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
             textAlign: TextAlign.center,
           ),
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Page indicator for form step
         if (totalFormPages > 1)
           Center(
             child: Text(
               'Page $currentFormPage of $totalFormPages',
-              style: const TextStyle(
-                fontSize: 14,
-                color: Color(0xFF999999),
-              ),
+              style: const TextStyle(fontSize: 14, color: Color(0xFF999999)),
             ),
           ),
-        
+
         const SizedBox(height: 32),
-        
+
         // Dynamic Form Renderer for current form page
         DynamicFormRenderer(
           form: _completeFormModel,
@@ -1158,7 +1174,7 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
       (section) => section.pageNumber == 3,
       orElse: () => _completeFormModel.sections.last,
     );
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1174,9 +1190,9 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
             textAlign: TextAlign.center,
           ),
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Description (from JSON)
         Center(
           child: Text(
@@ -1189,9 +1205,9 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
             textAlign: TextAlign.center,
           ),
         ),
-        
+
         const SizedBox(height: 32),
-        
+
         // Dynamic Form Renderer for page 3
         DynamicFormRenderer(
           form: _completeFormModel,
@@ -1200,9 +1216,9 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
           formKey: _formKey,
           onFieldChanged: _handleFieldChange,
         ),
-        
+
         const SizedBox(height: 32),
-        
+
         // Summary Section
         Container(
           padding: const EdgeInsets.all(16),
@@ -1225,26 +1241,17 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
               const SizedBox(height: 12),
               const Text(
                 '• All dependency forms completed',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF4CAF50),
-                ),
+                style: TextStyle(fontSize: 14, color: Color(0xFF4CAF50)),
               ),
               const SizedBox(height: 4),
               Text(
                 '• Recovery reason: ${_formData["recovery_reason"] ?? "Not specified"}',
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF666666),
-                ),
+                style: const TextStyle(fontSize: 14, color: Color(0xFF666666)),
               ),
               const SizedBox(height: 4),
               const Text(
                 '• All required documents ready for submission',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF666666),
-                ),
+                style: TextStyle(fontSize: 14, color: Color(0xFF666666)),
               ),
             ],
           ),
@@ -1257,7 +1264,7 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
   Widget _buildStepIndicator(int step) {
     final bool isActive = step <= currentStep;
     final bool isCompleted = step < currentStep;
-    
+
     return Container(
       width: 32,
       height: 32,
@@ -1267,19 +1274,15 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
       ),
       child: Center(
         child: isCompleted
-          ? const Icon(
-              Icons.check,
-              color: Color(0xFF2196F3),
-              size: 18,
-            )
-          : Text(
-              step.toString(),
-              style: TextStyle(
-                color: isActive ? const Color(0xFF2196F3) : Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
+            ? const Icon(Icons.check, color: Color(0xFF2196F3), size: 18)
+            : Text(
+                step.toString(),
+                style: TextStyle(
+                  color: isActive ? const Color(0xFF2196F3) : Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
       ),
     );
   }
@@ -1293,7 +1296,7 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
       ),
     );
   }
-  
+
   Widget _buildSectionHeader(String title) {
     return Row(
       children: [
@@ -1317,7 +1320,7 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
       ],
     );
   }
-  
+
   Widget _buildInfoCard(String text) {
     return Container(
       padding: const EdgeInsets.all(12),
@@ -1352,7 +1355,7 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
       ),
     );
   }
-  
+
   Widget _buildProcessFlowStep({
     required int stepNumber,
     required String title,
@@ -1373,7 +1376,9 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
                 height: 40,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: isActive ? const Color(0xFF2196F3) : const Color(0xFFE0E0E0),
+                  color: isActive
+                      ? const Color(0xFF2196F3)
+                      : const Color(0xFFE0E0E0),
                 ),
                 child: Center(
                   child: Text(
@@ -1395,9 +1400,9 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
                 ),
             ],
           ),
-          
+
           const SizedBox(width: 16),
-          
+
           // Step Content
           Expanded(
             child: Column(
@@ -1409,7 +1414,9 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: isActive ? const Color(0xFF333333) : const Color(0xFF666666),
+                    color: isActive
+                        ? const Color(0xFF333333)
+                        : const Color(0xFF666666),
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -1417,7 +1424,9 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
                   description,
                   style: TextStyle(
                     fontSize: 14,
-                    color: isActive ? const Color(0xFF666666) : const Color(0xFF999999),
+                    color: isActive
+                        ? const Color(0xFF666666)
+                        : const Color(0xFF999999),
                     height: 1.4,
                   ),
                 ),
@@ -1432,8 +1441,10 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
   // Get step label from JSON configuration
   String _getStepLabel(int stepNumber) {
     final jsonData = widget.jsonFormData ?? _getSampleJsonData();
-    final stepLabels = List<String>.from(jsonData['ui']?['stepLabels'] ?? ['Step 1', 'Step 2', 'Step 3']);
-    
+    final stepLabels = List<String>.from(
+      jsonData['ui']?['stepLabels'] ?? ['Step 1', 'Step 2', 'Step 3'],
+    );
+
     if (stepNumber <= stepLabels.length) {
       return stepLabels[stepNumber - 1];
     }
@@ -1479,7 +1490,7 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 60),
-                  
+
                   // Animated success icon
                   AnimatedBuilder(
                     animation: _scaleAnimation,
@@ -1520,9 +1531,9 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
                       );
                     },
                   ),
-                  
+
                   const SizedBox(height: 40),
-                  
+
                   // Success message
                   const Text(
                     'Application Submitted Successfully',
@@ -1532,9 +1543,9 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
                       color: Color(0xFF4CAF50),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // Description
                   const Text(
                     'We will inform you soon after your\napplication is processed.',
@@ -1702,10 +1713,7 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
                           ),
                           child: const Text(
                             'Retry',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                            ),
+                            style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
                         ),
                       ],
@@ -1720,4 +1728,3 @@ class _DemoFormScreenState extends State<DemoFormScreen> with TickerProviderStat
     );
   }
 }
-
