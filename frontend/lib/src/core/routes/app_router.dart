@@ -19,6 +19,7 @@ import '../../presentation/screens/forms/id_recovery_form_content_screen.dart';
 import '../../presentation/screens/forms/id_recovery_success_screen.dart';
 import '../../presentation/screens/forms/demo_form_screen.dart';
 import '../../presentation/screens/forms/form_selection_screen.dart';
+import '../../presentation/screens/services_screen.dart';
 
 class AppRouter {
   // Session-based flag to track if splash has been shown
@@ -136,19 +137,6 @@ class AppRouter {
               builder: (context, state) => const AddPasskeyScreen(),
             ),
             GoRoute(
-              path: 'form-selection',
-              name: 'form-selection',
-              builder: (context, state) => const FormSelectionScreen(),
-            ),
-            GoRoute(
-              path: 'demo-form',
-              name: 'demo-form',
-              builder: (context, state) {
-                final formId = state.uri.queryParameters['formId'];
-                return DemoFormScreen(formId: formId);
-              },
-            ),
-            GoRoute(
               path: 'id-recovery-process',
               name: 'id-recovery-process',
               builder: (context, state) => const IdRecoveryProcessScreen(),
@@ -178,6 +166,31 @@ class AppRouter {
           path: '/appointments',
           name: 'appointments',
           builder: (context, state) => const AppointmentsScreen(),
+        ),
+        GoRoute(
+          path: '/services',
+          name: 'services',
+          builder: (context, state) => const ServicesScreen(),
+        ),
+        GoRoute(
+          path: '/form-selection',
+          name: 'form-selection',
+          builder: (context, state) {
+            final department = state.uri.queryParameters['department'];
+            final departmentId = state.uri.queryParameters['departmentId'];
+            return FormSelectionScreen(
+              department: department,
+              departmentId: departmentId,
+            );
+          },
+        ),
+        GoRoute(
+          path: '/demo-form',
+          name: 'demo-form',
+          builder: (context, state) {
+            final formId = state.uri.queryParameters['formId'];
+            return DemoFormScreen(formId: formId);
+          },
         ),
         GoRoute(
           path: '/appointment-details',
@@ -219,6 +232,9 @@ class AppRoutes {
   static const String appNavigation = '/home/app-navigation';
   // static const String idCardRenewal = '/id-card-renewal'; // TODO: Uncomment when screen is created
   static const String appointments = '/appointments';
+  static const String services = '/services';
+  static const String formSelection = '/form-selection';
+  static const String demoFormStandalone = '/demo-form';
   static const String appointmentDetails = '/appointment-details';
   static const String appointmentUpdate = '/appointment-update';
 }
@@ -239,8 +255,6 @@ extension GoRouterExtension on GoRouter {
 
   void pushAddPasskey() => pushNamed('add-passkey');
 
-  void pushFormSelection() => pushNamed('form-selection');
-
   void pushDemoForm([String? formId]) {
     if (formId != null) {
       pushNamed('demo-form', queryParameters: {'formId': formId});
@@ -250,6 +264,28 @@ extension GoRouterExtension on GoRouter {
   }
 
   void pushAppointments() => pushNamed('appointments');
+
+  void pushServices() => pushNamed('services');
+
+  void pushFormSelection({String? department, String? departmentId}) {
+    final queryParams = <String, String>{};
+    if (department != null) queryParams['department'] = department;
+    if (departmentId != null) queryParams['departmentId'] = departmentId;
+    
+    if (queryParams.isNotEmpty) {
+      pushNamed('form-selection', queryParameters: queryParams);
+    } else {
+      pushNamed('form-selection');
+    }
+  }
+
+  void pushDemoFormStandalone([String? formId]) {
+    if (formId != null) {
+      pushNamed('demo-form', queryParameters: {'formId': formId});
+    } else {
+      pushNamed('demo-form');
+    }
+  }
 
   void pushAppointmentDetails([String? appointmentId]) {
     if (appointmentId != null) {
