@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/app_export.dart';
-import '../../core/services/onboarding_service.dart';
 
 class WelcomeScreens extends StatefulWidget {
   const WelcomeScreens({super.key});
@@ -13,7 +11,7 @@ class WelcomeScreens extends StatefulWidget {
 class _WelcomeScreensState extends State<WelcomeScreens> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
-  
+
   @override
   void initState() {
     super.initState();
@@ -25,19 +23,22 @@ class _WelcomeScreensState extends State<WelcomeScreens> {
       image: 'assets/welcome_screen/1-img.png',
       title: 'Easy Government Services',
       subtitle: 'Access all government services from your phone',
-      description: 'Apply for certificates, book appointments, and track your applications all in one place. No more long queues or paperwork.',
+      description:
+          'Apply for certificates, book appointments, and track your applications all in one place. No more long queues or paperwork.',
     ),
     WelcomePageData(
       image: 'assets/welcome_screen/2-img.png',
       title: 'Quick & Secure',
       subtitle: 'Fast processing with secure authentication',
-      description: 'Your documents are processed quickly and securely. Use biometric authentication and digital signatures for enhanced security.',
+      description:
+          'Your documents are processed quickly and securely. Use biometric authentication and digital signatures for enhanced security.',
     ),
     WelcomePageData(
       image: 'assets/welcome_screen/3-img.png',
       title: 'Stay Connected',
       subtitle: 'Get real-time updates and notifications',
-      description: 'Receive instant notifications about your application status, appointment reminders, and important government announcements.',
+      description:
+          'Receive instant notifications about your application status, appointment reminders, and important government announcements.',
     ),
   ];
 
@@ -58,7 +59,8 @@ class _WelcomeScreensState extends State<WelcomeScreens> {
   }
 
   void _completeOnboarding() async {
-    await OnboardingService.instance.markWelcomeScreensAsSeen();
+    // Navigate directly to login without marking welcome screens as seen
+    // This ensures welcome screens will show again if user is not logged in
     if (mounted) {
       context.go('/login');
     }
@@ -80,12 +82,10 @@ class _WelcomeScreensState extends State<WelcomeScreens> {
             },
             itemCount: _pages.length,
             itemBuilder: (context, index) {
-              return WelcomePage(
-                data: _pages[index],
-              );
+              return WelcomePage(data: _pages[index]);
             },
           ),
-          
+
           // Skip button overlaid on top
           SafeArea(
             child: Align(
@@ -96,7 +96,10 @@ class _WelcomeScreensState extends State<WelcomeScreens> {
                   onPressed: _skipToLogin,
                   style: TextButton.styleFrom(
                     backgroundColor: Colors.black.withOpacity(0.3),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -113,7 +116,7 @@ class _WelcomeScreensState extends State<WelcomeScreens> {
               ),
             ),
           ),
-          
+
           // Page indicators and navigation at the bottom
           Positioned(
             bottom: 0,
@@ -150,12 +153,14 @@ class _WelcomeScreensState extends State<WelcomeScreens> {
                             borderRadius: BorderRadius.circular(4),
                             color: _currentPage == index
                                 ? Theme.of(context).colorScheme.primary
-                                : Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                                : Theme.of(
+                                    context,
+                                  ).colorScheme.primary.withOpacity(0.3),
                           ),
                         ),
                       ),
                     ),
-                    
+
                     // Navigation text on the right
                     GestureDetector(
                       onTap: _nextPage,
@@ -163,7 +168,9 @@ class _WelcomeScreensState extends State<WelcomeScreens> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            _currentPage == _pages.length - 1 ? 'Get Started' : 'Next',
+                            _currentPage == _pages.length - 1
+                                ? 'Get Started'
+                                : 'Next',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -190,7 +197,7 @@ class _WelcomeScreensState extends State<WelcomeScreens> {
       ),
     );
   }
-  
+
   @override
   void dispose() {
     _pageController.dispose();
@@ -200,12 +207,9 @@ class _WelcomeScreensState extends State<WelcomeScreens> {
 
 class WelcomePage extends StatelessWidget {
   final WelcomePageData data;
-  
-  const WelcomePage({
-    super.key,
-    required this.data,
-  });
-  
+
+  const WelcomePage({super.key, required this.data});
+
   IconData _getIconForPage(String title) {
     if (title.contains('Easy Government')) {
       return Icons.account_balance;
@@ -220,9 +224,8 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get screen dimensions for responsive design
-    final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     return Column(
       children: [
         // Image fills top portion (increased height)
@@ -234,7 +237,9 @@ class WelcomePage extends StatelessWidget {
               data.image,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
-                print('[WelcomeScreens] Error loading image ${data.image}: $error');
+                print(
+                  '[WelcomeScreens] Error loading image ${data.image}: $error',
+                );
                 return Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -252,13 +257,17 @@ class WelcomePage extends StatelessWidget {
                       Icon(
                         _getIconForPage(data.title),
                         size: 100,
-                        color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.primary.withOpacity(0.5),
                       ),
                       const SizedBox(height: 16),
                       Text(
                         'Image not found',
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primary.withOpacity(0.5),
                           fontSize: 16,
                         ),
                       ),
@@ -269,7 +278,7 @@ class WelcomePage extends StatelessWidget {
             ),
           ),
         ),
-        
+
         // Content section (reduced to give more space to image)
         Expanded(
           flex: 2,
@@ -294,9 +303,9 @@ class WelcomePage extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  
+
                   const SizedBox(height: 10),
-                  
+
                   // Subtitle
                   Text(
                     data.subtitle,
@@ -308,9 +317,9 @@ class WelcomePage extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Description
                   Container(
                     constraints: const BoxConstraints(maxWidth: 320),
@@ -318,7 +327,9 @@ class WelcomePage extends StatelessWidget {
                       data.description,
                       style: TextStyle(
                         fontSize: 14,
-                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.75),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withOpacity(0.75),
                         height: 1.4,
                         fontWeight: FontWeight.w400,
                       ),
@@ -331,7 +342,7 @@ class WelcomePage extends StatelessWidget {
             ),
           ),
         ),
-        
+
         // Add some padding at the bottom for the navigation controls
         const SizedBox(height: 120),
       ],

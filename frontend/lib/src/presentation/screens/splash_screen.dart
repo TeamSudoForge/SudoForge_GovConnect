@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
-import '../../core/app_export.dart';
 import '../../core/routes/app_router.dart';
-import '../../core/services/onboarding_service.dart';
 import 'dart:async';
 
 class SplashScreen extends StatefulWidget {
@@ -27,19 +24,10 @@ class _SplashScreenState extends State<SplashScreen> {
   void _navigateBasedOnAuth() async {
     // Mark that splash has been shown for this session
     AppRouter.markSplashAsShown();
-    
-    // Check if user has seen welcome screens
-    final hasSeenWelcome = OnboardingService.instance.hasSeenWelcomeScreens;
-    print('[SplashScreen] Has seen welcome screens: $hasSeenWelcome');
-    
+
     if (mounted) {
-      if (!hasSeenWelcome) {
-        // Navigate directly to welcome screens
-        context.go('/welcome');
-      } else {
-        // Let the router handle auth-based navigation
-        context.go('/');
-      }
+      // Always go to welcome screens first - let the router handle auth-based navigation
+      context.go('/welcome');
     }
   }
 

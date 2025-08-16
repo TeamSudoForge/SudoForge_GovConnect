@@ -1,7 +1,6 @@
 import 'package:go_router/go_router.dart';
 import '../../core/app_export.dart';
 import '../../core/models/appointment_models.dart';
-import '../../core/services/onboarding_service.dart';
 import '../../presentation/screens/splash_screen.dart';
 import '../../presentation/screens/welcome_screens.dart';
 import '../../presentation/screens/login_screen.dart';
@@ -39,7 +38,7 @@ class AppRouter {
       refreshListenable: authService,
       redirect: (context, state) {
         print('[Router] Current location: ${state.matchedLocation}');
-        
+
         final authStatus = authService.state.status;
         final isLoggedIn = authStatus == AuthStatus.authenticated;
         final isLoggingIn = state.matchedLocation == '/login';
@@ -64,22 +63,18 @@ class AppRouter {
           return '/login';
         }
 
-        // Allow welcome screens to show if user hasn't seen them
-        if (isOnWelcome && !OnboardingService.instance.hasSeenWelcomeScreens) {
+        // Always allow welcome screens to show if user is not logged in
+        if (isOnWelcome && !isLoggedIn) {
           return null;
         }
 
-        // Skip welcome if already seen
-        if (isOnWelcome && OnboardingService.instance.hasSeenWelcomeScreens) {
-          if (isLoggedIn) {
-            return '/home';
-          } else {
-            return '/login';
-          }
+        // Skip welcome if already authenticated (logged in)
+        if (isOnWelcome && isLoggedIn) {
+          return '/home';
         }
 
-        // Redirect to welcome if not authenticated, not on auth screens, and haven't seen welcome
-        if (!isLoggedIn && !isOnAuth && !isOnWelcome && !OnboardingService.instance.hasSeenWelcomeScreens) {
+        // Redirect to welcome if not authenticated and not on auth/welcome screens
+        if (!isLoggedIn && !isOnAuth && !isOnWelcome) {
           return '/welcome';
         }
 
@@ -302,7 +297,7 @@ extension GoRouterExtension on GoRouter {
     final queryParams = <String, String>{};
     if (department != null) queryParams['department'] = department;
     if (departmentId != null) queryParams['departmentId'] = departmentId;
-    
+
     if (queryParams.isNotEmpty) {
       pushNamed('form-selection', queryParameters: queryParams);
     } else {

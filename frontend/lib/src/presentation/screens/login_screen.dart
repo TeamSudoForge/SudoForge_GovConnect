@@ -350,10 +350,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   TwoFactorVerificationScreen.routeName,
                   arguments: {'email': authService.state.email},
                 );
-              } else if (authService.state.status == AuthStatus.requiresEmailVerification) {
-
+              } else if (authService.state.status ==
+                  AuthStatus.requiresEmailVerification) {
                 print('🔄 Navigating to email verification screen');
-                print('📧 Email for verification: ${authService.state.email ?? emailController.text.trim()}');
+                print(
+                  '📧 Email for verification: ${authService.state.email ?? emailController.text.trim()}',
+                );
 
                 // Use GoRouter navigation with the correct route name
                 context.goNamed('email-verification');
@@ -375,7 +377,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   children: [
                     const SizedBox(height: 56),
-                    // Government Icon (removed image)
+                    // Government Icon with splash logo
                     Container(
                       height: 64,
                       width: 64,
@@ -383,8 +385,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: AppColors.colorFF0062,
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Center(
-                        child: SizedBox.shrink(), // No image
+                      child: Center(
+                        child: Image.asset(
+                          'assets/splash_logo.png',
+                          width: 40,
+                          height: 40,
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
                     _buildWelcomeHeader(styles),
@@ -586,7 +593,11 @@ class _LoginScreenState extends State<LoginScreen> {
         onPressed: () async {
           if (emailController.text.trim().isEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Please enter your email address for passkey authentication')),
+              const SnackBar(
+                content: Text(
+                  'Please enter your email address for passkey authentication',
+                ),
+              ),
             );
             return;
           }
@@ -598,14 +609,18 @@ class _LoginScreenState extends State<LoginScreen> {
             final authResponse = await passkeyService.authenticate();
 
             // Extract tokens from response (adjust based on your API response structure)
-            final accessToken = authResponse['accessToken'] ?? authResponse['access_token'];
-            final refreshToken = authResponse['refreshToken'] ?? authResponse['refresh_token'];
+            final accessToken =
+                authResponse['accessToken'] ?? authResponse['access_token'];
+            final refreshToken =
+                authResponse['refreshToken'] ?? authResponse['refresh_token'];
             final user = authResponse['user'];
 
             // Store tokens securely (you may want to use your AuthService for this)
             // For now, just show success and navigate
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Passkey authentication successful!')),
+              const SnackBar(
+                content: Text('Passkey authentication successful!'),
+              ),
             );
 
             // Navigate to home or handle success as needed
