@@ -33,4 +33,11 @@ export class AppointmentController {
   async get(@Param('ref') ref: string) {
     return this.appointmentService.getAppointment(ref);
   }
+
+  @Get('user')
+  async getUserAppointments(@Req() req, @Body() body) {
+    const userId = req.user.id;
+    const { page = 1, pageSize = 10, status } = body || {};
+    return this.appointmentService.getUserAppointments(userId, page, pageSize, status);
+  }
 }

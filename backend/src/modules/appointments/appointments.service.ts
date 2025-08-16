@@ -291,6 +291,28 @@ export class AppointmentService {
       },
     };
   }
+
+  async getUserAppointments(
+    userId: string,
+    page: number = 1,
+    pageSize: number = 10,
+    status?: 'CONFIRMED' | 'CANCELLED',
+  ): Promise<{
+    data: Appointment[];
+    total: number;
+    page: number;
+    pageSize: number;
+  }> {
+    const query = this.appointmentRepo.createQueryBuilder('appointment')
+      .where('appointment.userId = :userId', { userId });
+    if (status) {
+      query.andWhere('appointment.status = :status', { status });
+    }
+    query.skip((page - 1) * pageSize).take(pageSize);
+    const [data, total] = await query.getManyAndCount();
+    return { data, total, page, pageSize };
+  }
+
   private async generateQrCode(data: string): Promise<string> {
     try {
       return await QRCode.toDataURL(data);
@@ -298,7 +320,4 @@ export class AppointmentService {
       throw new BadRequestException('Failed to generate QR code');
     }
   }
-
-
-  
 }
