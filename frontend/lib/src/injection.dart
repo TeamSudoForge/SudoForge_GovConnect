@@ -48,7 +48,10 @@ class ServiceLocator {
 // Provider setup for the app
 final providers = [
   ChangeNotifierProvider(create: (_) => AuthProvider()),
-  ChangeNotifierProvider(create: (_) => NotificationProvider()),
+  // The NotificationProvider needs to be properly initialized with the singleton ServiceLocator
+  ChangeNotifierProvider<NotificationProvider>(
+    create: (_) => NotificationProvider(),
+  ),
   ChangeNotifierProvider<AuthService>.value(
     value: ServiceLocator().authService,
   ),

@@ -8,6 +8,16 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 
+export enum NotificationType {
+  GENERAL = 'general',
+  APPOINTMENT_CONFIRMATION = 'appointment_confirmation',
+  APPOINTMENT_REMINDER = 'appointment_reminder',
+  STATUS_UPDATE = 'status_update',
+  DOCUMENT_REQUEST = 'document_request',
+  VERIFICATION = 'verification',
+  SYSTEM = 'system',
+}
+
 @Entity('notifications')
 export class Notification {
   @PrimaryGeneratedColumn('uuid')
@@ -19,6 +29,13 @@ export class Notification {
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @Column({
+    type: 'enum',
+    enum: NotificationType,
+    default: NotificationType.GENERAL,
+  })
+  type: NotificationType;
 
   @Column()
   title: string;

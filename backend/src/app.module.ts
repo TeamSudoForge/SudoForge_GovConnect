@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
@@ -26,6 +27,7 @@ import {
   Field,
   FieldAttribute,
   Department,
+  Official,
   Service,
   FormField as OldFormField,
   FormResponse,
@@ -45,6 +47,7 @@ import { Notification } from './database/entities/notification.entity';
       isGlobal: true,
       load: [configuration],
     }),
+    ScheduleModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -69,6 +72,7 @@ import { Notification } from './database/entities/notification.entity';
           Field,
           FieldAttribute,
           Department,
+          Official,
           Service,
           OldFormField,
           FormResponse,
