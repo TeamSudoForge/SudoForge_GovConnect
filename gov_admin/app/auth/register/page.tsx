@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Building2, ArrowLeft } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { OfficialsAuthService } from "@/lib/services/officials-auth.service"
+import { DepartmentAuthService } from "@/lib/services/department-auth.service"
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -19,9 +19,9 @@ export default function RegisterPage() {
     email: "",
     password: "",
     confirmPassword: "",
-    designation: "",
-    department: "",
+    contact_email: "",
     contact_phone: "",
+    description: "",
   })
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
@@ -39,13 +39,13 @@ export default function RegisterPage() {
     }
 
     try {
-      const authService = OfficialsAuthService.getInstance()
+      const authService = DepartmentAuthService.getInstance()
       await authService.register({
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        designation: formData.designation || undefined,
-        department: formData.department || undefined,
+        description: formData.description || undefined,
+        contact_email: formData.contact_email || undefined,
         contact_phone: formData.contact_phone || undefined,
       })
       
@@ -75,9 +75,9 @@ export default function RegisterPage() {
 
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl text-center">Register Official</CardTitle>
+            <CardTitle className="text-2xl text-center">Register Department</CardTitle>
             <CardDescription className="text-center">
-              Register as a government official to access the portal
+              Register your government department to access the portal
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -89,11 +89,11 @@ export default function RegisterPage() {
               )}
               
               <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
+                <Label htmlFor="name">Department Name</Label>
                 <Input
                   id="name"
                   name="name"
-                  placeholder="John Doe"
+                  placeholder="Department of Health"
                   value={formData.name}
                   onChange={handleChange}
                   required
@@ -102,12 +102,12 @@ export default function RegisterPage() {
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email">Official Email</Label>
+                  <Label htmlFor="email">Department Email</Label>
                   <Input
                     id="email"
                     name="email"
                     type="email"
-                    placeholder="john.doe@gov.example"
+                    placeholder="department@gov.example"
                     value={formData.email}
                     onChange={handleChange}
                     required
@@ -126,27 +126,28 @@ export default function RegisterPage() {
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="designation">Designation</Label>
-                  <Input
-                    id="designation"
-                    name="designation"
-                    placeholder="Senior Officer"
-                    value={formData.designation}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="department">Department</Label>
-                  <Input
-                    id="department"
-                    name="department"
-                    placeholder="Department of Health"
-                    value={formData.department}
-                    onChange={handleChange}
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="contact_email">Contact Email (Optional)</Label>
+                <Input
+                  id="contact_email"
+                  name="contact_email"
+                  type="email"
+                  placeholder="contact@department.gov"
+                  value={formData.contact_email}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="description">Department Description</Label>
+                <Textarea
+                  id="description"
+                  name="description"
+                  placeholder="Brief description of your department's services and responsibilities"
+                  value={formData.description}
+                  onChange={handleChange}
+                  rows={3}
+                />
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
@@ -175,7 +176,7 @@ export default function RegisterPage() {
               </div>
 
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Registering..." : "Register Official"}
+                {isLoading ? "Registering..." : "Register Department"}
               </Button>
             </form>
 
