@@ -2,7 +2,10 @@
 import 'package:provider/provider.dart';
 import 'core/app_export.dart';
 import 'core/services/chat_service.dart';
+import 'core/services/appointment_service.dart';
 import 'core/providers/auth_provider.dart';
+import 'core/providers/notification_provider.dart';
+import 'core/services/notification_service.dart';
 import 'core/services/settings_service.dart';
 
 class ServiceLocator {
@@ -16,6 +19,8 @@ class ServiceLocator {
   late final AuthService _authService;
   late final ChatService _chatService;
   late final SettingsService _settingsService;
+  late final NotificationService _notificationService;
+  late final AppointmentService _appointmentService;
 
   void init() {
     _apiService = ApiService();
@@ -25,7 +30,9 @@ class ServiceLocator {
       apiService: _apiService,
       storageService: _storageService,
     );
+    _notificationService = NotificationService();
     _chatService = ChatService(_apiService, _authService);
+    _appointmentService = AppointmentService();
   }
 
   // Getters
@@ -34,16 +41,25 @@ class ServiceLocator {
   AuthService get authService => _authService;
   ChatService get chatService => _chatService;
   SettingsService get settingsService => _settingsService;
+  NotificationService get notificationService => _notificationService;
+  AppointmentService get appointmentService => _appointmentService;
 }
 
 // Provider setup for the app
 final providers = [
   ChangeNotifierProvider(create: (_) => AuthProvider()),
+  ChangeNotifierProvider(create: (_) => NotificationProvider()),
   ChangeNotifierProvider<AuthService>.value(
     value: ServiceLocator().authService,
   ),
+  ChangeNotifierProvider<NotificationService>.value(
+    value: ServiceLocator().notificationService,
+  ),
   ChangeNotifierProvider<SettingsService>.value(
     value: ServiceLocator().settingsService,
+  ),
+  ChangeNotifierProvider<AppointmentService>.value(
+    value: ServiceLocator().appointmentService,
   ),
 ];
 
@@ -52,4 +68,9 @@ Future<void> initializeServices() async {
   ServiceLocator().init();
   await ServiceLocator().settingsService.initialize();
   await ServiceLocator().authService.initialize();
+
+  // Inject AuthService into NotificationService
+  ServiceLocator().notificationService.setAuthService(
+    ServiceLocator().authService,
+  );
 }

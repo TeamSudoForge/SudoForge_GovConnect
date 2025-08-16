@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Form, FormSection, FormField, FormSubmission, FieldType, SubmissionStatus } from '../../database/entities';
 import { CreateDynamicFormDto } from './dto/create-dynamic-form.dto';
+import { UpdateDynamicFormDto } from './dto/update-dynamic-form.dto';
 import { CreateFormSubmissionDto, UpdateFormSubmissionDto } from './dto/form-submission.dto';
 import { FieldAttribute } from './entities';
 
@@ -60,6 +61,66 @@ export class DynamicFormsService {
         const field = this.formFieldRepository.create(fieldData);
 
         await this.formFieldRepository.save(field);
+      }
+    }
+
+    return this.getFormById(savedForm.id);
+  }
+
+  async updateForm(id: string, updateFormDto: UpdateDynamicFormDto): Promise<Form> {
+    // Check if form exists
+    const existingForm = await this.formRepository.findOne({
+      where: { id },
+      relations: ['sections', 'sections.fields'],
+    });
+
+    if (!existingForm) {
+      throw new NotFoundException(`Form with ID ${id} not found`);
+    }
+
+    // Update form basic fields
+    if (updateFormDto.title !== undefined) {
+      existingForm.title = updateFormDto.title;
+    }
+    if (updateFormDto.description !== undefined) {
+      existingForm.description = updateFormDto.description;
+    }
+    if (updateFormDto.isActive !== undefined) {
+      existingForm.isActive = updateFormDto.isActive;
+    }
+    if (updateFormDto.version !== undefined) {
+      existingForm.version = updateFormDto.version;
+    }
+    if (updateFormDto.metadata !== undefined) {
+      existingForm.metadata = updateFormDto.metadata;
+    }
+
+    // Save updated form
+    const savedForm = await this.formRepository.save(existingForm);
+
+    // If sections are provided, replace existing sections
+    if (updateFormDto.sections) {
+      // Delete existing sections (cascade will delete fields)
+      await this.formSectionRepository.delete({ formId: savedForm.id });
+
+      // Create new sections
+      for (const sectionData of updateFormDto.sections) {
+        const section = this.formSectionRepository.create({
+          ...sectionData,
+          formId: savedForm.id,
+        });
+
+        const savedSection = await this.formSectionRepository.save(section);
+
+        // Create fields for this section
+        for (const fieldData of sectionData.fields) {
+          const field = this.formFieldRepository.create({
+            ...fieldData,
+            sectionId: savedSection.id,
+          });
+
+          await this.formFieldRepository.save(field);
+        }
       }
     }
 

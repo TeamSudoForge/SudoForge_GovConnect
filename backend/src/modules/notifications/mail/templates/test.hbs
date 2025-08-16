@@ -1,0 +1,12 @@
+<html>
+  <body>
+    <h2>{{title}}</h2>
+    <p>{{body}}</p>
+    {{#if user}}
+      <p><strong>User:</strong> {{user.email}}</p>
+    {{/if}}
+    {{#if data}}
+      <pre>{{data}}</pre>
+    {{/if}}
+  </body>
+</html>

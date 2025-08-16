@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { AuthSession } from './auth-session.entity';
 import { Passkey } from './passkey.entity';
+import { Notification } from './notification.entity';
 
 @Entity('users')
 export class User {
@@ -20,7 +21,7 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column({ name: 'password_hash', nullable: true })
+  @Column({ name: 'password_hash' })
   passwordHash: string;
 
   @Column({ name: 'first_name' })
@@ -38,8 +39,8 @@ export class User {
   @Column({ name: 'is_email_verified', default: true })
   isEmailVerified: boolean;
 
-  @Column({ name: 'passkey_challenge', type: 'text', nullable: true })
-  passkeyChallenge: string | null;
+  @Column({ name: 'fcm_token', type: 'varchar', nullable: true })
+  fcmToken: string | null;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
@@ -52,4 +53,7 @@ export class User {
 
   @OneToMany(() => Passkey, (passkey) => passkey.user)
   passkeys: Passkey[];
+
+  @OneToMany(() => Notification, (notification) => notification.user)
+  notifications: Notification[];
 }

@@ -25,6 +25,19 @@ export class Department {
   @Column({ nullable: true })
   contact_phone: string;
 
+  // Authentication fields for department login
+  @Column({ unique: true })
+  email: string;
+
+  @Column({ name: 'password_hash' })
+  passwordHash: string;
+
+  @Column({ default: true })
+  isActive: boolean;
+
+  @Column({ default: 'department' })
+  role: string;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

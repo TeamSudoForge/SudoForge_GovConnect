@@ -26,6 +26,7 @@ import { FormsService } from './services/forms.service';
 import { FormResponsesService } from './services/form-responses.service';
 import { AnalyticsService } from './services/analytics.service';
 import { DepartmentsService } from './services/departments.service';
+import { ServicesService } from './services/services.service';
 import { DynamicFormsService } from './dynamic-forms.service';
 import { FormSeederService } from './seeders/form-seeder.service';
 
@@ -34,6 +35,7 @@ import { FormsController } from './controllers/forms.controller';
 import { FormResponsesController } from './controllers/form-responses.controller';
 import { AnalyticsController } from './controllers/analytics.controller';
 import { DepartmentsController } from './controllers/departments.controller';
+import { ServicesController } from './controllers/services.controller';
 import { DynamicFormsController } from './dynamic-forms.controller';
 
 @Module({
@@ -59,6 +61,7 @@ import { DynamicFormsController } from './dynamic-forms.controller';
     FormResponsesController,
     AnalyticsController,
     DepartmentsController,
+    ServicesController,
     DynamicFormsController,
   ],
   providers: [
@@ -66,6 +69,7 @@ import { DynamicFormsController } from './dynamic-forms.controller';
     FormResponsesService,
     AnalyticsService,
     DepartmentsService,
+    ServicesService,
     DynamicFormsService,
     FormSeederService,
   ],
@@ -74,6 +78,7 @@ import { DynamicFormsController } from './dynamic-forms.controller';
     FormResponsesService,
     AnalyticsService,
     DepartmentsService,
+    ServicesService,
     DynamicFormsService,
     FormSeederService,
   ],
