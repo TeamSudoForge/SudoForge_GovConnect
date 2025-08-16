@@ -2,6 +2,7 @@
 import 'package:provider/provider.dart';
 import 'core/app_export.dart';
 import 'core/services/chat_service.dart';
+import 'core/services/appointment_service.dart';
 import 'core/providers/auth_provider.dart';
 import 'core/services/settings_service.dart';
 
@@ -16,6 +17,7 @@ class ServiceLocator {
   late final AuthService _authService;
   late final ChatService _chatService;
   late final SettingsService _settingsService;
+  late final AppointmentService _appointmentService;
 
   void init() {
     _apiService = ApiService();
@@ -26,6 +28,7 @@ class ServiceLocator {
       storageService: _storageService,
     );
     _chatService = ChatService(_apiService, _authService);
+    _appointmentService = AppointmentService();
   }
 
   // Getters
@@ -34,6 +37,7 @@ class ServiceLocator {
   AuthService get authService => _authService;
   ChatService get chatService => _chatService;
   SettingsService get settingsService => _settingsService;
+  AppointmentService get appointmentService => _appointmentService;
 }
 
 // Provider setup for the app
@@ -44,6 +48,9 @@ final providers = [
   ),
   ChangeNotifierProvider<SettingsService>.value(
     value: ServiceLocator().settingsService,
+  ),
+  ChangeNotifierProvider<AppointmentService>.value(
+    value: ServiceLocator().appointmentService,
   ),
 ];
 

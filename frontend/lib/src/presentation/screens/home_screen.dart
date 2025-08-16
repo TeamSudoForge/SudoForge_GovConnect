@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:remixicon/remixicon.dart';
 import '../../core/app_export.dart';
 import '../../core/theme/theme_config.dart';
+import '../../core/services/appointment_service.dart';
+import '../../core/models/appointment_models.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/bottom_navigation_widget.dart';
 import 'login_screen.dart';
@@ -55,25 +57,33 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Consumer2<AuthService, SettingsService>(
-        builder: (context, authService, settingsService, child) {
-          final user = authService.currentUser;
+      body: Consumer3<AuthService, SettingsService, AppointmentService>(
+        builder:
+            (context, authService, settingsService, appointmentService, child) {
+              final user = authService.currentUser;
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildWelcomeSection(user, styles, theme),
-                const SizedBox(height: 32),
-                _buildQuickActions(context, styles, theme),
-                const SizedBox(height: 32),
-                _buildUserInfo(user, styles, theme),
-                const SizedBox(height: 24),
-              ],
-            ),
-          );
-        },
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildWelcomeSection(user, styles, theme),
+                    const SizedBox(height: 32),
+                    _buildQuickActions(context, styles, theme),
+                    const SizedBox(height: 32),
+                    _buildUpcomingAppointments(
+                      context,
+                      appointmentService,
+                      styles,
+                      theme,
+                    ),
+                    const SizedBox(height: 32),
+                    _buildUserInfo(user, styles, theme),
+                    const SizedBox(height: 24),
+                  ],
+                ),
+              );
+            },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -98,42 +108,118 @@ class HomeScreen extends StatelessWidget {
     TextStyleHelper styles,
     ThemeData theme,
   ) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [theme.primaryColor, theme.colorScheme.secondary],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+    return Consumer<AppointmentService>(
+      builder: (context, appointmentService, child) {
+        final upcomingCount = appointmentService.upcomingAppointments.length;
+
+        return Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [theme.primaryColor, theme.colorScheme.secondary],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Welcome, ${user?.firstName ?? 'Kavindu'}',
+                style: styles.headline24Regular.copyWith(
+                  color: theme.colorScheme.onPrimary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Here\'s your current status',
+                style: styles.body14Regular.copyWith(
+                  fontSize: 16,
+                  color: theme.colorScheme.onPrimary.withOpacity(0.8),
+                ),
+              ),
+              const SizedBox(height: 24),
+              // Status Cards
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _buildStatusCard(
+                        icon: Remix.calendar_line,
+                        title: 'Appointments',
+                        count: upcomingCount.toString(),
+                        subtitle: 'Upcoming this week',
+                        iconColor: const Color(0xFFFF9500),
+                        styles: styles,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _buildStatusCard(
+                        icon: Remix.service_line,
+                        title: 'Services',
+                        count: '6',
+                        subtitle: 'In progress',
+                        iconColor: const Color(0xFF34C759),
+                        styles: styles,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildStatusCard({
+    required IconData icon,
+    required String title,
+    required String count,
+    required String subtitle,
+    required Color iconColor,
+    required TextStyleHelper styles,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(icon, color: iconColor, size: 20),
+            const SizedBox(width: 8),
+            Text(
+              title,
+              style: styles.body14Medium.copyWith(
+                color: const Color(0xFF1D1D1F),
+              ),
+            ),
+          ],
         ),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Welcome back,',
-            style: styles.title16Regular.copyWith(
-              color: theme.colorScheme.onPrimary.withOpacity(0.8),
-            ),
+        const SizedBox(height: 12),
+        Text(
+          count,
+          style: styles.headline24Regular.copyWith(
+            color: const Color(0xFF1D1D1F),
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
           ),
-          const SizedBox(height: 4),
-          Text(
-            '${user?.firstName ?? ''} ${user?.lastName ?? ''}',
-            style: styles.headline24Regular.copyWith(
-              color: theme.colorScheme.onPrimary,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Access all your government services in one place.',
-            style: styles.body14Regular.copyWith(
-              color: theme.colorScheme.onPrimary.withOpacity(0.9),
-            ),
-          ),
-        ],
-      ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          subtitle,
+          style: styles.body12Regular.copyWith(color: const Color(0xFF8E8E93)),
+        ),
+      ],
     );
   }
 
@@ -281,6 +367,230 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildUpcomingAppointments(
+    BuildContext context,
+    AppointmentService appointmentService,
+    TextStyleHelper styles,
+    ThemeData theme,
+  ) {
+    final nextTwoAppointments = appointmentService.nextTwoAppointments;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: theme.shadowColor.withAlpha(13),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Upcoming Appointments',
+                style: styles.title18Medium.copyWith(
+                  color: theme.colorScheme.secondary,
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  context.pushNamed('appointments');
+                },
+                child: Text(
+                  'View all',
+                  style: styles.body14Medium.copyWith(
+                    color: theme.primaryColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          if (appointmentService.isLoading)
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.all(32),
+                child: CircularProgressIndicator(),
+              ),
+            )
+          else if (appointmentService.error != null)
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: Column(
+                  children: [
+                    Icon(
+                      Remix.error_warning_line,
+                      color: theme.colorScheme.error,
+                      size: 32,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      appointmentService.error!,
+                      style: styles.body14Regular.copyWith(
+                        color: theme.colorScheme.error,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    TextButton(
+                      onPressed: () => appointmentService.refreshAppointments(),
+                      child: Text(
+                        'Retry',
+                        style: styles.body14Medium.copyWith(
+                          color: theme.primaryColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          else if (nextTwoAppointments.isEmpty)
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: Column(
+                  children: [
+                    Icon(
+                      Remix.calendar_line,
+                      color: theme.colorScheme.onSurface.withOpacity(0.5),
+                      size: 32,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'No upcoming appointments',
+                      style: styles.body14Regular.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.7),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          else
+            ...nextTwoAppointments.map((appointment) {
+              return _buildAppointmentCard(context, appointment, styles, theme);
+            }).toList(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAppointmentCard(
+    BuildContext context,
+    AppointmentListItem appointment,
+    TextStyleHelper styles,
+    ThemeData theme,
+  ) {
+    // Get icon and color based on appointment type
+    final iconCode = AppointmentService.getAppointmentIcon(appointment.title);
+    final colorCode = AppointmentService.getAppointmentColor(appointment.title);
+    final appointmentColor = Color(colorCode);
+    final appointmentIcon = IconData(iconCode, fontFamily: 'RemixIcon');
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: theme.dividerTheme.color!.withOpacity(0.3)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: appointmentColor.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(appointmentIcon, color: appointmentColor, size: 24),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  appointment.title,
+                  style: styles.title16Medium.copyWith(
+                    color: theme.colorScheme.secondary,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Icon(
+                      Remix.time_line,
+                      size: 14,
+                      color: theme.colorScheme.onSurface.withOpacity(0.6),
+                    ),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        '${appointment.date.replaceAll('\n', ' ')} • ${appointment.time}',
+                        style: styles.body14Regular.copyWith(
+                          color: theme.colorScheme.onSurface.withOpacity(0.7),
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  appointment.department,
+                  style: styles.body12Regular.copyWith(
+                    color: theme.colorScheme.onSurface.withOpacity(0.5),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          GestureDetector(
+            onTap: () {
+              // Navigate to appointment details
+              context.pushNamed(
+                'appointment-details',
+                pathParameters: {'appointmentId': appointment.id},
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: theme.primaryColor,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                'Details',
+                style: styles.body14Medium.copyWith(
+                  color: theme.colorScheme.onPrimary,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
