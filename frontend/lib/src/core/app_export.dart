@@ -13,6 +13,7 @@ export 'services/auth_service.dart';
 export 'services/api_service.dart';
 export 'services/storage_service.dart';
 export 'services/settings_service.dart';
+export 'services/departments_service.dart';
 
 // Storage
 export 'storage_keys.dart';

@@ -74,6 +74,16 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
     color: AppColors.colorFF1717,
   );
+  static const TextStyle body16Regular = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    color: AppColors.colorFF1717,
+  );
+  static const TextStyle body16Medium = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+    color: AppColors.colorFF1717,
+  );
   static const TextStyle body10Regular = TextStyle(
     fontSize: 10,
     fontWeight: FontWeight.w400,
@@ -147,5 +157,7 @@ class TextStyleHelper {
   TextStyle get body12 => AppTextStyles.body12;
   TextStyle get body12Regular => AppTextStyles.body12Regular;
   TextStyle get body12Medium => AppTextStyles.body12Medium;
+  TextStyle get body16Regular => AppTextStyles.body16Regular;
+  TextStyle get body16Medium => AppTextStyles.body16Medium;
   TextStyle get body10Regular => AppTextStyles.body10Regular;
 }
