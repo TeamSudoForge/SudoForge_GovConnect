@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, LessThanOrEqual } from 'typeorm';
-import { Notification } from './notification.entity';
+import { Notification } from '../../database/entities/notification.entity';
 import { MailService } from './mail/mail.service';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { FcmService } from './fcm/fcm.service';

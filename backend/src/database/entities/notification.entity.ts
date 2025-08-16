@@ -4,12 +4,21 @@ import {
   Column,
   CreateDateColumn,
   ManyToOne,
+  JoinColumn,
 } from 'typeorm';
-import { User } from 'src/database/entities/user.entity';
+import { User } from './user.entity';
+
 @Entity('notifications')
 export class Notification {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column({ name: 'user_id' })
+  userId: string;
+
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @Column()
   title: string;
@@ -31,7 +40,4 @@ export class Notification {
 
   @CreateDateColumn()
   createdAt: Date;
-
-  @ManyToOne(() => User, { onDelete: 'CASCADE' })
-  user: User;
 }

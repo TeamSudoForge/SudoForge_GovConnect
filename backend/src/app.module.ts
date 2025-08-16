@@ -37,7 +37,7 @@ import {
   FormField,
   FormSubmission,
 } from './database/entities';
-import { Notification } from './modules/notifications/notification.entity';
+import { Notification } from './database/entities/notification.entity';
 
 @Module({
   imports: [
