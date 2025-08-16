@@ -17,6 +17,9 @@ class ApiService {
 
   late final Dio _dio;
 
+  // Getter for dio instance (needed by ChatService)
+  Dio get dio => _dio;
+
   ApiService() {
     _dio = Dio(
       BaseOptions(

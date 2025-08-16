@@ -8,14 +8,14 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./database/init:/docker-entrypoint-initdb.d
     networks:
       - govconnect-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -42,7 +42,7 @@ services:
       RP_ID: localhost
       ORIGIN: http://localhost:3000
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       database:
         condition: service_healthy
@@ -51,12 +51,19 @@ services:
     volumes:
       - ./uploads:/app/uploads
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health"]
+      test:
+        [
+          'CMD',
+          'wget',
+          '--quiet',
+          '--tries=1',
+          '--spider',
+          'http://localhost:3000/health',
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
     restart: unless-stopped
-
 
   # File Storage Service (MinIO S3-compatible)
   file-storage:
@@ -66,15 +73,15 @@ services:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin123
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - '9000:9000'
+      - '9001:9001'
     volumes:
       - minio_data:/data
     command: server /data --console-address ":9001"
     networks:
       - govconnect-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -85,8 +92,8 @@ services:
     image: mailhog/mailhog:latest
     container_name: govconnect-mail-dev
     ports:
-      - "1025:1025"  # SMTP port
-      - "8025:8025"  # Web UI port
+      - '1025:1025' # SMTP port
+      - '8025:8025' # Web UI port
     networks:
       - govconnect-network
     restart: unless-stopped
@@ -96,14 +103,14 @@ services:
     image: redis:7-alpine
     container_name: govconnect-redis
     ports:
-      - "6379:6379"
+      - '6379:6379'
     volumes:
       - redis_data:/data
     networks:
       - govconnect-network
     command: redis-server --appendonly yes
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ['CMD', 'redis-cli', 'ping']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -117,7 +124,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@govconnect.com
       PGADMIN_DEFAULT_PASSWORD: admin123
     ports:
-      - "5050:80"
+      - '5050:80'
     depends_on:
       - database
     networks:

@@ -6,7 +6,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { DepartmentAuthController } from './department-auth.controller';
+import { DepartmentAuthService } from './department-auth.service';
 import { User } from '../../database/entities/user.entity';
+import { Department } from '../forms/entities/department.entity';
 import { UsersModule } from '../users/users.module';
 import { AuthSession } from '../../database/entities/auth-session.entity';
 import { Passkey } from '../../database/entities/passkey.entity';
@@ -15,16 +18,16 @@ import { PasskeyRepository } from './repositories/passkey.repository';
 import { UserRepository } from './repositories/user.repository';
 import { TwoFactorService } from './two-factor/two-factor.service';
 import { TwoFactorCode } from './two-factor/entities/two-factor-code.entity';
+import { MailService } from '../notifications/mail/mail.service';
+import { JwtStrategy } from '../../common/strategies/jwt.strategy';
 import { TwoFactorModule } from './two-factor/two-factor.module';
 import { EmailVerificationModule } from './email-verification/email-verification.module';
 import { EmailVerificationCode } from './email-verification/entities/email-verification-code.entity';
-import { MailService } from '../notifications/mail/mail.service';
 import { EmailVerificationService } from './email-verification/email-verification.service';
-import { JwtStrategy } from 'src/common/strategies/jwt.strategy';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, AuthSession, Passkey, TwoFactorCode, EmailVerificationCode]),
+    TypeOrmModule.forFeature([User, Department, AuthSession, Passkey, TwoFactorCode, EmailVerificationCode]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -41,9 +44,10 @@ import { JwtStrategy } from 'src/common/strategies/jwt.strategy';
     TwoFactorModule,
     EmailVerificationModule,
   ],
-  controllers: [AuthController],
+  controllers: [AuthController, DepartmentAuthController],
   providers: [
     AuthService, 
+    DepartmentAuthService,
     JwtStrategy, 
     AuthSessionRepository, 
     PasskeyRepository, 
@@ -54,6 +58,7 @@ import { JwtStrategy } from 'src/common/strategies/jwt.strategy';
   ],
   exports: [
     AuthService, 
+    DepartmentAuthService,
     JwtStrategy, 
     PassportModule,
     AuthSessionRepository, 

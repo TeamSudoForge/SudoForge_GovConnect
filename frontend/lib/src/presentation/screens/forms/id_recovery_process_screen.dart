@@ -163,7 +163,7 @@ class _IdRecoveryProcessScreenState extends State<IdRecoveryProcessScreen> {
                       // Main Title
                       const Center(
                         child: Text(
-                          'Recover or renew your loss ID',
+                          'Recover or renew your lostID',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w600,
