@@ -12,15 +12,61 @@ import { Textarea } from "@/components/ui/textarea"
 import { Building2, ArrowLeft } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { OfficialsAuthService } from "@/lib/services/officials-auth.service"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+// Predefined divisions for Grama Niladhari
+const DIVISIONS = [
+  "Colombo North",
+  "Colombo South",
+  "Colombo East",
+  "Colombo West",
+  "Dehiwala",
+  "Mount Lavinia",
+  "Moratuwa",
+  "Kotte",
+  "Kaduwela",
+  "Homagama",
+  "Maharagama",
+  "Kesbewa",
+  "Boralesgamuwa",
+  "Nugegoda",
+  "Piliyandala",
+  "Ratmalana",
+  "Pannipitiya",
+  "Kottawa",
+  "Malabe",
+  "Battaramulla",
+]
+
+// Predefined departments
+const DEPARTMENTS = [
+  "District Secretariat",
+  "Divisional Secretariat",
+  "Grama Niladhari Division",
+  "Municipal Council",
+  "Urban Council",
+  "Pradeshiya Sabha",
+  "Ministry of Home Affairs",
+  "Ministry of Public Administration",
+  "Land Registry",
+  "Social Services Department",
+]
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
-    name: "",
+    nameWithInitials: "",
     email: "",
     password: "",
     confirmPassword: "",
-    designation: "",
+    role: "",
     department: "",
+    division: "",
     contact_phone: "",
   })
   const [isLoading, setIsLoading] = useState(false)
@@ -41,11 +87,12 @@ export default function RegisterPage() {
     try {
       const authService = OfficialsAuthService.getInstance()
       await authService.register({
-        name: formData.name,
+        name: formData.nameWithInitials,
         email: formData.email,
         password: formData.password,
-        designation: formData.designation || undefined,
+        designation: formData.role || undefined,
         department: formData.department || undefined,
+        division: formData.division || undefined,
         contact_phone: formData.contact_phone || undefined,
       })
       
@@ -62,6 +109,13 @@ export default function RegisterPage() {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
+    }))
+  }
+
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
     }))
   }
 
@@ -89,15 +143,16 @@ export default function RegisterPage() {
               )}
               
               <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
+                <Label htmlFor="nameWithInitials">Name with Initials</Label>
                 <Input
-                  id="name"
-                  name="name"
-                  placeholder="John Doe"
-                  value={formData.name}
+                  id="nameWithInitials"
+                  name="nameWithInitials"
+                  placeholder="J. K. Perera"
+                  value={formData.nameWithInitials}
                   onChange={handleChange}
                   required
                 />
+                <p className="text-xs text-muted-foreground">Enter your name with initials (e.g., J. K. Perera)</p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
@@ -128,25 +183,47 @@ export default function RegisterPage() {
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="designation">Designation</Label>
-                  <Input
-                    id="designation"
-                    name="designation"
-                    placeholder="Senior Officer"
-                    value={formData.designation}
-                    onChange={handleChange}
-                  />
+                  <Label htmlFor="role">Role</Label>
+                  <Select value={formData.role} onValueChange={(value) => handleSelectChange("role", value)}>
+                    <SelectTrigger id="role">
+                      <SelectValue placeholder="Select your role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="grama_niladhari">Grama Niladhari</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="department">Department</Label>
-                  <Input
-                    id="department"
-                    name="department"
-                    placeholder="Department of Health"
-                    value={formData.department}
-                    onChange={handleChange}
-                  />
+                  <Select value={formData.department} onValueChange={(value) => handleSelectChange("department", value)}>
+                    <SelectTrigger id="department">
+                      <SelectValue placeholder="Select your department" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {DEPARTMENTS.map((dept) => (
+                        <SelectItem key={dept} value={dept.toLowerCase().replace(/\s+/g, '_')}>
+                          {dept}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="division">Division</Label>
+                <Select value={formData.division} onValueChange={(value) => handleSelectChange("division", value)}>
+                  <SelectTrigger id="division">
+                    <SelectValue placeholder="Select your division" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {DIVISIONS.map((division) => (
+                      <SelectItem key={division} value={division.toLowerCase().replace(/\s+/g, '_')}>
+                        {division}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">

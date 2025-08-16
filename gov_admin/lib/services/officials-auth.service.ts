@@ -12,6 +12,7 @@ export interface OfficialsRegisterRequest {
   password: string;
   designation?: string;
   department?: string;
+  division?: string;
   contact_phone?: string;
 }
 
@@ -21,6 +22,7 @@ export interface Official {
   email: string;
   designation?: string;
   department?: string;
+  division?: string;
   contact_phone?: string;
   isActive: boolean;
   role: string;

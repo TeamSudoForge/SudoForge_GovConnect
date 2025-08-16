@@ -42,6 +42,7 @@ export class OfficialsAuthController {
       email: official.email,
       designation: official.designation,
       department: official.department,
+      division: official.division,
       contact_phone: official.contact_phone,
       isActive: official.isActive,
       role: official.role,

@@ -5,6 +5,7 @@ import 'package:remixicon/remixicon.dart';
 import '../../core/app_export.dart';
 import '../../core/theme/theme_config.dart';
 import '../../core/services/appointment_service.dart';
+import '../../core/services/onboarding_service.dart';
 import '../../core/models/appointment_models.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/bottom_navigation_widget.dart';
@@ -320,6 +321,23 @@ class HomeScreen extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const ChatbotScreen()),
+            );
+          },
+          styles: styles,
+          theme: theme,
+        ),
+        const SizedBox(height: 16),
+        _buildNavigationButton(
+          context: context,
+          text: 'Reset Welcome Screens (Debug)',
+          icon: Remix.refresh_line,
+          backgroundColor: Colors.orange,
+          onPressed: () async {
+            await OnboardingService.instance.resetOnboarding();
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Welcome screens reset. Restart app to see them.'),
+              ),
             );
           },
           styles: styles,
