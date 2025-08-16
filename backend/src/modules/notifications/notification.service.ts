@@ -23,6 +23,9 @@ export class NotificationService {
     data?: string,
     scheduledAt?: Date,
   ): Promise<Notification> {
+    if (!user || !user.id) {
+      throw new Error('Notification must be associated with a valid user');
+    }
     const notification = this.notificationRepo.create({
       user,
       title,
