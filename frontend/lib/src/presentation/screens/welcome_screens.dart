@@ -20,21 +20,21 @@ class _WelcomeScreensState extends State<WelcomeScreens> {
 
   final List<WelcomePageData> _pages = [
     WelcomePageData(
-      image: 'assets/welcome_screen/1-img.png',
+      image: 'assets/welcome_screen/welcome1.png',
       title: 'Easy Government Services',
       subtitle: 'Access all government services from your phone',
       description:
           'Apply for certificates, book appointments, and track your applications all in one place. No more long queues or paperwork.',
     ),
     WelcomePageData(
-      image: 'assets/welcome_screen/2-img.png',
+      image: 'assets/welcome_screen/welcome2.png',
       title: 'Quick & Secure',
       subtitle: 'Fast processing with secure authentication',
       description:
           'Your documents are processed quickly and securely. Use biometric authentication and digital signatures for enhanced security.',
     ),
     WelcomePageData(
-      image: 'assets/welcome_screen/3-img.png',
+      image: 'assets/welcome_screen/welcome3.png',
       title: 'Stay Connected',
       subtitle: 'Get real-time updates and notifications',
       description:
@@ -95,7 +95,7 @@ class _WelcomeScreensState extends State<WelcomeScreens> {
                 child: TextButton(
                   onPressed: _skipToLogin,
                   style: TextButton.styleFrom(
-                    backgroundColor: Colors.black.withOpacity(0.3),
+                    backgroundColor: Colors.black.withOpacity(0.4),
                     padding: const EdgeInsets.symmetric(
                       horizontal: 20,
                       vertical: 10,
@@ -110,6 +110,13 @@ class _WelcomeScreensState extends State<WelcomeScreens> {
                       color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
+                      shadows: [
+                        Shadow(
+                          offset: const Offset(0, 1),
+                          blurRadius: 2,
+                          color: Colors.black.withOpacity(0.3),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -130,8 +137,8 @@ class _WelcomeScreensState extends State<WelcomeScreens> {
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    Theme.of(context).scaffoldBackgroundColor.withOpacity(0.8),
-                    Theme.of(context).scaffoldBackgroundColor,
+                    Colors.black.withOpacity(0.3),
+                    Colors.black.withOpacity(0.6),
                   ],
                 ),
               ),
@@ -152,40 +159,55 @@ class _WelcomeScreensState extends State<WelcomeScreens> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4),
                             color: _currentPage == index
-                                ? Theme.of(context).colorScheme.primary
-                                : Theme.of(
-                                    context,
-                                  ).colorScheme.primary.withOpacity(0.3),
+                                ? Colors.white
+                                : Colors.white.withOpacity(0.4),
                           ),
                         ),
                       ),
                     ),
 
-                    // Navigation text on the right
+                    // Navigation button on the right
                     GestureDetector(
                       onTap: _nextPage,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            _currentPage == _pages.length - 1
-                                ? 'Get Started'
-                                : 'Next',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                          if (_currentPage < _pages.length - 1) ...[
-                            const SizedBox(width: 6),
-                            Icon(
-                              Icons.arrow_forward_rounded,
-                              size: 20,
-                              color: Theme.of(context).colorScheme.primary,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(25),
+                          boxShadow: [
+                            BoxShadow(
+                              offset: const Offset(0, 2),
+                              blurRadius: 8,
+                              color: Colors.black.withOpacity(0.2),
                             ),
                           ],
-                        ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              _currentPage == _pages.length - 1
+                                  ? 'Get Started'
+                                  : 'Next',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            if (_currentPage < _pages.length - 1) ...[
+                              const SizedBox(width: 8),
+                              Icon(
+                                Icons.arrow_forward,
+                                size: 18,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ],
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -226,125 +248,109 @@ class WelcomePage extends StatelessWidget {
     // Get screen dimensions for responsive design
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return Column(
+    return Stack(
       children: [
-        // Image fills top portion (increased height)
-        Expanded(
-          flex: 7,
-          child: Container(
-            width: double.infinity,
-            child: Image.asset(
-              data.image,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                print(
-                  '[WelcomeScreens] Error loading image ${data.image}: $error',
-                );
-                return Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Theme.of(context).colorScheme.primary.withOpacity(0.2),
-                        Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                      ],
-                    ),
+        // Full-screen background image
+        Positioned.fill(
+          child: Image.asset(
+            data.image,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              print(
+                '[WelcomeScreens] Error loading image ${data.image}: $error',
+              );
+              return Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Theme.of(context).colorScheme.primary.withOpacity(0.6),
+                      Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                    ],
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        _getIconForPage(data.title),
-                        size: 100,
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.primary.withOpacity(0.5),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      _getIconForPage(data.title),
+                      size: 150,
+                      color: Colors.white.withOpacity(0.8),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Image not found',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.8),
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
                       ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Image not found',
-                        style: TextStyle(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.primary.withOpacity(0.5),
-                          fontSize: 16,
-                        ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+
+        // Content overlay positioned at the bottom
+        Positioned(
+          bottom: 150, // Leave space for navigation controls
+          left: 0,
+          right: 0,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 32.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Title
+                Text(
+                  data.title,
+                  style: TextStyle(
+                    fontSize: screenWidth < 360 ? 28 : 32,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.black87,
+                    height: 1.1,
+                    letterSpacing: -0.5,
+                    shadows: [
+                      Shadow(
+                        offset: const Offset(0, 2),
+                        blurRadius: 4,
+                        color: Colors.white.withOpacity(0.8),
                       ),
                     ],
                   ),
-                );
-              },
-            ),
-          ),
-        ),
+                  textAlign: TextAlign.left,
+                ),
 
-        // Content section (reduced to give more space to image)
-        Expanded(
-          flex: 2,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 20),
-                  // Title
-                  Text(
-                    data.title,
-                    style: TextStyle(
-                      fontSize: screenWidth < 360 ? 22 : 26,
-                      fontWeight: FontWeight.w800,
-                      color: Theme.of(context).colorScheme.onSurface,
-                      height: 1.2,
-                      letterSpacing: -0.5,
-                    ),
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                const SizedBox(height: 16),
 
-                  const SizedBox(height: 10),
-
-                  // Subtitle
-                  Text(
-                    data.subtitle,
+                // Description
+                Container(
+                  constraints: BoxConstraints(maxWidth: screenWidth * 0.85),
+                  child: Text(
+                    data.description,
                     style: TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).colorScheme.primary,
-                      height: 1.3,
+                      color: Colors.black87,
+                      height: 1.5,
+                      fontWeight: FontWeight.w500,
+                      shadows: [
+                        Shadow(
+                          offset: const Offset(0, 1),
+                          blurRadius: 3,
+                          color: Colors.white.withOpacity(0.8),
+                        ),
+                      ],
                     ),
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.left,
                   ),
-
-                  const SizedBox(height: 16),
-
-                  // Description
-                  Container(
-                    constraints: const BoxConstraints(maxWidth: 320),
-                    child: Text(
-                      data.description,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onSurface.withOpacity(0.75),
-                        height: 1.4,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
-
-        // Add some padding at the bottom for the navigation controls
-        const SizedBox(height: 120),
       ],
     );
   }
