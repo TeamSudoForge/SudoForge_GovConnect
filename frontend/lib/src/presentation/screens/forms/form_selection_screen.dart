@@ -6,21 +6,18 @@ import '../../widgets/bottom_navigation_widget.dart';
 
 class FormSelectionScreen extends StatelessWidget {
   static const String routeName = '/form-selection';
-  
+
   final String? department;
   final String? departmentId;
 
-  const FormSelectionScreen({
-    Key? key,
-    this.department,
-    this.departmentId,
-  }) : super(key: key);
+  const FormSelectionScreen({Key? key, this.department, this.departmentId})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final styles = TextStyleHelper.instance;
     final theme = Theme.of(context);
-    
+
     // Get department-specific forms
     final departmentForms = _getDepartmentForms(department ?? 'Immigration');
 
@@ -31,10 +28,7 @@ class FormSelectionScreen extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           onPressed: () => context.pop(),
-          icon: Icon(
-            Remix.arrow_left_line,
-            color: theme.colorScheme.onPrimary,
-          ),
+          icon: Icon(Remix.arrow_left_line, color: theme.colorScheme.onPrimary),
         ),
         title: Text(
           '${department ?? 'Department'} Services',
@@ -46,70 +40,8 @@ class FormSelectionScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // Header Section
-            Container(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Available Services',
-                    style: styles.headline24.copyWith(
-                      color: theme.colorScheme.onBackground,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Select a service to apply or submit required documents\nfor ${department ?? 'this department'}',
-                    style: styles.body14Regular.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.7),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              color: const Color(0xFF2196F3),
-              child: Row(
-                children: [
-                  GestureDetector(
-                    onTap: () => context.pop(),
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
-                        size: 24,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  const Expanded(
-                    child: Text(
-                      'Select Form',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // Department Info Section
             Container(
               padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surface,
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -152,7 +84,12 @@ class FormSelectionScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFormCard(BuildContext context, Map<String, String> form, ThemeData theme, TextStyleHelper styles) {
+  Widget _buildFormCard(
+    BuildContext context,
+    Map<String, String> form,
+    ThemeData theme,
+    TextStyleHelper styles,
+  ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -218,7 +155,10 @@ class FormSelectionScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: theme.primaryColor.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
@@ -238,13 +178,16 @@ class FormSelectionScreen extends StatelessWidget {
   }
 
   IconData _getFormIcon(String title) {
-    if (title.toLowerCase().contains('id') || title.toLowerCase().contains('recovery')) {
+    if (title.toLowerCase().contains('id') ||
+        title.toLowerCase().contains('recovery')) {
       return Remix.id_card_line;
-    } else if (title.toLowerCase().contains('business') || title.toLowerCase().contains('license')) {
+    } else if (title.toLowerCase().contains('business') ||
+        title.toLowerCase().contains('license')) {
       return Remix.briefcase_line;
     } else if (title.toLowerCase().contains('health')) {
       return Remix.health_book_line;
-    } else if (title.toLowerCase().contains('building') || title.toLowerCase().contains('permit')) {
+    } else if (title.toLowerCase().contains('building') ||
+        title.toLowerCase().contains('permit')) {
       return Remix.building_line;
     } else if (title.toLowerCase().contains('passport')) {
       return Remix.passport_line;
@@ -265,7 +208,8 @@ class FormSelectionScreen extends StatelessWidget {
           {
             'id': 'fa79a916-e02d-4e41-888f-ccbd7af664b4',
             'title': 'ID Recovery Application',
-            'description': 'Apply for replacement of lost or damaged identity documents',
+            'description':
+                'Apply for replacement of lost or damaged identity documents',
           },
           {
             'id': '8f65c305-8c2a-4346-bc20-7c727ddb911c',
@@ -278,12 +222,14 @@ class FormSelectionScreen extends StatelessWidget {
           {
             'id': 'fa79a916-e02d-4e41-888f-ccbd7af664b4',
             'title': 'Business License Application',
-            'description': 'Register a new business and obtain required licenses',
+            'description':
+                'Register a new business and obtain required licenses',
           },
           {
             'id': '8f65c305-8c2a-4346-bc20-7c727ddb911c',
             'title': 'Trade Permit',
-            'description': 'Apply for permits to conduct specific trade activities',
+            'description':
+                'Apply for permits to conduct specific trade activities',
           },
         ];
       case 'health services':
