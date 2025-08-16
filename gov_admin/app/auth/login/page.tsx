@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Building2, ArrowLeft } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { DepartmentAuthService } from "@/lib/services/department-auth.service"
+import { OfficialsAuthService } from "@/lib/services/officials-auth.service"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -25,7 +25,7 @@ export default function LoginPage() {
     setError("")
 
     try {
-      const authService = DepartmentAuthService.getInstance()
+      const authService = OfficialsAuthService.getInstance()
       await authService.login({ email, password })
       
       // Redirect to dashboard on successful login
@@ -47,9 +47,9 @@ export default function LoginPage() {
 
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl text-center">Department Sign In</CardTitle>
+            <CardTitle className="text-2xl text-center">Official Sign In</CardTitle>
             <CardDescription className="text-center">
-              Enter your department credentials to access the portal
+              Enter your official credentials to access the portal
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -60,11 +60,11 @@ export default function LoginPage() {
                 </div>
               )}
               <div className="space-y-2">
-                <Label htmlFor="email">Department Email</Label>
+                <Label htmlFor="email">Official Email</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="department@gov.example"
+                  placeholder="john.doe@gov.example"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -86,7 +86,7 @@ export default function LoginPage() {
             </form>
 
             <div className="mt-6 text-center text-sm">
-              <span className="text-muted-foreground">Need to register your department? </span>
+              <span className="text-muted-foreground">Need to register as an official? </span>
               <Link href="/auth/register" className="text-primary hover:underline">
                 Register here
               </Link>

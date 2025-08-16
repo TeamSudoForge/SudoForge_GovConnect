@@ -12,6 +12,7 @@ import {
   FormResponse,
   FormResponseValue,
 } from './entities';
+import { Official } from './entities/official.entity';
 
 // Dynamic Forms Entities
 import {
@@ -45,6 +46,7 @@ import { DynamicFormsController } from './dynamic-forms.controller';
       Field,
       FieldAttribute,
       Department,
+      Official,
       Service,
       OldFormField,
       FormResponse,

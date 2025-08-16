@@ -8,8 +8,11 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { DepartmentAuthController } from './department-auth.controller';
 import { DepartmentAuthService } from './department-auth.service';
+import { OfficialsAuthController } from './officials-auth.controller';
+import { OfficialsAuthService } from './officials-auth.service';
 import { User } from '../../database/entities/user.entity';
 import { Department } from '../forms/entities/department.entity';
+import { Official } from '../forms/entities/official.entity';
 import { UsersModule } from '../users/users.module';
 import { AuthSession } from '../../database/entities/auth-session.entity';
 import { Passkey } from '../../database/entities/passkey.entity';
@@ -27,7 +30,7 @@ import { EmailVerificationService } from './email-verification/email-verificatio
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Department, AuthSession, Passkey, TwoFactorCode, EmailVerificationCode]),
+    TypeOrmModule.forFeature([User, Department, Official, AuthSession, Passkey, TwoFactorCode, EmailVerificationCode]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -44,10 +47,11 @@ import { EmailVerificationService } from './email-verification/email-verificatio
     TwoFactorModule,
     EmailVerificationModule,
   ],
-  controllers: [AuthController, DepartmentAuthController],
+  controllers: [AuthController, DepartmentAuthController, OfficialsAuthController],
   providers: [
     AuthService, 
     DepartmentAuthService,
+    OfficialsAuthService,
     JwtStrategy, 
     AuthSessionRepository, 
     PasskeyRepository, 
@@ -59,6 +63,7 @@ import { EmailVerificationService } from './email-verification/email-verificatio
   exports: [
     AuthService, 
     DepartmentAuthService,
+    OfficialsAuthService,
     JwtStrategy, 
     PassportModule,
     AuthSessionRepository, 
