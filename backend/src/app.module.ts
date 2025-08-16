@@ -8,6 +8,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { FormsModule } from './modules/forms/forms.module';
 import { HealthModule } from './health/health.module';
+import { ChatbotModule } from './modules/chatbot/chatbot.module';
 import { RelyingPartyModule } from './relying-party/relying-party.module';
 import { NotificationModule } from './modules/notifications/notification.module';
 import configuration from './config/configuration';
@@ -15,6 +16,10 @@ import { User } from './database/entities/user.entity';
 import { AuthSession } from './database/entities/auth-session.entity';
 import { Passkey } from './database/entities/passkey.entity';
 import { TwoFactorCode } from './modules/auth/two-factor/entities/two-factor-code.entity';
+import { ChatMessage } from './modules/chatbot/entities/chat-message.entity';
+import { ChatSession } from './modules/chatbot/entities/chat-session.entity';
+import { Tag } from './modules/chatbot/entities/tag.entity';
+import { FaqQuestion } from './modules/chatbot/entities/faq-question.entity';
 import { EmailVerificationCode } from './database/entities';
 import {
   FieldType,
@@ -22,10 +27,16 @@ import {
   FieldAttribute,
   Department,
   Service,
-  FormField,
+  FormField as OldFormField,
   FormResponse,
   FormResponseValue,
 } from './modules/forms/entities';
+import {
+  Form,
+  FormSection,
+  FormField,
+  FormSubmission,
+} from './database/entities';
 import { Notification } from './modules/notifications/notification.entity';
 
 @Module({
@@ -49,18 +60,27 @@ import { Notification } from './modules/notifications/notification.entity';
           AuthSession,
           Passkey,
           TwoFactorCode,
+          ChatMessage,
+          ChatSession,
+          Tag,
+          FaqQuestion,
           EmailVerificationCode,
           FieldType,
           Field,
           FieldAttribute,
           Department,
           Service,
-          FormField,
+          OldFormField,
           FormResponse,
           FormResponseValue,
           Notification,
+          // Dynamic Forms entities
+          Form,
+          FormSection,
+          FormField,
+          FormSubmission,
         ],
-        synchronize: configService.get('DB_SYNCHRONIZE', 'false') === 'true',
+        synchronize: false, // Disabled to prevent schema conflicts
         logging: configService.get('DB_LOGGING', 'false') === 'true',
       }),
     }),
@@ -69,6 +89,7 @@ import { Notification } from './modules/notifications/notification.entity';
     UsersModule,
     FormsModule,
     HealthModule,
+    ChatbotModule,
     RelyingPartyModule,
     NotificationModule,
   ],

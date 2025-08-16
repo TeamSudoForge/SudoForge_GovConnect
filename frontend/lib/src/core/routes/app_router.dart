@@ -10,12 +10,15 @@ import '../../presentation/screens/two_factor_verification_screen.dart';
 import '../../presentation/screens/app_navigation_screen.dart';
 import '../../presentation/screens/appointment_details.dart';
 import '../../presentation/screens/appointment_update_screen.dart';
+import '../../presentation/screens/appointments_screen.dart';
 import '../../presentation/screens/notifications_screen.dart';
 import '../../presentation/screens/settings_screen.dart';
 import '../../presentation/screens/add_passkey_screen.dart';
 import '../../presentation/screens/forms/id_recovery_process_screen.dart';
 import '../../presentation/screens/forms/id_recovery_form_content_screen.dart';
 import '../../presentation/screens/forms/id_recovery_success_screen.dart';
+import '../../presentation/screens/forms/demo_form_screen.dart';
+import '../../presentation/screens/forms/form_selection_screen.dart';
 
 class AppRouter {
   // Session-based flag to track if splash has been shown
@@ -133,6 +136,19 @@ class AppRouter {
               builder: (context, state) => const AddPasskeyScreen(),
             ),
             GoRoute(
+              path: 'form-selection',
+              name: 'form-selection',
+              builder: (context, state) => const FormSelectionScreen(),
+            ),
+            GoRoute(
+              path: 'demo-form',
+              name: 'demo-form',
+              builder: (context, state) {
+                final formId = state.uri.queryParameters['formId'];
+                return DemoFormScreen(formId: formId);
+              },
+            ),
+            GoRoute(
               path: 'id-recovery-process',
               name: 'id-recovery-process',
               builder: (context, state) => const IdRecoveryProcessScreen(),
@@ -159,9 +175,21 @@ class AppRouter {
         ),
 
         GoRoute(
+          path: '/appointments',
+          name: 'appointments',
+          builder: (context, state) => const AppointmentsScreen(),
+        ),
+        GoRoute(
           path: '/appointment-details',
+          redirect: (context, state) => '/appointment-details/1',
+        ),
+        GoRoute(
+          path: '/appointment-details/:id',
           name: 'appointment-details',
-          builder: (context, state) => const AppointmentDetailsScreen(),
+          builder: (context, state) {
+            final appointmentId = state.pathParameters['id'] ?? '1';
+            return AppointmentDetailsScreen(appointmentId: appointmentId);
+          },
         ),
         GoRoute(
           path: '/appointment-update',
@@ -187,8 +215,10 @@ class AppRoutes {
   static const String profile = '/home/profile';
   static const String settings = '/home/settings';
   static const String addPasskey = '/home/add-passkey';
+  static const String demoForm = '/home/demo-form';
   static const String appNavigation = '/home/app-navigation';
   // static const String idCardRenewal = '/id-card-renewal'; // TODO: Uncomment when screen is created
+  static const String appointments = '/appointments';
   static const String appointmentDetails = '/appointment-details';
   static const String appointmentUpdate = '/appointment-update';
 }
@@ -209,7 +239,25 @@ extension GoRouterExtension on GoRouter {
 
   void pushAddPasskey() => pushNamed('add-passkey');
 
-  void pushAppointmentDetails() => pushNamed('appointment-details');
+  void pushFormSelection() => pushNamed('form-selection');
+
+  void pushDemoForm([String? formId]) {
+    if (formId != null) {
+      pushNamed('demo-form', queryParameters: {'formId': formId});
+    } else {
+      pushNamed('demo-form');
+    }
+  }
+
+  void pushAppointments() => pushNamed('appointments');
+
+  void pushAppointmentDetails([String? appointmentId]) {
+    if (appointmentId != null) {
+      pushNamed('appointment-details', pathParameters: {'id': appointmentId});
+    } else {
+      pushNamed('appointment-details', pathParameters: {'id': '1'});
+    }
+  }
 
   void pushTwoFactorVerification(String email) =>
       pushNamed('two-factor-verification', queryParameters: {'email': email});

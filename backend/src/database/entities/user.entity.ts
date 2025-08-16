@@ -20,7 +20,7 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column({ name: 'password_hash' })
+  @Column({ name: 'password_hash', nullable: true })
   passwordHash: string;
 
   @Column({ name: 'first_name' })
@@ -40,6 +40,9 @@ export class User {
 
   @Column({ name: 'fcm_token', type: 'varchar', nullable: true })
   fcmToken: string | null;
+
+  @Column({ name: 'passkey_challenge', type: 'text', nullable: true })
+  passkeyChallenge: string | null;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

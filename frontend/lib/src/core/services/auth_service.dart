@@ -370,6 +370,16 @@ class AuthService extends ChangeNotifier {
     }
   }
 
+  // Get current access token for API requests
+  Future<String?> getToken() async {
+    try {
+      return await _storageService.getAccessToken();
+    } catch (e) {
+      print('Error getting access token: $e');
+      return null;
+    }
+  }
+
   @override
   void dispose() {
     super.dispose();

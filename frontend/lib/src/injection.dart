@@ -1,6 +1,7 @@
 // Dependency injection setup
 import 'package:provider/provider.dart';
 import 'core/app_export.dart';
+import 'core/services/chat_service.dart';
 import 'core/providers/auth_provider.dart';
 import 'core/providers/notification_provider.dart';
 import 'core/services/notification_service.dart';
@@ -15,6 +16,7 @@ class ServiceLocator {
   late final ApiService _apiService;
   late final StorageService _storageService;
   late final AuthService _authService;
+  late final ChatService _chatService;
   late final SettingsService _settingsService;
   late final NotificationService _notificationService;
 
@@ -27,12 +29,14 @@ class ServiceLocator {
       storageService: _storageService,
     );
     _notificationService = NotificationService();
+    _chatService = ChatService(_apiService, _authService);
   }
 
   // Getters
   ApiService get apiService => _apiService;
   StorageService get storageService => _storageService;
   AuthService get authService => _authService;
+  ChatService get chatService => _chatService;
   SettingsService get settingsService => _settingsService;
   NotificationService get notificationService => _notificationService;
 }

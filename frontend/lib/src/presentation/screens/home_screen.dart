@@ -8,6 +8,7 @@ import '../widgets/custom_button.dart';
 import '../widgets/bottom_navigation_widget.dart';
 import 'login_screen.dart';
 import 'qrflow/qr_scan_screen.dart';
+import 'chatbot_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String routeName = '/home';
@@ -69,18 +70,22 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(height: 32),
                 _buildUserInfo(user, styles, theme),
                 const SizedBox(height: 24),
-                // Button to navigate to app navigation screen
-                CustomButton(
-                  text: 'appointment details',
-                  onPressed: () {
-                    context.pushNamed('appointment-details');
-                  },
-                  backgroundColor: AppColors.colorFF007B,
-                ),
               ],
             ),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const ChatbotScreen()),
+          );
+        },
+        backgroundColor: AppColors.colorFF007B,
+        child: Icon(
+          Remix.customer_service_2_line,
+          color: AppColors.whiteCustom,
+        ),
       ),
       bottomNavigationBar: const BottomNavigationWidget(
         currentItem: BottomNavItem.home,
@@ -192,6 +197,44 @@ class HomeScreen extends StatelessWidget {
           backgroundColor: const Color(0xFF2196F3),
           onPressed: () {
             context.pushNamed('id-recovery-process');
+          },
+          styles: styles,
+          theme: theme,
+        ),
+        const SizedBox(height: 16),
+        _buildNavigationButton(
+          context: context,
+          text: 'Dynamic Form Demo',
+          icon: Remix.file_2_line,
+          backgroundColor: const Color(0xFF2196F3),
+          onPressed: () {
+            context.pushNamed('form-selection');
+          },
+          styles: styles,
+          theme: theme,
+        ),
+        const SizedBox(height: 16),
+        _buildNavigationButton(
+          context: context,
+          text: 'Dynamic Forms 2',
+          icon: Remix.file_2_line,
+          backgroundColor: const Color(0xFF2196F3),
+          onPressed: () {
+            context.pushNamed('form-selection');
+          },
+          styles: styles,
+          theme: theme,
+        ),
+        const SizedBox(height: 16),
+        _buildNavigationButton(
+          context: context,
+          text: 'GovConnect Assistant',
+          icon: Remix.customer_service_2_line,
+          backgroundColor: AppColors.colorFF007B,
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const ChatbotScreen()),
+            );
           },
           styles: styles,
           theme: theme,

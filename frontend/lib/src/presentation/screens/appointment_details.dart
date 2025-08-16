@@ -9,8 +9,9 @@ import '../../core/models/appointment_models.dart';
 
 class AppointmentDetailsScreen extends StatefulWidget {
   static const String routeName = '/appointment-details';
+  final String? appointmentId;
 
-  const AppointmentDetailsScreen({super.key});
+  const AppointmentDetailsScreen({super.key, this.appointmentId});
 
   @override
   State<AppointmentDetailsScreen> createState() =>
@@ -18,8 +19,14 @@ class AppointmentDetailsScreen extends StatefulWidget {
 }
 
 class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
-  // Sample appointment data
-  final AppointmentDetails appointmentData = sampleAppointment;
+  // Get appointment data based on ID, fall back to sample
+  AppointmentDetails get appointmentData {
+    if (widget.appointmentId != null &&
+        sampleAppointmentsDetails.containsKey(widget.appointmentId)) {
+      return sampleAppointmentsDetails[widget.appointmentId]!;
+    }
+    return sampleAppointment; // fallback to original sample
+  }
 
   // Map controller for flutter_map
   final MapController _mapController = MapController();
@@ -40,8 +47,9 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: const CommonAppBar(
         title: 'ID card renewal',
         showNotifications: true,
@@ -63,15 +71,21 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Title section
-                      Text(
-                        appointmentData.serviceTitle,
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                          height: 1.2,
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        child: Text(
+                          appointmentData.serviceTitle,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w600,
+                            color: theme.colorScheme.onSurface,
+                            height: 1.2,
+                          ),
+                          softWrap: true,
+                          overflow: TextOverflow.visible,
                         ),
                       ),
+
                       const SizedBox(height: 12),
 
                       // Date and time section - positioned to the right
@@ -85,7 +99,8 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
                                 appointmentData.date,
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Colors.grey.shade600,
+                                  color: theme.colorScheme.onSurface
+                                      .withOpacity(0.6),
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -123,7 +138,7 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
                       appointmentData.department,
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey.shade600,
+                        color: theme.colorScheme.onSurface.withOpacity(0.6),
                       ),
                     ),
                   ),
@@ -155,12 +170,12 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Service description',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -168,23 +183,26 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
                     appointmentData.serviceDescription,
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.grey.shade700,
+                      color: theme.colorScheme.onSurface.withOpacity(0.7),
                       height: 1.5,
                     ),
                   ),
                   const SizedBox(height: 24),
-                  const Text(
+                  Text(
                     'Service description',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Originals documents needed',
-                    style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: theme.colorScheme.onSurface.withOpacity(0.7),
+                    ),
                   ),
                   const SizedBox(height: 12),
 
@@ -223,12 +241,12 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Location Details',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -239,7 +257,11 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
                     width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.grey.shade300),
+                      border: Border.all(
+                        color:
+                            theme.dividerTheme.color ??
+                            theme.colorScheme.outline,
+                      ),
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
@@ -290,11 +312,13 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
                             left: 8,
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: theme.colorScheme.surface,
                                 borderRadius: BorderRadius.circular(4),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.1),
+                                    color: theme.shadowColor.withValues(
+                                      alpha: 0.1,
+                                    ),
                                     blurRadius: 4,
                                     offset: const Offset(0, 2),
                                   ),
@@ -309,14 +333,15 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
                                       vertical: 4,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: Colors.white,
+                                      color: theme.colorScheme.surface,
                                       borderRadius: BorderRadius.circular(4),
                                     ),
-                                    child: const Text(
+                                    child: Text(
                                       'Map',
                                       style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w500,
+                                        color: theme.colorScheme.onSurface,
                                       ),
                                     ),
                                   ),
@@ -329,7 +354,8 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
                                       'Satellite',
                                       style: TextStyle(
                                         fontSize: 12,
-                                        color: Colors.grey.shade600,
+                                        color: theme.colorScheme.onSurface
+                                            .withOpacity(0.6),
                                       ),
                                     ),
                                   ),
@@ -346,11 +372,11 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
                               children: [
                                 Container(
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: theme.colorScheme.surface,
                                     borderRadius: BorderRadius.circular(4),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withValues(
+                                        color: theme.shadowColor.withValues(
                                           alpha: 0.1,
                                         ),
                                         blurRadius: 4,
@@ -365,7 +391,11 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
                                         _mapController.camera.zoom + 1,
                                       );
                                     },
-                                    icon: const Icon(Icons.add, size: 20),
+                                    icon: Icon(
+                                      Icons.add,
+                                      size: 20,
+                                      color: theme.colorScheme.onSurface,
+                                    ),
                                     iconSize: 20,
                                     padding: const EdgeInsets.all(8),
                                     constraints: const BoxConstraints(
@@ -377,11 +407,11 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
                                 const SizedBox(height: 2),
                                 Container(
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: theme.colorScheme.surface,
                                     borderRadius: BorderRadius.circular(4),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withValues(
+                                        color: theme.shadowColor.withValues(
                                           alpha: 0.1,
                                         ),
                                         blurRadius: 4,
@@ -396,7 +426,11 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
                                         _mapController.camera.zoom - 1,
                                       );
                                     },
-                                    icon: const Icon(Icons.remove, size: 20),
+                                    icon: Icon(
+                                      Icons.remove,
+                                      size: 20,
+                                      color: theme.colorScheme.onSurface,
+                                    ),
                                     iconSize: 20,
                                     padding: const EdgeInsets.all(8),
                                     constraints: const BoxConstraints(
@@ -418,13 +452,18 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
                   // Contact Information
                   Row(
                     children: [
-                      Icon(Icons.phone, size: 20, color: Colors.grey.shade600),
+                      Icon(
+                        Icons.phone,
+                        size: 20,
+                        color: theme.colorScheme.onSurface.withOpacity(0.6),
+                      ),
                       const SizedBox(width: 8),
-                      const Text(
+                      Text(
                         'Phone',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
+                          color: theme.colorScheme.onSurface,
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -447,13 +486,18 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
 
                   Row(
                     children: [
-                      Icon(Icons.email, size: 20, color: Colors.grey.shade600),
+                      Icon(
+                        Icons.email,
+                        size: 20,
+                        color: theme.colorScheme.onSurface.withOpacity(0.6),
+                      ),
                       const SizedBox(width: 8),
-                      const Text(
+                      Text(
                         'Email',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
+                          color: theme.colorScheme.onSurface,
                         ),
                       ),
                       const SizedBox(width: 24),
@@ -475,12 +519,12 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
                   const SizedBox(height: 16),
 
                   // Address Section
-                  const Text(
+                  Text(
                     'Address',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -488,7 +532,7 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
                     appointmentData.location.address,
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.grey.shade700,
+                      color: theme.colorScheme.onSurface.withOpacity(0.7),
                       height: 1.5,
                     ),
                   ),
@@ -535,15 +579,19 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
-                    foregroundColor: Colors.white,
+                    foregroundColor: theme.colorScheme.onPrimary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                     elevation: 0,
                   ),
-                  child: const Text(
+                  child: Text(
                     'Update appointment',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.onPrimary,
+                    ),
                   ),
                 ),
               ),
@@ -560,6 +608,7 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
   }
 
   Widget _buildDocumentItem(String text) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
@@ -569,8 +618,8 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
             margin: const EdgeInsets.only(top: 6),
             width: 4,
             height: 4,
-            decoration: const BoxDecoration(
-              color: Colors.black87,
+            decoration: BoxDecoration(
+              color: theme.colorScheme.onSurface,
               shape: BoxShape.circle,
             ),
           ),
@@ -580,7 +629,7 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
               text,
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.grey.shade700,
+                color: theme.colorScheme.onSurface.withOpacity(0.7),
                 height: 1.5,
               ),
             ),
