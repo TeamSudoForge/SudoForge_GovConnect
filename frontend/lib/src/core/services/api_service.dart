@@ -7,9 +7,9 @@ class ApiService {
     // When running on Android emulator, localhost needs to be changed to 10.0.2.2
     if (Platform.isAndroid) {
       // if using Android emulator
-      return 'http://10.0.2.2:3000';
+      // return 'http://10.0.2.2:3000';
       // if using real Android device
-      // return "http://192.168.8.102:3000";
+      return "http://192.168.142.69:3000";
     }
     // For iOS simulator or physical devices, you might need to use your machine's IP address
     return 'http://localhost:3000';

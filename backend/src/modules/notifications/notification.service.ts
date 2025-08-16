@@ -44,7 +44,7 @@ export class NotificationService {
     await this.mailService.send({
       to: user.email,
       subject: title,
-      template: 'basic',
+      template: 'test',
       context: { user, title, body, data },
     });
 
